@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --cream: #f0eee7;
@@ -629,6 +630,165 @@
     .welcome-hero h1 { font-size: 28px; }
   }
 
+  /* ===== AUTH SCREEN ===== */
+  #auth-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--dark);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #auth-screen.visible { display: flex; }
+
+  .auth-box {
+    width: 100%;
+    max-width: 420px;
+    padding: 24px;
+  }
+
+  .auth-logo-wrap {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .auth-logo-wrap .brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: white;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .auth-logo-wrap .sub {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+
+  .auth-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 36px;
+  }
+
+  .auth-card h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    color: white;
+    margin-bottom: 6px;
+  }
+
+  .auth-card p.auth-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 28px;
+  }
+
+  .auth-field {
+    margin-bottom: 16px;
+  }
+
+  .auth-field label {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+  }
+
+  .auth-field input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: white;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .auth-field input:focus {
+    border-color: var(--blue);
+    background: rgba(70,130,180,0.08);
+  }
+
+  .auth-field input::placeholder { color: rgba(255,255,255,0.2); }
+
+  .auth-btn {
+    width: 100%;
+    background: var(--blue);
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 8px;
+  }
+
+  .auth-btn:hover { background: var(--blue-dark); }
+  .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .auth-toggle {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .auth-toggle a {
+    color: var(--blue);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .auth-toggle a:hover { text-decoration: underline; }
+
+  .auth-msg {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: none;
+  }
+
+  .auth-msg.error {
+    background: rgba(220,50,50,0.15);
+    border: 1px solid rgba(220,50,50,0.3);
+    color: #ff6b6b;
+    display: block;
+  }
+
+  .auth-msg.success {
+    background: rgba(70,130,180,0.15);
+    border: 1px solid rgba(70,130,180,0.3);
+    color: var(--blue-light);
+    display: block;
+  }
+
+  .auth-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 24px 0;
+  }
+
   /* ===== SCROLLBAR ===== */
   .sidebar::-webkit-scrollbar { width: 4px; }
   .sidebar::-webkit-scrollbar-track { background: transparent; }
@@ -651,12 +811,60 @@
 </head>
 <body>
 
+<!-- AUTH SCREEN -->
+<div id="auth-screen" class="visible">
+  <div class="auth-box">
+    <div class="auth-logo-wrap">
+      <span class="brand">The Ultimate Performer</span>
+      <span class="sub">The Performance Coach</span>
+    </div>
+    <div class="auth-card">
+      <div id="auth-login-view">
+        <h2>Sign in</h2>
+        <p class="auth-sub">Enter your email and password to access the programme.</p>
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button class="auth-btn" onclick="handleLogin()">Sign In</button>
+        <div id="login-msg" class="auth-msg"></div>
+        <div class="auth-divider"></div>
+        <div class="auth-toggle">
+          Forgot your password? <a onclick="showForgot()">Reset it here</a>
+        </div>
+      </div>
+
+      <div id="auth-forgot-view" style="display:none;">
+        <h2>Reset password</h2>
+        <p class="auth-sub">Enter your email and we'll send you a reset link.</p>
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="forgot-email" placeholder="you@example.com">
+        </div>
+        <button class="auth-btn" onclick="handleForgot()">Send Reset Link</button>
+        <div id="forgot-msg" class="auth-msg"></div>
+        <div class="auth-divider"></div>
+        <div class="auth-toggle">
+          <a onclick="showLogin()">← Back to sign in</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- NAV -->
 <nav class="nav">
   <img class="nav-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAARCAAyAQADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABwYIBf/EAC0QAAIBAwMDBAIBBQAAAAAAAAABAgMEBREhBhIxBxNBURQiYXEyQlKBkf/EABkBAQEAAwEAAAAAAAAAAAAAAAAFBgQDCf/EACARAQABBAIDAQAAAAAAAAAAAAABAgMREiExUQQF/9oADAMBAAIRAxEAPwCmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==" alt="The Performance Coach" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
   <span style="display:none; font-family:'DM Serif Display',serif; color:white; font-size:18px;">The Performance Coach</span>
   <span class="nav-title">The Ultimate Performer</span>
-  <span class="nav-user" onclick="showScreen('dashboard')">Dashboard</span>
+  <span class="nav-user" id="nav-user-info" style="display:flex;align-items:center;gap:12px;">
+    <span id="nav-user-email" style="font-size:12px;color:rgba(255,255,255,0.4);"></span>
+    <span onclick="handleSignOut()" style="font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer;padding:6px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:4px;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">Sign out</span>
+  </span>
 </nav>
 
 <div class="app-layout">
@@ -1101,32 +1309,154 @@
 </div>
 
 <script>
+  // ===== SUPABASE INIT =====
+  const { createClient } = supabase;
+  const _supabase = createClient(
+    'https://surkhxljptfidlmrjlmv.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmtoeGxqcHRmaWRsbXJqbG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTY2NjgsImV4cCI6MjA5MzYzMjY2OH0.lLOfYp004WMT2gw-_lWXNIEXpgxglRJzbzkhTZHRMu4'
+  );
+
+  // ===== AUTH STATE =====
+  async function initAuth() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (session) {
+      showApp(session.user.email);
+    } else {
+      showAuthScreen();
+    }
+
+    _supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        showApp(session.user.email);
+      }
+      if (event === 'SIGNED_OUT') {
+        showAuthScreen();
+      }
+    });
+  }
+
+  function showApp(email) {
+    document.getElementById('auth-screen').classList.remove('visible');
+    document.getElementById('nav-user-email').textContent = email;
+    showScreen('dashboard');
+  }
+
+  function showAuthScreen() {
+    document.getElementById('auth-screen').classList.add('visible');
+  }
+
+  // ===== LOGIN =====
+  async function handleLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const msg = document.getElementById('login-msg');
+    const btn = document.querySelector('#auth-login-view .auth-btn');
+
+    msg.className = 'auth-msg';
+    msg.textContent = '';
+
+    if (!email || !password) {
+      msg.className = 'auth-msg error';
+      msg.textContent = 'Please enter your email and password.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Signing in...';
+
+    const { error } = await _supabase.auth.signInWithPassword({ email, password });
+
+    btn.disabled = false;
+    btn.textContent = 'Sign In';
+
+    if (error) {
+      msg.className = 'auth-msg error';
+      msg.textContent = error.message === 'Invalid login credentials'
+        ? 'Email or password is incorrect.'
+        : error.message;
+    }
+  }
+
+  // ===== FORGOT PASSWORD =====
+  async function handleForgot() {
+    const email = document.getElementById('forgot-email').value.trim();
+    const msg = document.getElementById('forgot-msg');
+    const btn = document.querySelector('#auth-forgot-view .auth-btn');
+
+    msg.className = 'auth-msg';
+    msg.textContent = '';
+
+    if (!email) {
+      msg.className = 'auth-msg error';
+      msg.textContent = 'Please enter your email.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://app.theperformancecoach.ae'
+    });
+
+    btn.disabled = false;
+    btn.textContent = 'Send Reset Link';
+
+    if (error) {
+      msg.className = 'auth-msg error';
+      msg.textContent = error.message;
+    } else {
+      msg.className = 'auth-msg success';
+      msg.textContent = 'Reset link sent — check your inbox.';
+    }
+  }
+
+  // ===== SIGN OUT =====
+  async function handleSignOut() {
+    await _supabase.auth.signOut();
+  }
+
+  // ===== VIEW TOGGLES =====
+  function showForgot() {
+    document.getElementById('auth-login-view').style.display = 'none';
+    document.getElementById('auth-forgot-view').style.display = 'block';
+  }
+
+  function showLogin() {
+    document.getElementById('auth-forgot-view').style.display = 'none';
+    document.getElementById('auth-login-view').style.display = 'block';
+  }
+
+  // ===== ENTER KEY =====
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const authVisible = document.getElementById('auth-screen').classList.contains('visible');
+      if (authVisible) {
+        const forgotVisible = document.getElementById('auth-forgot-view').style.display === 'block';
+        forgotVisible ? handleForgot() : handleLogin();
+      }
+    }
+  });
+
+  // ===== NAV + SCREENS =====
   function showScreen(id) {
-    // Hide all screens
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    // Remove active from sidebar
     document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
-    // Show target
     const screen = document.getElementById('screen-' + id);
     if (screen) screen.classList.add('active');
-    // Activate sidebar item
     document.querySelectorAll('.sidebar-item').forEach(item => {
       if (item.getAttribute('onclick') && item.getAttribute('onclick').includes("'" + id + "'")) {
         item.classList.add('active');
       }
     });
-    // Scroll to top
     document.querySelector('.main-content').scrollTop = 0;
     window.scrollTo(0, 0);
   }
 
   function switchTab(btn, tabId) {
-    // Get parent container
     const container = btn.closest('.screen') || document.querySelector('.screen.active');
-    // Deactivate all tab buttons in this section
     btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    // Hide all tab contents that are siblings
     container.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
     const target = document.getElementById(tabId);
     if (target) target.classList.add('active');
@@ -1145,6 +1475,9 @@
       btn.textContent = 'Close';
     }
   }
+
+  // ===== INIT =====
+  initAuth();
 </script>
 </body>
 </html>

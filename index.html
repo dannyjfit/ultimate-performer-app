@@ -9,809 +9,227 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root {
-    --cream: #f0eee7;
-    --blue: #4682b4;
-    --dark: #1a1a1a;
-    --blue-dark: #2d5f8a;
-    --blue-light: #6ba0c8;
-    --mid: #3a3a3a;
-    --border: rgba(70,130,180,0.2);
-    --card-bg: rgba(255,255,255,0.7);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--cream);
-    color: var(--dark);
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-    line-height: 1.6;
-    min-height: 100vh;
-  }
-
-  /* ===== NAV ===== */
-  .nav {
-    background: var(--dark);
-    padding: 0 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 64px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
-  }
-
-  .nav-logo {
-    height: 36px;
-    width: auto;
-  }
-
-  .nav-title {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--blue);
-  }
-
-  .nav-user {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    color: rgba(255,255,255,0.5);
-    cursor: pointer;
-  }
-
-  /* ===== SIDEBAR + LAYOUT ===== */
-  .app-layout {
-    display: flex;
-    min-height: calc(100vh - 64px);
-  }
-
-  .sidebar {
-    width: 260px;
-    background: var(--dark);
-    color: white;
-    padding: 24px 0;
-    flex-shrink: 0;
-    position: sticky;
-    top: 64px;
-    height: calc(100vh - 64px);
-    overflow-y: auto;
-  }
-
-  .sidebar-section {
-    margin-bottom: 8px;
-  }
-
-  .sidebar-label {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.3);
-    padding: 16px 24px 8px;
-  }
-
-  .sidebar-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 24px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 14px;
-    color: rgba(255,255,255,0.65);
-    border-left: 3px solid transparent;
-  }
-
-  .sidebar-item:hover {
-    background: rgba(70,130,180,0.1);
-    color: white;
-    border-left-color: var(--blue);
-  }
-
-  .sidebar-item.active {
-    background: rgba(70,130,180,0.15);
-    color: white;
-    border-left-color: var(--blue);
-  }
-
-  .sidebar-item .icon {
-    width: 18px;
-    text-align: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-
-  /* ===== MAIN CONTENT ===== */
-  .main-content {
-    flex: 1;
-    padding: 40px 48px;
-    max-width: 900px;
-  }
-
-  /* ===== SCREENS ===== */
-  .screen { display: none; }
-  .screen.active { display: block; }
-
-  /* ===== HERO / WELCOME ===== */
-  .welcome-hero {
-    background: var(--dark);
-    border-radius: 12px;
-    padding: 48px;
-    margin-bottom: 32px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .welcome-hero::before {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 300px; height: 100%;
-    background: linear-gradient(135deg, transparent, rgba(70,130,180,0.15));
-  }
-
-  .welcome-tag {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--blue);
-    margin-bottom: 16px;
-  }
-
-  .welcome-hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 42px;
-    color: white;
-    line-height: 1.15;
-    margin-bottom: 16px;
-  }
-
-  .welcome-hero p {
-    color: rgba(255,255,255,0.65);
-    font-size: 16px;
-    max-width: 500px;
-    margin-bottom: 32px;
-  }
-
-  .btn-primary {
-    display: inline-block;
-    background: var(--blue);
-    color: white;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 14px 28px;
-    border-radius: 4px;
-    cursor: pointer;
-    border: none;
-    transition: background 0.2s;
-  }
-
-  .btn-primary:hover { background: var(--blue-dark); }
-
-  .btn-secondary {
-    display: inline-block;
-    background: transparent;
-    color: var(--blue);
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 14px 28px;
-    border-radius: 4px;
-    cursor: pointer;
-    border: 2px solid var(--blue);
-    transition: all 0.2s;
-    margin-left: 12px;
-  }
-
-  .btn-secondary:hover {
-    background: var(--blue);
-    color: white;
-  }
-
-  /* ===== MODULE CARDS ===== */
-  .modules-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 32px;
-  }
-
-  .module-card {
-    background: white;
-    border-radius: 10px;
-    padding: 24px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid rgba(0,0,0,0.06);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .module-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    border-color: var(--blue);
-  }
-
-  .module-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%; height: 3px;
-    background: var(--blue);
-    transform: scaleX(0);
-    transition: transform 0.2s;
-  }
-
-  .module-card:hover::after { transform: scaleX(1); }
-
-  .module-number {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--blue);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .module-card h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
-    color: var(--dark);
-    margin-bottom: 8px;
-  }
-
-  .module-card p {
-    font-size: 13px;
-    color: #666;
-    line-height: 1.5;
-  }
-
-  .module-icon {
-    font-size: 28px;
-    margin-bottom: 12px;
-  }
-
-  /* ===== PAGE HEADER ===== */
-  .page-header {
-    margin-bottom: 32px;
-  }
-
-  .page-tag {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--blue);
-    margin-bottom: 8px;
-  }
-
-  .page-header h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 34px;
-    color: var(--dark);
-    margin-bottom: 8px;
-  }
-
-  .page-header p {
-    color: #555;
-    font-size: 15px;
-    max-width: 600px;
-  }
-
-  /* ===== VIDEO SECTION ===== */
-  .video-embed {
-    width: 100%;
-    border-radius: 10px;
-    overflow: hidden;
-    background: var(--dark);
-    margin-bottom: 24px;
-    aspect-ratio: 16/9;
-  }
-
-  .video-embed iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-
-  /* ===== TOOL EMBED ===== */
-  .tool-embed {
-    width: 100%;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    margin-bottom: 24px;
-    background: white;
-  }
-
-  .tool-embed iframe {
-    width: 100%;
-    height: 600px;
-    border: none;
-  }
-
-  /* ===== CONTENT SECTIONS ===== */
-  .content-section {
-    background: white;
-    border-radius: 10px;
-    padding: 28px;
-    margin-bottom: 20px;
-    border: 1px solid rgba(0,0,0,0.06);
-  }
-
-  .content-section h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    color: var(--dark);
-    margin-bottom: 12px;
-  }
-
-  .content-section h4 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--blue);
-    margin-bottom: 12px;
-  }
-
-  .content-section p {
-    font-size: 14px;
-    color: #444;
-    line-height: 1.7;
-    margin-bottom: 12px;
-  }
-
-  .content-section p:last-child { margin-bottom: 0; }
-
-  /* ===== VIDEO GRID ===== */
-  .video-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-
-  .video-item {
-    background: white;
-    border-radius: 8px;
-    border: 1px solid rgba(0,0,0,0.06);
-    overflow: hidden;
-    transition: box-shadow 0.2s;
-  }
-
-  .video-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-
-  .video-item-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    cursor: pointer;
-  }
-
-  .video-thumb {
-    width: 64px;
-    height: 48px;
-    background: var(--dark);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 20px;
-  }
-
-  .video-item-info h4 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--dark);
-    margin-bottom: 2px;
-  }
-
-  .video-item-info p {
-    font-size: 12px;
-    color: #888;
-  }
-
-  .video-toggle-btn {
-    margin-left: auto;
-    background: var(--blue);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s;
-    flex-shrink: 0;
-  }
-
-  .video-toggle-btn:hover { background: var(--blue-dark); }
-
-  .video-player-wrap {
-    display: none;
-    padding: 0 20px 20px;
-  }
-
-  .video-player-wrap.open { display: block; }
-
-  .video-player-wrap iframe {
-    width: 100%;
-    aspect-ratio: 16/9;
-    border: none;
-    border-radius: 6px;
-  }
-
-  /* ===== EXERCISE LIBRARY ===== */
-  .exercise-filters {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-
-  .filter-btn {
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: white;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: #555;
-  }
-
-  .filter-btn:hover, .filter-btn.active {
-    background: var(--blue);
-    color: white;
-    border-color: var(--blue);
-  }
-
-  /* ===== CALLOUT ===== */
-  .callout {
-    background: rgba(70,130,180,0.08);
-    border-left: 4px solid var(--blue);
-    border-radius: 0 8px 8px 0;
-    padding: 16px 20px;
-    margin-bottom: 20px;
-  }
-
-  .callout p {
-    font-size: 14px;
-    color: var(--dark);
-    line-height: 1.6;
-  }
-
-  .callout strong { color: var(--blue); }
-
-  /* ===== COACHING CARD ===== */
-  .coaching-card {
-    background: var(--dark);
-    border-radius: 10px;
-    padding: 32px;
-    color: white;
-    text-align: center;
-    margin-top: 24px;
-  }
-
-  .coaching-card h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 26px;
-    margin-bottom: 12px;
-    color: white;
-  }
-
-  .coaching-card p {
-    color: rgba(255,255,255,0.65);
-    margin-bottom: 24px;
-    font-size: 15px;
-  }
-
-  .price-tag {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--blue);
-    margin-bottom: 20px;
-  }
-
-  .price-tag span {
-    font-size: 14px;
-    font-weight: 400;
-    color: rgba(255,255,255,0.4);
-    font-family: 'Inter', sans-serif;
-  }
-
-  /* ===== TABS ===== */
-  .tabs {
-    display: flex;
-    gap: 0;
-    margin-bottom: 24px;
-    border-bottom: 2px solid rgba(0,0,0,0.08);
-  }
-
-  .tab-btn {
-    padding: 12px 20px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    color: #888;
-    transition: all 0.2s;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-  }
-
-  .tab-btn.active {
-    color: var(--blue);
-    border-bottom-color: var(--blue);
-  }
-
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-
-  /* ===== DIVIDER ===== */
-  .divider {
-    height: 1px;
-    background: rgba(0,0,0,0.06);
-    margin: 28px 0;
-  }
-
-  /* ===== PROGRESS ===== */
-  .progress-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-
-  .progress-label {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--dark);
-    width: 120px;
-    flex-shrink: 0;
-  }
-
-  .progress-bar-wrap {
-    flex: 1;
-    height: 6px;
-    background: rgba(0,0,0,0.08);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .progress-bar {
-    height: 100%;
-    background: var(--blue);
-    border-radius: 3px;
-    transition: width 0.6s ease;
-  }
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main-content { padding: 24px 20px; }
-    .modules-grid { grid-template-columns: 1fr; }
-    .welcome-hero h1 { font-size: 28px; }
-  }
-
-  /* ===== AUTH SCREEN ===== */
-  #auth-screen {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: var(--dark);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-  }
-
-  #auth-screen.visible { display: flex; }
-
-  .auth-box {
-    width: 100%;
-    max-width: 420px;
-    padding: 24px;
-  }
-
-  .auth-logo-wrap {
-    text-align: center;
-    margin-bottom: 36px;
-  }
-
-  .auth-logo-wrap .brand {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px;
-    color: white;
-    display: block;
-    margin-bottom: 4px;
-  }
-
-  .auth-logo-wrap .sub {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--blue);
-  }
-
-  .auth-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 36px;
-  }
-
-  .auth-card h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 24px;
-    color: white;
-    margin-bottom: 6px;
-  }
-
-  .auth-card p.auth-sub {
-    font-size: 13px;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 28px;
-  }
-
-  .auth-field {
-    margin-bottom: 16px;
-  }
-
-  .auth-field label {
-    display: block;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 8px;
-  }
-
-  .auth-field input {
-    width: 100%;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px;
-    padding: 12px 16px;
-    color: white;
-    font-size: 15px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .auth-field input:focus {
-    border-color: var(--blue);
-    background: rgba(70,130,180,0.08);
-  }
-
-  .auth-field input::placeholder { color: rgba(255,255,255,0.2); }
-
-  .auth-btn {
-    width: 100%;
-    background: var(--blue);
-    color: white;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 14px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s;
-    margin-top: 8px;
-  }
-
-  .auth-btn:hover { background: var(--blue-dark); }
-  .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  .auth-toggle {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 13px;
-    color: rgba(255,255,255,0.4);
-  }
-
-  .auth-toggle a {
-    color: var(--blue);
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .auth-toggle a:hover { text-decoration: underline; }
-
-  .auth-msg {
-    margin-top: 16px;
-    padding: 12px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    display: none;
-  }
-
-  .auth-msg.error {
-    background: rgba(220,50,50,0.15);
-    border: 1px solid rgba(220,50,50,0.3);
-    color: #ff6b6b;
-    display: block;
-  }
-
-  .auth-msg.success {
-    background: rgba(70,130,180,0.15);
-    border: 1px solid rgba(70,130,180,0.3);
-    color: var(--blue-light);
-    display: block;
-  }
-
-  .auth-divider {
-    height: 1px;
-    background: rgba(255,255,255,0.06);
-    margin: 24px 0;
-  }
-
-  /* ===== SCROLLBAR ===== */
-  .sidebar::-webkit-scrollbar { width: 4px; }
-  .sidebar::-webkit-scrollbar-track { background: transparent; }
-  .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-
-  .badge {
-    display: inline-block;
-    background: var(--blue);
-    color: white;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 10px;
-    margin-left: 8px;
-  }
+:root { --cream:#f0eee7; --blue:#4682b4; --dark:#1a1a1a; --blue-dark:#2d5f8a; --blue-light:#6ba0c8; --border:rgba(70,130,180,0.2); }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;font-weight:400;line-height:1.6;min-height:100vh;}
+
+/* AUTH */
+#auth-screen{display:none;position:fixed;inset:0;background:var(--dark);z-index:1000;align-items:center;justify-content:center;}
+#auth-screen.visible{display:flex;}
+.auth-box{width:100%;max-width:420px;padding:24px;}
+.auth-logo-wrap{text-align:center;margin-bottom:36px;}
+.auth-logo-wrap .brand{font-family:'DM Serif Display',serif;font-size:28px;color:white;display:block;margin-bottom:4px;}
+.auth-logo-wrap .sub{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue);}
+.auth-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:36px;}
+.auth-card h2{font-family:'DM Serif Display',serif;font-size:24px;color:white;margin-bottom:6px;}
+.auth-card p.auth-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:28px;}
+.auth-field{margin-bottom:16px;}
+.auth-field label{display:block;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;}
+.auth-field input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:12px 16px;color:white;font-size:15px;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s;}
+.auth-field input:focus{border-color:var(--blue);background:rgba(70,130,180,0.08);}
+.auth-field input::placeholder{color:rgba(255,255,255,0.2);}
+.auth-btn{width:100%;background:var(--blue);color:white;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px;border-radius:6px;border:none;cursor:pointer;transition:background 0.2s;margin-top:8px;}
+.auth-btn:hover{background:var(--blue-dark);}
+.auth-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.auth-toggle{text-align:center;margin-top:20px;font-size:13px;color:rgba(255,255,255,0.4);}
+.auth-toggle a{color:var(--blue);cursor:pointer;}
+.auth-msg{margin-top:16px;padding:12px 16px;border-radius:6px;font-size:13px;display:none;}
+.auth-msg.error{background:rgba(220,50,50,0.15);border:1px solid rgba(220,50,50,0.3);color:#ff6b6b;display:block;}
+.auth-msg.success{background:rgba(70,130,180,0.15);border:1px solid rgba(70,130,180,0.3);color:var(--blue-light);display:block;}
+.auth-divider{height:1px;background:rgba(255,255,255,0.06);margin:24px 0;}
+
+/* NAV */
+.nav{background:var(--dark);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.3);}
+.nav-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--blue);}
+
+/* LAYOUT */
+.app-layout{display:flex;min-height:calc(100vh - 64px);}
+.sidebar{width:260px;background:var(--dark);color:white;padding:24px 0;flex-shrink:0;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;}
+.sidebar-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:16px 24px 8px;}
+.sidebar-item{display:flex;align-items:center;gap:12px;padding:10px 24px;cursor:pointer;transition:all 0.2s;font-size:14px;color:rgba(255,255,255,0.65);border-left:3px solid transparent;}
+.sidebar-item:hover{background:rgba(70,130,180,0.1);color:white;border-left-color:var(--blue);}
+.sidebar-item.active{background:rgba(70,130,180,0.15);color:white;border-left-color:var(--blue);}
+.sidebar-item .icon{width:18px;text-align:center;font-size:16px;flex-shrink:0;}
+.main-content{flex:1;padding:40px 48px;max-width:920px;}
+.screen{display:none;}.screen.active{display:block;}
+
+/* HERO */
+.welcome-hero{background:var(--dark);border-radius:12px;padding:48px;margin-bottom:32px;position:relative;overflow:hidden;}
+.welcome-hero::before{content:'';position:absolute;top:0;right:0;width:300px;height:100%;background:linear-gradient(135deg,transparent,rgba(70,130,180,0.12));pointer-events:none;}
+.welcome-tag{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:16px;}
+.welcome-hero h1{font-family:'DM Serif Display',serif;font-size:42px;color:white;line-height:1.15;margin-bottom:16px;}
+.welcome-hero p{color:rgba(255,255,255,0.65);font-size:16px;max-width:500px;margin-bottom:32px;}
+
+/* BUTTONS */
+.btn-primary{display:inline-block;background:var(--blue);color:white;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 28px;border-radius:4px;cursor:pointer;border:none;transition:background 0.2s;}
+.btn-primary:hover{background:var(--blue-dark);}
+.btn-secondary{display:inline-block;background:transparent;color:var(--blue);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 28px;border-radius:4px;cursor:pointer;border:2px solid var(--blue);transition:all 0.2s;margin-left:12px;}
+.btn-secondary:hover{background:var(--blue);color:white;}
+
+/* MODULE CARDS */
+.modules-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px;}
+.module-card{background:white;border-radius:10px;padding:24px;cursor:pointer;transition:all 0.2s;border:1px solid rgba(0,0,0,0.06);position:relative;overflow:hidden;}
+.module-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.1);border-color:var(--blue);}
+.module-card::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:3px;background:var(--blue);transform:scaleX(0);transition:transform 0.2s;}
+.module-card:hover::after{transform:scaleX(1);}
+.module-number{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:8px;}
+.module-card h3{font-family:'DM Serif Display',serif;font-size:20px;color:var(--dark);margin-bottom:8px;}
+.module-card p{font-size:13px;color:#666;line-height:1.5;}
+.module-icon{font-size:28px;margin-bottom:12px;}
+
+/* PAGE HEADER */
+.page-header{margin-bottom:32px;}
+.page-tag{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.page-header h2{font-family:'DM Serif Display',serif;font-size:34px;color:var(--dark);margin-bottom:8px;}
+.page-header p{color:#555;font-size:15px;max-width:600px;}
+
+/* VIDEO */
+.video-embed{width:100%;border-radius:10px;overflow:hidden;background:var(--dark);margin-bottom:24px;aspect-ratio:16/9;}
+.video-embed iframe{width:100%;height:100%;border:none;}
+
+/* TOOL */
+.tool-embed{width:100%;border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:24px;background:white;}
+.tool-embed iframe{width:100%;height:600px;border:none;}
+
+/* CONTENT */
+.content-section{background:white;border-radius:10px;padding:28px;margin-bottom:20px;border:1px solid rgba(0,0,0,0.06);}
+.content-section h3{font-family:'DM Serif Display',serif;font-size:22px;color:var(--dark);margin-bottom:12px;}
+.content-section h4{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
+.content-section p{font-size:14px;color:#444;line-height:1.7;margin-bottom:12px;}
+.content-section p:last-child{margin-bottom:0;}
+.content-section ul{padding-left:20px;margin-bottom:12px;}
+.content-section ul li{font-size:14px;color:#444;line-height:1.7;margin-bottom:4px;}
+
+/* VIDEO LIST */
+.video-list{display:flex;flex-direction:column;gap:16px;margin-bottom:24px;}
+.video-item{background:white;border-radius:8px;border:1px solid rgba(0,0,0,0.06);overflow:hidden;}
+.video-item-header{display:flex;align-items:center;gap:16px;padding:16px 20px;}
+.video-thumb{width:64px;height:48px;background:var(--dark);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;}
+.video-item-info h4{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;}
+.video-item-info p{font-size:12px;color:#888;}
+.video-toggle-btn{margin-left:auto;background:var(--blue);color:white;border:none;border-radius:4px;padding:8px 16px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
+.video-toggle-btn:hover{background:var(--blue-dark);}
+.video-player-wrap{display:none;padding:0 20px 20px;}
+.video-player-wrap.open{display:block;}
+.video-player-wrap iframe{width:100%;aspect-ratio:16/9;border:none;border-radius:6px;}
+
+/* CALLOUT */
+.callout{background:rgba(70,130,180,0.08);border-left:4px solid var(--blue);border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:20px;}
+.callout p{font-size:14px;color:var(--dark);line-height:1.6;}
+.callout strong{color:var(--blue);}
+
+/* QUOTE */
+.quote-block{background:var(--dark);border-radius:10px;padding:24px 28px;margin-bottom:20px;border-left:4px solid var(--blue);}
+.quote-block p{font-family:'DM Serif Display',serif;font-size:17px;color:white;line-height:1.6;font-style:italic;}
+
+/* TABS */
+.tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid rgba(0,0,0,0.08);}
+.tab-btn{padding:12px 20px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:transparent;color:#888;transition:all 0.2s;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-content{display:none;}.tab-content.active{display:block;}
+
+/* DIVIDER */
+.divider{height:1px;background:rgba(0,0,0,0.06);margin:28px 0;}
+
+/* TABLES */
+.data-table{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;}
+.data-table th{background:var(--dark);color:white;padding:10px 14px;text-align:left;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;}
+.data-table td{padding:9px 14px;border-bottom:1px solid rgba(0,0,0,0.06);color:#444;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:nth-child(even) td{background:rgba(0,0,0,0.02);}
+
+.input-table{width:100%;border-collapse:collapse;margin-bottom:20px;}
+.input-table th{background:var(--dark);color:white;padding:10px 14px;text-align:left;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;}
+.input-table td{padding:8px;border:1px solid rgba(0,0,0,0.08);}
+.input-table td:first-child{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--dark);background:rgba(0,0,0,0.02);width:200px;}
+.input-table input{width:100%;border:1px solid rgba(0,0,0,0.1);border-radius:4px;padding:8px 10px;font-size:13px;font-family:'Inter',sans-serif;background:white;outline:none;}
+.input-table input:focus{border-color:var(--blue);}
+
+.weekly-table{width:100%;border-collapse:collapse;margin-bottom:20px;}
+.weekly-table th{background:var(--dark);color:white;padding:10px 14px;text-align:left;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;}
+.weekly-table td{padding:8px 10px;border:1px solid rgba(0,0,0,0.08);vertical-align:top;}
+.weekly-table td:first-child{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--dark);background:rgba(70,130,180,0.05);width:90px;}
+.weekly-table textarea{width:100%;border:1px solid rgba(0,0,0,0.1);border-radius:4px;padding:6px 8px;font-size:12px;font-family:'Inter',sans-serif;resize:vertical;min-height:48px;outline:none;}
+.weekly-table textarea:focus{border-color:var(--blue);}
+
+/* ACCORDION */
+.accordion{margin-bottom:10px;border:1px solid rgba(0,0,0,0.08);border-radius:8px;overflow:hidden;}
+.accordion-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;cursor:pointer;background:white;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--dark);transition:background 0.2s;}
+.accordion-header:hover{background:rgba(70,130,180,0.05);}
+.accordion-header .acc-icon{font-size:16px;transition:transform 0.2s;}
+.accordion-body{display:none;padding:20px;background:white;border-top:1px solid rgba(0,0,0,0.06);}
+.accordion-body p{font-size:14px;color:#444;line-height:1.7;margin-bottom:10px;}
+.accordion-body ul{padding-left:20px;}
+.accordion-body ul li{font-size:14px;color:#444;line-height:1.7;margin-bottom:4px;}
+.accordion.open .accordion-body{display:block;}
+.accordion.open .acc-icon{transform:rotate(180deg);}
+
+/* CHECKLIST */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);font-size:14px;color:#444;}
+.checklist li:last-child{border-bottom:none;}
+.checklist li input[type="checkbox"]{margin-top:3px;width:16px;height:16px;accent-color:var(--blue);flex-shrink:0;cursor:pointer;}
+
+/* WHY INPUT */
+.why-input{width:100%;border:2px solid var(--blue);border-radius:8px;padding:16px;font-size:15px;font-family:'Inter',sans-serif;color:var(--dark);background:white;resize:vertical;min-height:80px;outline:none;}
+.why-input:focus{box-shadow:0 0 0 3px rgba(70,130,180,0.15);}
+
+/* GOLDEN CIRCLE */
+.golden-circle-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;}
+.gc-card{border-radius:10px;padding:20px;text-align:center;}
+.gc-card.why{background:var(--dark);color:white;border:2px solid var(--blue);}
+.gc-card.how{background:rgba(70,130,180,0.08);border:1px solid var(--border);}
+.gc-card.what{background:white;border:1px solid rgba(0,0,0,0.08);}
+.gc-card .gc-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;color:var(--blue);}
+.gc-card .gc-title{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:8px;}
+.gc-card.why .gc-title{color:white;}
+.gc-card p{font-size:13px;color:#555;line-height:1.5;}
+.gc-card.why p{color:rgba(255,255,255,0.65);}
+
+/* PLATE */
+.plate-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.plate-item{background:white;border-radius:8px;padding:16px 20px;border:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;gap:14px;}
+.plate-icon{font-size:24px;flex-shrink:0;}
+.plate-item h4{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--dark);margin-bottom:2px;}
+.plate-item p{font-size:13px;color:#666;}
+
+/* INJURY */
+.injury-option{background:white;border-radius:8px;border:1px solid rgba(0,0,0,0.08);margin-bottom:10px;overflow:hidden;}
+.injury-option-header{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;font-size:14px;font-weight:600;color:var(--dark);transition:background 0.2s;}
+.injury-option-header:hover{background:rgba(70,130,180,0.05);}
+.injury-option-body{display:none;padding:16px 20px;border-top:1px solid rgba(0,0,0,0.06);font-size:14px;color:#444;line-height:1.7;}
+.injury-option.open .injury-option-body{display:block;}
+
+/* SALES */
+.sales-hero{background:var(--dark);border-radius:12px;padding:52px 48px;margin-bottom:28px;text-align:center;position:relative;overflow:hidden;}
+.sales-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(70,130,180,0.18) 0%,transparent 70%);pointer-events:none;}
+.sales-hero .tag{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:16px;}
+.sales-hero h2{font-family:'DM Serif Display',serif;font-size:44px;color:white;line-height:1.1;margin-bottom:16px;}
+.sales-hero p{color:rgba(255,255,255,0.65);font-size:17px;max-width:520px;margin:0 auto 32px;}
+.price-block{display:inline-block;background:rgba(70,130,180,0.15);border:1px solid rgba(70,130,180,0.3);border-radius:8px;padding:20px 36px;margin-bottom:28px;}
+.price-block .price{font-family:'Montserrat',sans-serif;font-size:40px;font-weight:800;color:var(--blue);}
+.price-block .period{font-size:14px;color:rgba(255,255,255,0.4);font-family:'Inter',sans-serif;}
+.includes-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+.include-item{background:white;border-radius:8px;padding:20px;border:1px solid rgba(0,0,0,0.06);display:flex;gap:14px;align-items:flex-start;}
+.include-item .inc-icon{font-size:22px;flex-shrink:0;}
+.include-item h4{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.include-item p{font-size:13px;color:#666;line-height:1.5;}
+.testimonial-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:24px;margin-bottom:16px;}
+.testimonial-card p{font-style:italic;color:rgba(255,255,255,0.75);font-size:15px;line-height:1.6;margin-bottom:12px;}
+.testimonial-card .attr{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--blue);text-transform:uppercase;}
+
+.badge{display:inline-block;background:var(--blue);color:white;font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:10px;margin-left:8px;}
+
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-track{background:transparent;}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+
+@media(max-width:768px){.sidebar{display:none;}.main-content{padding:24px 20px;}.modules-grid,.golden-circle-grid,.includes-grid,.plate-grid{grid-template-columns:1fr;}.welcome-hero h1{font-size:28px;}}
 </style>
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
+<!-- AUTH -->
 <div id="auth-screen" class="visible">
   <div class="auth-box">
     <div class="auth-logo-wrap">
@@ -821,36 +239,22 @@
     <div class="auth-card">
       <div id="auth-login-view">
         <h2>Sign in</h2>
-        <p class="auth-sub">Enter your email and password to access the programme.</p>
-        <div class="auth-field">
-          <label>Email</label>
-          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
-        </div>
-        <div class="auth-field">
-          <label>Password</label>
-          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
-        </div>
+        <p class="auth-sub">Enter your email and password to access the program.</p>
+        <div class="auth-field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"></div>
+        <div class="auth-field"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
         <button class="auth-btn" onclick="handleLogin()">Sign In</button>
         <div id="login-msg" class="auth-msg"></div>
         <div class="auth-divider"></div>
-        <div class="auth-toggle">
-          Forgot your password? <a onclick="showForgot()">Reset it here</a>
-        </div>
+        <div class="auth-toggle">Forgot your password? <a onclick="showForgot()">Reset it here</a></div>
       </div>
-
       <div id="auth-forgot-view" style="display:none;">
         <h2>Reset password</h2>
         <p class="auth-sub">Enter your email and we'll send you a reset link.</p>
-        <div class="auth-field">
-          <label>Email</label>
-          <input type="email" id="forgot-email" placeholder="you@example.com">
-        </div>
+        <div class="auth-field"><label>Email</label><input type="email" id="forgot-email" placeholder="you@example.com"></div>
         <button class="auth-btn" onclick="handleForgot()">Send Reset Link</button>
         <div id="forgot-msg" class="auth-msg"></div>
         <div class="auth-divider"></div>
-        <div class="auth-toggle">
-          <a onclick="showLogin()">← Back to sign in</a>
-        </div>
+        <div class="auth-toggle"><a onclick="showLogin()">← Back to sign in</a></div>
       </div>
     </div>
   </div>
@@ -858,626 +262,445 @@
 
 <!-- NAV -->
 <nav class="nav">
-  <img class="nav-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAARCAAyAQADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABwYIBf/EAC0QAAIBAwMDBAIBBQAAAAAAAAABAgMEBREhBhIxBxNBURQiYXEyQlKBkf/EABkBAQEAAwEAAAAAAAAAAAAAAAAFBgQDCf/EACARAQABBAIDAQAAAAAAAAAAAAABAgMREiExUQQF/9oADAMBAAIRAxEAPwCmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==" alt="The Performance Coach" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-  <span style="display:none; font-family:'DM Serif Display',serif; color:white; font-size:18px;">The Performance Coach</span>
   <span class="nav-title">The Ultimate Performer</span>
-  <span class="nav-user" id="nav-user-info" style="display:flex;align-items:center;gap:12px;">
+  <span style="display:flex;align-items:center;gap:12px;">
     <span id="nav-user-email" style="font-size:12px;color:rgba(255,255,255,0.4);"></span>
-    <span onclick="handleSignOut()" style="font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer;padding:6px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:4px;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">Sign out</span>
+    <span onclick="handleSignOut()" style="font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer;padding:6px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:4px;">Sign out</span>
   </span>
 </nav>
 
 <div class="app-layout">
+<aside class="sidebar">
+  <div><div class="sidebar-label">Start Here</div>
+    <div class="sidebar-item active" onclick="showScreen('dashboard')"><span class="icon">🏠</span> Dashboard</div>
+    <div class="sidebar-item" onclick="showScreen('quiz')"><span class="icon">📋</span> Your Quiz <span class="badge">Step 1</span></div>
+  </div>
+  <div><div class="sidebar-label">Intro</div>
+    <div class="sidebar-item" onclick="showScreen('welcome-video')"><span class="icon">▶</span> Welcome Video</div>
+  </div>
+  <div><div class="sidebar-label">Modules</div>
+    <div class="sidebar-item" onclick="showScreen('why-workshop')"><span class="icon">🎯</span> Why Workshop</div>
+    <div class="sidebar-item" onclick="showScreen('movement')"><span class="icon">🏋️</span> Movement</div>
+    <div class="sidebar-item" onclick="showScreen('nutrition')"><span class="icon">🥗</span> Nutrition</div>
+    <div class="sidebar-item" onclick="showScreen('recovery')"><span class="icon">🧘</span> Recovery</div>
+    <div class="sidebar-item" onclick="showScreen('build-plan')"><span class="icon">🗓️</span> Your Plan</div>
+  </div>
+  <div><div class="sidebar-label">Tools</div>
+    <div class="sidebar-item" onclick="showScreen('calorie-calc')"><span class="icon">🔢</span> Calorie Calculator</div>
+    <div class="sidebar-item" onclick="showScreen('exercise-lib')"><span class="icon">📚</span> Exercise Library</div>
+    <div class="sidebar-item" onclick="showScreen('meal-gen')"><span class="icon">🍳</span> Meal Plan Generator</div>
+    <div class="sidebar-item" onclick="showScreen('training-gen')"><span class="icon">💪</span> Training Generator</div>
+  </div>
+  <div><div class="sidebar-label">Upgrade</div>
+    <div class="sidebar-item" onclick="showScreen('coaching')"><span class="icon">🎯</span> Work With Me</div>
+  </div>
+</aside>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-label">Start Here</div>
-      <div class="sidebar-item active" onclick="showScreen('dashboard')">
-        <span class="icon">🏠</span> Dashboard
-      </div>
-      <div class="sidebar-item" onclick="showScreen('quiz')">
-        <span class="icon">📋</span> Your Quiz
-        <span class="badge">Start</span>
-      </div>
+<main class="main-content">
+
+<!-- DASHBOARD -->
+<div id="screen-dashboard" class="screen active">
+  <div class="welcome-hero">
+    <div class="welcome-tag">Welcome to the program</div>
+    <h1>The Ultimate<br>Performer</h1>
+    <p>For busy professionals who are ready to start putting themselves first. Work through it in order — everything is here for a reason.</p>
+    <button class="btn-primary" onclick="showScreen('welcome-video')">Start Here — Watch Welcome Video</button>
+  </div>
+  <div style="margin-bottom:24px;">
+    <div class="page-tag">Your Journey</div>
+    <h2 style="font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:4px;">Work through it in order</h2>
+    <p style="color:#666;font-size:14px;">Start with the welcome video, take the quiz, then work through each module from top to bottom. Don't skip ahead.</p>
+  </div>
+  <div class="modules-grid">
+    <div class="module-card" onclick="showScreen('welcome-video')"><div class="module-icon">👋</div><div class="module-number">Start Here</div><h3>Welcome Video</h3><p>Watch this first. I walk you through the program and exactly how to use it.</p></div>
+    <div class="module-card" onclick="showScreen('quiz')"><div class="module-icon">📋</div><div class="module-number">Step 1</div><h3>Take the Quiz</h3><p>Find out where you are, what's holding you back, and what to focus on first.</p></div>
+    <div class="module-card" onclick="showScreen('why-workshop')"><div class="module-icon">🎯</div><div class="module-number">Module 1</div><h3>Why Workshop</h3><p>Build the foundation everything else sits on. Your reason that doesn't disappear when motivation does.</p></div>
+    <div class="module-card" onclick="showScreen('movement')"><div class="module-icon">🏋️</div><div class="module-number">Module 2</div><h3>Movement</h3><p>Training built around your schedule, your equipment, and your level.</p></div>
+    <div class="module-card" onclick="showScreen('nutrition')"><div class="module-icon">🥗</div><div class="module-number">Module 3</div><h3>Nutrition</h3><p>Simple, realistic eating that fits a busy life. No complicated plans.</p></div>
+    <div class="module-card" onclick="showScreen('recovery')"><div class="module-icon">🧘</div><div class="module-number">Module 4</div><h3>Recovery</h3><p>Sleep, breathwork, and stress management. The stuff most people skip.</p></div>
+    <div class="module-card" onclick="showScreen('build-plan')"><div class="module-icon">🗓️</div><div class="module-number">Module 5</div><h3>Your Plan</h3><p>Pull it all together into a week that actually works for your life.</p></div>
+    <div class="module-card" onclick="showScreen('coaching')"><div class="module-icon">🎯</div><div class="module-number">Upgrade</div><h3>Work With Me</h3><p>Want to go faster? Work with me directly. AED 499/month, no contracts.</p></div>
+  </div>
+</div>
+
+<!-- WELCOME VIDEO -->
+<div id="screen-welcome-video" class="screen">
+  <div class="page-header"><div class="page-tag">Start Here</div><h2>Welcome to the Program</h2><p>Watch this before anything else. I'll walk you through what this program is, what to expect, and how to get the most out of it.</p></div>
+  <div class="video-embed"><iframe src="https://www.youtube.com/embed/xeIilzlei4E" allowfullscreen></iframe></div>
+  <div class="callout"><p><strong>Done?</strong> Next step is the quiz — it takes about 5 minutes and tells me exactly where to point you first.</p></div>
+  <button class="btn-primary" onclick="showScreen('quiz')">Next: Take the Quiz →</button>
+</div>
+
+<!-- QUIZ -->
+<div id="screen-quiz" class="screen">
+  <div class="page-header"><div class="page-tag">Step 1</div><h2>Your Performance Quiz</h2><p>This builds your personalised starting point. Takes about 5 minutes — be honest with your answers.</p></div>
+  <div class="tool-embed"><iframe src="https://dannyjfit.github.io/ultimate-performer-quiz/" title="Ultimate Performer Quiz"></iframe></div>
+  <div class="callout"><p><strong>Finished the quiz?</strong> Head into the Why Workshop next — this is Module 1 and it's the foundation everything else is built on.</p></div>
+  <button class="btn-primary" onclick="showScreen('why-workshop')">Next: Why Workshop →</button>
+</div>
+
+<!-- WHY WORKSHOP -->
+<div id="screen-why-workshop" class="screen">
+  <div class="page-header"><div class="page-tag">Module 1</div><h2>The Why Workshop</h2><p>Every client I've coached who fell off the wagon had the same problem. It wasn't that they didn't know what to do. It was that when life got in the way, they didn't have a strong enough reason to keep going. That changes here.</p></div>
+  <div class="video-embed"><iframe src="https://www.youtube.com/embed/7ila_L3CTP4" allowfullscreen></iframe></div>
+  <div class="content-section">
+    <h4>Why Your Why Matters</h4>
+    <p>Motivation is unreliable. It shows up when things are going well and disappears the moment you need it most. What doesn't disappear is a reason that actually means something to you personally. That's what we're finding here — not a goal, not a target. A why.</p>
+  </div>
+  <div class="golden-circle-grid">
+    <div class="gc-card why"><div class="gc-label">Start with</div><div class="gc-title">🎯 WHY</div><p>Your purpose — the reason behind everything you do</p></div>
+    <div class="gc-card how"><div class="gc-label">Then</div><div class="gc-title">⚙️ HOW</div><p>Your process — how you show up every day</p></div>
+    <div class="gc-card what"><div class="gc-label">Then</div><div class="gc-title">📦 WHAT</div><p>Your outcomes — the results you're working towards</p></div>
+  </div>
+  <div class="callout" style="margin-bottom:28px;"><p>Most people start with WHAT they want to change. High performers start with <strong>WHY</strong>. Everything in this section works from the inside out.</p></div>
+  <div class="content-section">
+    <h4>Step 1 — Screen Time Audit</h4>
+    <p>Before anything else, let's look at where your time is actually going. Whatever you see is either aligned with who you say you want to be, or it isn't.</p>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">📱 iPhone — how to check <span class="acc-icon">▾</span></div><div class="accordion-body"><p>Settings → Screen Time → See All Activity → Week → Most Used → Show Categories</p></div></div>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">🤖 Android — how to check <span class="acc-icon">▾</span></div><div class="accordion-body"><p>Settings → Digital Wellbeing and Parental Controls → tap the chart</p></div></div>
+  </div>
+  <div class="content-section">
+    <h4>Step 2 — Reflection Questions</h4>
+    <p>Write your answers here. Five minutes spent on this will carry you through the next 90 days.</p>
+    <table class="input-table" style="margin-top:16px;">
+      <tr><th colspan="2">Your Answers</th></tr>
+      <tr><td>What do you want to feel more of in your daily life?</td><td><input type="text" placeholder="Your answer..."></td></tr>
+      <tr><td>What has your health and energy cost you so far?</td><td><input type="text" placeholder="Your answer..."></td></tr>
+      <tr><td>If you felt stronger and healthier, what would actually change?</td><td><input type="text" placeholder="Your answer..."></td></tr>
+      <tr><td>Who in your life would benefit from you showing up at your best?</td><td><input type="text" placeholder="Your answer..."></td></tr>
+    </table>
+  </div>
+  <div class="content-section">
+    <h4>Step 3 — Build Your Why Statement</h4>
+    <p>Pull your answers into one sentence:</p>
+    <div class="quote-block" style="margin:16px 0;"><p>"I am committed to my health because I want to [feel/achieve], so that I can [impact on your life or the people around you]."</p></div>
+    <p style="font-size:13px;color:#666;margin-bottom:16px;"><strong>Examples:</strong> "I want more energy so I can actually be present with my kids after work" · "I want to feel strong and confident so I stop letting tiredness make my decisions for me"</p>
+    <label style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:8px;">Your Why Statement</label>
+    <textarea class="why-input" placeholder="Write it here — then screenshot it. This is your anchor."></textarea>
+    <p style="font-size:13px;color:#888;margin-top:8px;">📸 Screenshot it. Save it somewhere you'll see it every day.</p>
+  </div>
+  <div class="callout"><p><strong>Done?</strong> Move to Movement next.</p></div>
+  <button class="btn-primary" onclick="showScreen('movement')">Next: Movement →</button>
+</div>
+
+<!-- MOVEMENT -->
+<div id="screen-movement" class="screen">
+  <div class="page-header"><div class="page-tag">Module 2</div><h2>Movement</h2><p>Forget everything you think a training program has to look like. This is built around your schedule, your level, and your goal. If you're carrying an injury, read this before you start.</p></div>
+  <div class="video-embed"><iframe src="https://www.youtube.com/embed/2k1gt5TiZLo" allowfullscreen></iframe></div>
+  <div class="content-section">
+    <h4>Injury Check — Read Before You Continue</h4>
+    <div class="injury-option" onclick="toggleInjury(this)"><div class="injury-option-header">✅ No — I'm good to go</div><div class="injury-option-body"><p>Good. Use the training generator below to get your plan. It'll give you your full weekly schedule, warm ups, sets and core work — all based on your answers.</p></div></div>
+    <div class="injury-option" onclick="toggleInjury(this)"><div class="injury-option-header">⚠️ Yes — I have an injury or concern</div><div class="injury-option-body"><p>Don't guess. Book a free 20 minute call and we'll figure out what you can and can't do safely before you start. It takes 20 minutes and it's worth it.</p><a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank"><button class="btn-primary" style="margin-top:8px;">Book a Free Call</button></a></div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(this,'tab-training-gen')">Generate My Plan</button>
+    <button class="tab-btn" onclick="switchTab(this,'tab-exercise-lib-m')">Exercise Library</button>
+  </div>
+  <div id="tab-training-gen" class="tab-content active">
+    <div class="callout"><p>Use the plan builder below. It'll give you your full weekly schedule based on your location, experience level, and how many days per week you're training.</p></div>
+    <div class="tool-embed"><iframe src="https://dannyjfit.github.io/training-plan-generator/" title="Training Plan Generator"></iframe></div>
+  </div>
+  <div id="tab-exercise-lib-m" class="tab-content">
+    <div class="callout"><p>Every exercise in your program has a video demonstration from me. Use this to check form before and during your sessions.</p></div>
+    <div class="tool-embed" style="height:auto;"><iframe src="https://dannyjfit.github.io/exercise-library/" title="Exercise Library" style="height:750px;width:100%;border:none;"></iframe></div>
+  </div>
+  <div class="callout"><p><strong>Done?</strong> Move to Nutrition next.</p></div>
+  <button class="btn-primary" onclick="showScreen('nutrition')">Next: Nutrition →</button>
+</div>
+
+<!-- NUTRITION -->
+<div id="screen-nutrition" class="screen">
+  <div class="page-header"><div class="page-tag">Module 3</div><h2>Nutrition</h2><p>This section is about simplifying nutrition so it actually works for your life — not making it more complicated.</p></div>
+  <div class="video-embed"><iframe src="https://www.youtube.com/embed/0aE7vTH4Fyk" allowfullscreen></iframe></div>
+  <div class="content-section">
+    <h4>Why Nutrition Keeps Falling Apart</h4>
+    <p>Most busy professionals aren't failing at nutrition because they lack discipline. They're failing because the advice they've been given was never designed for someone running at their pace. Meal prep every Sunday. Track every macro. Cook fresh every evening. Never eat out.</p>
+    <p>That works if you have the time and headspace. Most people reading this don't — and that's fine. The goal here isn't perfection, it's a framework simple enough that you'll actually repeat it. You don't need to overhaul your diet. You need to remove the decisions that keep tripping you up.</p>
+  </div>
+  <div class="content-section">
+    <h4>Step 1 — Get Your Numbers</h4>
+    <p>Before food lists or meal plans, get your numbers first. This tells you exactly what you're working with.</p>
+    <div class="tool-embed"><iframe src="https://dannyjfit.github.io/calorie-calculator/" title="Calorie Calculator"></iframe></div>
+  </div>
+  <div class="content-section">
+    <h4>The Three Defaults</h4>
+    <p>The single most effective nutrition habit for busy people isn't tracking. It's having a default for each meal so you're never starting from scratch.</p>
+    <ul><li><strong>A default breakfast</strong> — high protein, no thought required, done in under 5 minutes.</li><li><strong>A default lunch</strong> — something you can grab or put together quickly, without overthinking.</li><li><strong>A default dinner</strong> — a meal you can cook in 20 minutes or less, most nights of the week.</li></ul>
+    <p>When the default is good enough, you stop relying on willpower and start relying on habit. Consistency follows.</p>
+  </div>
+  <div class="content-section">
+    <h4>Your Meal Plans</h4>
+    <p>Built around your calorie target, dietary preference, and cooking setup. Select your calorie target from the calculator above and follow the instructions.</p>
+    <div class="tool-embed"><iframe src="https://dannyjfit.github.io/meal-plan-generator/" title="Meal Plan Generator"></iframe></div>
+  </div>
+  <div class="content-section">
+    <h4>Your Food Lists</h4>
+    <p>Use these as your reference. Build your meals from these groups.</p>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">🥩 Protein Sources <span class="acc-icon">▾</span></div><div class="accordion-body"><p>The anchor of every meal. Aim for <strong>1.6–2.2g of protein per kg of bodyweight daily.</strong></p><table class="data-table"><tr><th>Food</th><th>Per 100g</th><th>Common Serving</th></tr><tr><td>Chicken breast</td><td>165 kcal</td><td>~200 kcal (120g cooked)</td></tr><tr><td>Chicken thighs (skinless)</td><td>175 kcal</td><td>~200 kcal (115g cooked)</td></tr><tr><td>Lean beef mince (5% fat)</td><td>150 kcal</td><td>~225 kcal (150g raw)</td></tr><tr><td>Salmon fillet</td><td>208 kcal</td><td>~310 kcal (150g)</td></tr><tr><td>Tuna (tinned in water)</td><td>100 kcal</td><td>~130 kcal (130g drained)</td></tr><tr><td>Eggs (whole)</td><td>155 kcal</td><td>~70 kcal (1 large egg)</td></tr><tr><td>Greek yoghurt (0% fat)</td><td>57 kcal</td><td>~115 kcal (200g)</td></tr><tr><td>Cottage cheese</td><td>98 kcal</td><td>~145 kcal (150g)</td></tr><tr><td>Whey protein powder</td><td>370 kcal</td><td>~120 kcal (1 scoop/30g)</td></tr><tr><td>Tofu (firm)</td><td>76 kcal</td><td>~115 kcal (150g)</td></tr><tr><td>Lentils (cooked)</td><td>116 kcal</td><td>~175 kcal (150g)</td></tr><tr><td>Chickpeas (cooked)</td><td>164 kcal</td><td>~245 kcal (150g)</td></tr></table></div></div>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">🌾 Carbohydrate Sources <span class="acc-icon">▾</span></div><div class="accordion-body"><p>Carbs aren't the enemy — they're fuel, especially if you're training. <strong>Focus on whole food carbs. Post-training is a good time to eat them.</strong></p><table class="data-table"><tr><th>Food</th><th>Per 100g</th><th>Common Serving</th></tr><tr><td>White rice (cooked)</td><td>130 kcal</td><td>~195 kcal (150g)</td></tr><tr><td>Brown rice (cooked)</td><td>112 kcal</td><td>~170 kcal (150g)</td></tr><tr><td>Rolled oats (dry)</td><td>379 kcal</td><td>~190 kcal (50g)</td></tr><tr><td>Sweet potato</td><td>86 kcal</td><td>~130 kcal (150g)</td></tr><tr><td>Wholegrain pasta (cooked)</td><td>124 kcal</td><td>~185 kcal (150g)</td></tr><tr><td>Sourdough bread</td><td>274 kcal</td><td>~137 kcal (1 thick slice)</td></tr><tr><td>Quinoa (cooked)</td><td>120 kcal</td><td>~180 kcal (150g)</td></tr><tr><td>Banana</td><td>89 kcal</td><td>~90 kcal (1 medium)</td></tr><tr><td>Mixed berries</td><td>45 kcal</td><td>~45 kcal (100g)</td></tr></table></div></div>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">🥑 Fat Sources <span class="acc-icon">▾</span></div><div class="accordion-body"><p>Healthy fats support hormones, brain function, and satiety. Don't cut them out. <strong>Include a portion at each meal.</strong></p><table class="data-table"><tr><th>Food</th><th>Per 100g</th><th>Common Serving</th></tr><tr><td>Avocado</td><td>160 kcal</td><td>~160 kcal (half)</td></tr><tr><td>Olive oil</td><td>884 kcal</td><td>~40 kcal (1 tsp)</td></tr><tr><td>Almonds</td><td>579 kcal</td><td>~165 kcal (small handful)</td></tr><tr><td>Peanut butter (natural)</td><td>588 kcal</td><td>~90 kcal (1 tbsp)</td></tr><tr><td>Salmon</td><td>208 kcal</td><td>~310 kcal (150g)</td></tr><tr><td>Dark chocolate (85%+)</td><td>598 kcal</td><td>~120 kcal (2 squares)</td></tr><tr><td>Chia seeds</td><td>486 kcal</td><td>~49 kcal (1 tbsp)</td></tr></table></div></div>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">🥦 Vegetables <span class="acc-icon">▾</span></div><div class="accordion-body"><p>Eat these freely. Low calorie, high fibre, and most people aren't eating enough of them. <strong>Half your plate should be veg at lunch and dinner.</strong></p><table class="data-table"><tr><th>Food</th><th>Per 100g</th><th>Common Serving</th></tr><tr><td>Broccoli</td><td>34 kcal</td><td>~51 kcal (150g)</td></tr><tr><td>Spinach (raw)</td><td>23 kcal</td><td>~14 kcal (60g handful)</td></tr><tr><td>Mixed salad leaves</td><td>20 kcal</td><td>~12 kcal (60g)</td></tr><tr><td>Peppers</td><td>31 kcal</td><td>~31 kcal (1 medium)</td></tr><tr><td>Cherry tomatoes</td><td>18 kcal</td><td>~18 kcal (100g)</td></tr><tr><td>Courgette</td><td>17 kcal</td><td>~26 kcal (150g)</td></tr><tr><td>Mushrooms</td><td>22 kcal</td><td>~33 kcal (150g)</td></tr><tr><td>Carrots</td><td>41 kcal</td><td>~62 kcal (1 medium)</td></tr></table></div></div>
+  </div>
+  <div class="content-section">
+    <h4>Building Your Plate (Without Tracking)</h4>
+    <p>If you'd rather not count calories, use this as your guide. Do this at every meal and you'll be close to where you need to be without tracking a single calorie.</p>
+    <div class="plate-grid">
+      <div class="plate-item"><span class="plate-icon">✋</span><div><h4>Protein</h4><p>Palm-sized portion (~25–35g protein)</p></div></div>
+      <div class="plate-item"><span class="plate-icon">✊</span><div><h4>Carbs</h4><p>Fist-sized portion</p></div></div>
+      <div class="plate-item"><span class="plate-icon">👍</span><div><h4>Fats</h4><p>Thumb-sized portion</p></div></div>
+      <div class="plate-item"><span class="plate-icon">🥦</span><div><h4>Veg</h4><p>Fill the rest of the plate</p></div></div>
     </div>
+  </div>
+  <div class="content-section">
+    <h4>Practical Habits That Actually Make a Difference</h4>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">💧 Hydration <span class="acc-icon">▾</span></div><div class="accordion-body"><p>Aim for 2.5–3 litres of water per day. Most people are mildly dehydrated most of the time — it affects focus, energy, and mood more than they realise.</p><ul><li>Start the day with a full glass before coffee</li><li>Keep a water bottle on your desk</li><li>Add a pinch of salt or electrolytes if you're training hard</li><li>If you're tired at 3pm, drink water before reaching for caffeine</li></ul></div></div>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">🍽️ Eat Until 80% Full <span class="acc-icon">▾</span></div><div class="accordion-body"><p>Your body takes roughly 20 minutes to register fullness. Put your fork down between bites, eat without screens when you can, and stop before you feel stuffed. You'll eat less without trying.</p></div></div>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">🛒 Fix Your Food Environment <span class="acc-icon">▾</span></div><div class="accordion-body"><p>What's in your kitchen and at your desk will determine what you eat under pressure — not your intentions.</p><ul><li>Keep high-protein snacks visible and easy to grab (Greek yoghurt, boiled eggs, mixed nuts)</li><li>Remove the stuff you'll reach for when you're tired or stressed</li><li>Identify better options at your regular restaurants now, so you're not deciding on the fly</li><li>Batch cook once or twice a week — even just protein and rice means a default is always available</li></ul></div></div>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">☕ Caffeine & Alcohol <span class="acc-icon">▾</span></div><div class="accordion-body"><p><strong>Caffeine:</strong> Works. Cut off at 2pm — it has a half-life of 5–6 hours and will affect sleep quality even if you can fall asleep. Don't use it to replace sleep. 1–3 cups daily is fine for most people.</p><p><strong>Alcohol:</strong> Worth being honest about. It affects sleep quality significantly, elevates cortisol, and disrupts recovery. It doesn't have to be zero — but if performance is the goal, most people benefit from being more intentional about when and how much.</p></div></div>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">🔢 Should You Track Calories? <span class="acc-icon">▾</span></div><div class="accordion-body"><p>Tracking for a period of time is one of the most useful things you can do — not forever, just long enough to understand what's actually in the food you eat regularly. Most people are surprised. Use MyFitnessPal or Cronometer for 2–4 weeks, log everything, then decide whether to keep tracking or use the plate method. Either works.</p></div></div>
+  </div>
+  <div class="callout"><p><strong>Done?</strong> Move to Recovery next.</p></div>
+  <button class="btn-primary" onclick="showScreen('recovery')">Next: Recovery →</button>
+</div>
 
-    <div class="sidebar-section">
-      <div class="sidebar-label">Intro Videos</div>
-      <div class="sidebar-item" onclick="showScreen('welcome-video')">
-        <span class="icon">▶</span> Welcome
-      </div>
-      <div class="sidebar-item" onclick="showScreen('why-video')">
-        <span class="icon">▶</span> Find Your Why
-      </div>
+<!-- RECOVERY -->
+<div id="screen-recovery" class="screen">
+  <div class="page-header"><div class="page-tag">Module 4</div><h2>Recovery</h2><p>Most people treat recovery like an optional extra. The clients who make the biggest changes are the ones who take this as seriously as their training. Go through all of it, even if you think you've got it handled.</p></div>
+  <div class="video-embed"><iframe src="https://www.youtube.com/embed/0LAAa14Je1w" allowfullscreen></iframe></div>
+  <div class="content-section">
+    <h4>😴 Sleep</h4>
+    <p>Most of my clients are losing more ground here than anywhere else — and they don't even realise it. Poor sleep silently wrecks your energy, your mood, your decision-making, and your results. This isn't a nice-to-have. It's the foundation.</p>
+    <table class="data-table" style="margin-top:16px;"><tr><th>Rule</th><th>Why it matters</th></tr><tr><td>7–9 hours per night</td><td>Non-negotiable for performance and recovery</td></tr><tr><td>No screens 1 hour before bed</td><td>Blue light suppresses melatonin and delays sleep</td></tr><tr><td>Consistent sleep and wake time</td><td>Including weekends — your body runs on rhythm</td></tr><tr><td>No caffeine after 2pm</td><td>Caffeine has a 6 hour half-life</td></tr><tr><td>Cool, dark room</td><td>Core body temp needs to drop to initiate sleep</td></tr><tr><td>Phone off the bedside table</td><td>Notifications spike cortisol at 3am</td></tr><tr><td>Read before sleep instead of scrolling</td><td>Reduces stimulation, signals wind-down</td></tr></table>
+    <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Your Commitment</p>
+    <table class="input-table"><tr><td>What time will you be in bed by?</td><td><input type="text" placeholder="e.g. 10:30pm"></td></tr><tr><td>What time will your alarm be set for?</td><td><input type="text" placeholder="e.g. 6:30am"></td></tr></table>
+  </div>
+  <div class="content-section">
+    <h4>🌬️ Breathwork — Box Breathing</h4>
+    <p>Use this daily — when you feel overwhelmed, before a big meeting, or to start your day grounded. Four sides, four seconds each: Inhale 4 → Hold 4 → Exhale 4 → Hold 4. Repeat 4 rounds.</p>
+    <div class="tool-embed"><iframe src="https://dannyjfit.github.io/recovery-box-breathing/" title="Box Breathing"></iframe></div>
+    <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Your Commitment</p>
+    <table class="input-table"><tr><td>When will you do your box breathing?</td><td><input type="text" placeholder="Morning / Evening / Both"></td></tr></table>
+  </div>
+  <div class="content-section">
+    <h4>🧘 Recovery Videos</h4>
+    <p>Use these alongside your breathwork. Even 5–10 minutes of guided practice changes how you process stress over time.</p>
+    <div class="video-list">
+      <div class="video-item"><div class="video-item-header"><div class="video-thumb">🎬</div><div class="video-item-info"><h4>Full Body Cooldown Stretch</h4><p>Post-workout or before bed</p></div><button class="video-toggle-btn" onclick="toggleVideo(this,'oN8xV3Kb5-Q')">Watch</button></div><div class="video-player-wrap"><iframe src="" frameborder="0" allowfullscreen></iframe></div></div>
+      <div class="video-item"><div class="video-item-header"><div class="video-thumb">🎬</div><div class="video-item-info"><h4>Zone 2 Cardio Explainer</h4><p>The most underrated tool for longevity and recovery</p></div><button class="video-toggle-btn" onclick="toggleVideo(this,'FdUFhUuJl1E')">Watch</button></div><div class="video-player-wrap"><iframe src="" frameborder="0" allowfullscreen></iframe></div></div>
+      <div class="video-item"><div class="video-item-header"><div class="video-thumb">🎬</div><div class="video-item-info"><h4>Guided Meditation</h4><p>10 minutes — use when your head won't switch off</p></div><button class="video-toggle-btn" onclick="toggleVideo(this,'5iG07sH-aG0')">Watch</button></div><div class="video-player-wrap"><iframe src="" frameborder="0" allowfullscreen></iframe></div></div>
     </div>
+    <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Your Commitment</p>
+    <table class="input-table"><tr><td>Which session will you use?</td><td><input type="text" placeholder="e.g. Box breathing"></td></tr><tr><td>When will you do it?</td><td><input type="text" placeholder="e.g. Every evening before bed"></td></tr></table>
+  </div>
+  <div class="content-section">
+    <h4>🧠 Stress Management</h4>
+    <p>You can't outwork a broken stress response. These aren't complicated — they just require you to actually do them.</p>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">🚶 Daily Movement as Stress Regulation <span class="acc-icon">▾</span></div><div class="accordion-body"><p>A 20 minute walk changes your state. Not exercise for calories — movement as a reset. If you do nothing else from this section, do this.</p></div></div>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">⏱️ The 10 Minute Rule <span class="acc-icon">▾</span></div><div class="accordion-body"><p>When something feels overwhelming, give yourself 10 minutes to sit with it before reacting. No phone, no distraction. Let the feeling pass before making a decision.</p></div></div>
+    <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">📓 Journalling — 5 Minutes, Morning or Evening <span class="acc-icon">▾</span></div><div class="accordion-body"><table class="input-table"><tr><th colspan="2">Journal Prompts</th></tr><tr><td>What's on my mind right now?</td><td><input type="text" placeholder="Your answer..."></td></tr><tr><td>What went well today?</td><td><input type="text" placeholder="Your answer..."></td></tr><tr><td>What do I want tomorrow to look like?</td><td><input type="text" placeholder="Your answer..."></td></tr></table></div></div>
+  </div>
+  <div class="content-section">
+    <h4>✅ Weekly Recovery Checklist</h4>
+    <p>Use this every Sunday. Be honest.</p>
+    <ul class="checklist">
+      <li><input type="checkbox"> Got 7+ hours sleep at least 5 nights</li>
+      <li><input type="checkbox"> Completed at least one box breathing session</li>
+      <li><input type="checkbox"> Did at least one guided meditation</li>
+      <li><input type="checkbox"> Had at least one screen-free wind-down before bed</li>
+      <li><input type="checkbox"> Hit my daily steps at least 4 days</li>
+      <li><input type="checkbox"> Journalled at least twice</li>
+    </ul>
+  </div>
+  <div class="callout"><p><strong>Done?</strong> Last step — build your plan.</p></div>
+  <button class="btn-primary" onclick="showScreen('build-plan')">Next: Your Plan →</button>
+</div>
 
-    <div class="sidebar-section">
-      <div class="sidebar-label">Your Plan</div>
-      <div class="sidebar-item" onclick="showScreen('movement')">
-        <span class="icon">🏋️</span> Movement
-      </div>
-      <div class="sidebar-item" onclick="showScreen('nutrition')">
-        <span class="icon">🥗</span> Nutrition
-      </div>
-      <div class="sidebar-item" onclick="showScreen('recovery')">
-        <span class="icon">🧘</span> Recovery
-      </div>
-      <div class="sidebar-item" onclick="showScreen('build-plan')">
-        <span class="icon">🗓️</span> Build Your Plan
-      </div>
+<!-- BUILD YOUR PLAN -->
+<div id="screen-build-plan" class="screen">
+  <div class="page-header"><div class="page-tag">Module 5</div><h2>Your Plan</h2><p>This is where everything comes together. Your training, your nutrition, your recovery — all in one place, built around you.</p></div>
+  <div class="video-embed"><iframe src="https://www.youtube.com/embed/dFElwPVdO3w" allowfullscreen></iframe></div>
+  <div class="content-section">
+    <h4>Before You Start — Checklist</h4>
+    <p>Make sure you've worked through all the modules first. Your plan is built from your answers.</p>
+    <ul class="checklist">
+      <li><input type="checkbox"> Completed the <strong>Why Workshop</strong> and have your why statement</li>
+      <li><input type="checkbox"> Chosen your training location, level, and frequency in <strong>Movement</strong></li>
+      <li><input type="checkbox"> Run your <strong>calorie calculator</strong> in Nutrition</li>
+      <li><input type="checkbox"> Set up your <strong>recovery non-negotiables</strong> in Recovery</li>
+    </ul>
+  </div>
+  <div class="content-section">
+    <h4>Your Why Statement</h4>
+    <p>Paste your why statement here. Read it before you train. Read it when you don't want to.</p>
+    <textarea class="why-input" placeholder="Paste your why statement here..."></textarea>
+  </div>
+  <div class="content-section">
+    <h4>Your Daily Targets</h4>
+    <table class="input-table">
+      <tr><th colspan="2">Nutrition Targets</th></tr>
+      <tr><td>Daily Calories</td><td><input type="text" placeholder="From your calculator"></td></tr>
+      <tr><td>Daily Protein</td><td><input type="text" placeholder="From your calculator"></td></tr>
+      <tr><td>Meals per day</td><td><input type="text" placeholder="e.g. 3 + 1 snack"></td></tr>
+    </table>
+    <table class="input-table">
+      <tr><th colspan="2">Recovery Non-Negotiables</th></tr>
+      <tr><td>Sleep target</td><td><input type="text" placeholder="e.g. 7.5 hours"></td></tr>
+      <tr><td>Sleep window</td><td><input type="text" placeholder="e.g. 10:30pm – 6am"></td></tr>
+      <tr><td>Morning routine</td><td><input type="text" placeholder="e.g. Walk + box breathing"></td></tr>
+      <tr><td>Stress tool</td><td><input type="text" placeholder="e.g. 10 min walk at lunch"></td></tr>
+      <tr><td>Weekly recovery session</td><td><input type="text" placeholder="e.g. Sunday meditation + checklist"></td></tr>
+    </table>
+  </div>
+  <div class="content-section">
+    <h4>📅 Your Weekly Structure</h4>
+    <p>Fill this in based on your training plan, calorie targets, and recovery commitments. This is your template week.</p>
+    <table class="weekly-table">
+      <tr><th>Day</th><th>Training / Rest</th><th>Nutrition Focus</th><th>Recovery</th></tr>
+      <tr><td>Monday</td><td><textarea placeholder="e.g. Upper body session"></textarea></td><td><textarea placeholder="e.g. Hit protein target"></textarea></td><td><textarea placeholder="e.g. Box breathing AM"></textarea></td></tr>
+      <tr><td>Tuesday</td><td><textarea placeholder="e.g. Active rest / walk"></textarea></td><td><textarea placeholder="e.g. Hit protein target"></textarea></td><td><textarea placeholder="e.g. 10 min walk minimum"></textarea></td></tr>
+      <tr><td>Wednesday</td><td><textarea placeholder="e.g. Lower body session"></textarea></td><td><textarea placeholder="e.g. Hit protein target"></textarea></td><td><textarea placeholder="e.g. Meditation PM"></textarea></td></tr>
+      <tr><td>Thursday</td><td><textarea placeholder="e.g. Active rest / walk"></textarea></td><td><textarea placeholder="e.g. Hit protein target"></textarea></td><td><textarea placeholder="e.g. 10 min walk minimum"></textarea></td></tr>
+      <tr><td>Friday</td><td><textarea placeholder="e.g. Full body session"></textarea></td><td><textarea placeholder="e.g. Hit protein target"></textarea></td><td><textarea placeholder="e.g. Box breathing — wind down early"></textarea></td></tr>
+      <tr><td>Saturday</td><td><textarea placeholder="e.g. Optional session / full rest"></textarea></td><td><textarea placeholder="e.g. Relaxed — stay roughly on track"></textarea></td><td><textarea placeholder="e.g. Longer walk or full rest"></textarea></td></tr>
+      <tr><td>Sunday</td><td><textarea placeholder="Rest"></textarea></td><td><textarea placeholder="e.g. Prep meals for the week"></textarea></td><td><textarea placeholder="e.g. Weekly recovery checklist"></textarea></td></tr>
+    </table>
+  </div>
+  <div class="quote-block"><p>You've got everything you need here. The only variable now is whether you actually use it. Most people won't — not because they can't, but because they keep waiting for the perfect moment or the perfect version of themselves to show up first. That version shows up by doing the work, not before it. Start today. Adjust as you go.</p></div>
+  <div class="callout"><p><strong>One last step.</strong> Book a free 30-minute Performance Review — I'll look at what you've built, spot what's missing, and tell you exactly what to focus on first.</p></div>
+  <a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank"><button class="btn-primary">Book Your Free Review →</button></a>
+</div>
+
+<!-- STANDALONE TOOLS -->
+<div id="screen-calorie-calc" class="screen"><div class="page-header"><div class="page-tag">Tool</div><h2>Calorie Calculator</h2><p>Work out exactly how much you should be eating to hit your goal.</p></div><div class="tool-embed"><iframe src="https://dannyjfit.github.io/calorie-calculator/" title="Calorie Calculator"></iframe></div></div>
+<div id="screen-exercise-lib" class="screen"><div class="page-header"><div class="page-tag">Tool</div><h2>Exercise Library</h2><p>95 exercises across bodyweight, dumbbell, barbell and kettlebell — every one filmed by me. Use this to check form or find alternatives.</p></div><div class="tool-embed" style="height:auto;"><iframe src="https://dannyjfit.github.io/exercise-library/" title="Exercise Library" style="height:750px;width:100%;border:none;"></iframe></div></div>
+<div id="screen-meal-gen" class="screen"><div class="page-header"><div class="page-tag">Tool</div><h2>Meal Plan Generator</h2><p>A 5-day meal plan built around your calories, your preferences, and your actual life.</p></div><div class="tool-embed"><iframe src="https://dannyjfit.github.io/meal-plan-generator/" title="Meal Plan Generator"></iframe></div></div>
+<div id="screen-training-gen" class="screen"><div class="page-header"><div class="page-tag">Tool</div><h2>Training Plan Generator</h2><p>Generate a training plan based on your available days, equipment, and goals.</p></div><div class="tool-embed"><iframe src="https://dannyjfit.github.io/training-plan-generator/" title="Training Plan Generator"></iframe></div></div>
+
+<!-- 1:1 COACHING -->
+<div id="screen-coaching" class="screen">
+  <div class="sales-hero">
+    <div class="tag">Work With Me</div>
+    <h2>Ready to go faster?</h2>
+    <p>The program gives you the framework. I give you the accountability, the personalisation, and the push you actually need to follow through on it.</p>
+    <div class="price-block"><div class="price">AED 499</div><div class="period">per month · no contracts · cancel any time</div></div><br>
+    <a href="https://theperformancecoach.ae/book-a-free-call/" target="_blank" style="text-decoration:none;"><button class="btn-primary" style="font-size:13px;padding:16px 36px;">Book a Free Call</button></a>
+  </div>
+  <div class="includes-grid">
+    <div class="include-item"><span class="inc-icon">📋</span><div><h4>Personalised Programming</h4><p>Training and nutrition built specifically around your schedule, goals, and life — not a template.</p></div></div>
+    <div class="include-item"><span class="inc-icon">📞</span><div><h4>Weekly Check-ins</h4><p>We review what's working, what's not, and adjust. No guessing, no wasted weeks.</p></div></div>
+    <div class="include-item"><span class="inc-icon">💬</span><div><h4>Direct Access</h4><p>Message me when something comes up. You're not waiting for the next session to get an answer.</p></div></div>
+    <div class="include-item"><span class="inc-icon">🎯</span><div><h4>Accountability</h4><p>I hold you to the standard you say you want. That's the whole point.</p></div></div>
+    <div class="include-item"><span class="inc-icon">🧠</span><div><h4>Mindset Coaching</h4><p>The physical side is only part of it. We work on the thinking patterns running in the background too.</p></div></div>
+    <div class="include-item"><span class="inc-icon">🔄</span><div><h4>No Lock-in</h4><p>Rolling monthly. If it's not working, you leave. Simple.</p></div></div>
+  </div>
+  <div class="content-section" style="background:var(--dark);padding:36px;">
+    <h4 style="color:var(--blue);">Who I Work With</h4>
+    <p style="color:rgba(255,255,255,0.7);">I work with a small number of clients at any one time — busy professionals and entrepreneurs in Dubai who are serious about performing at their best. Not people who want to look good on holiday. People who want to show up better at work, at home, and for themselves — and who are willing to put in the work to do it.</p>
+    <p style="color:rgba(255,255,255,0.7);">If that's you, book a call. There's no pressure, no pitch. We figure out if we're the right fit, and go from there.</p>
+    <a href="https://theperformancecoach.ae/book-a-free-call/" target="_blank" style="text-decoration:none;"><button class="btn-primary" style="margin-top:16px;">Book a Free Call</button></a>
+  </div>
+  <div style="margin-top:28px;">
+    <div class="page-tag" style="margin-bottom:16px;">What People Say</div>
+    <div style="background:var(--dark);border-radius:12px;padding:32px;">
+      <div class="testimonial-card"><p>"Having Danny as a coach is really such an empowering experience."</p><div class="attr">Sharon K — Founder</div></div>
+      <div class="testimonial-card"><p>"Danny is an outstanding PT, coach and mentor — far more than just showing you different exercises, he considers all your health and wellbeing circumstances and goes above and beyond."</p><div class="attr">James H — Founder</div></div>
+      <div class="testimonial-card"><p>"Training with Danny is simply life changing."</p><div class="attr">Maan Hamadeh</div></div>
+      <div class="testimonial-card"><p>"He helped me lose 6kgs in just a few months. Danny taught me to completely change my eating habits with a steady program that manages around my busy work schedule."</p><div class="attr">Amy Ross</div></div>
     </div>
+  </div>
+  <div style="text-align:center;margin-top:28px;padding:40px;background:white;border-radius:12px;border:1px solid rgba(0,0,0,0.06);">
+    <div class="page-tag" style="margin-bottom:8px;">Not Ready to Commit?</div>
+    <h3 style="font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:12px;">Book a Free 30-Min Performance Review</h3>
+    <p style="color:#555;max-width:480px;margin:0 auto 24px;font-size:15px;">I'll review where you are, what you've built in the program, and tell you exactly what to focus on. No pitch, no pressure.</p>
+    <a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank" style="text-decoration:none;"><button class="btn-primary">Book Free Review</button></a>
+  </div>
+</div>
 
-    <div class="sidebar-section">
-      <div class="sidebar-label">Tools</div>
-      <div class="sidebar-item" onclick="showScreen('calorie-calc')">
-        <span class="icon">🔢</span> Calorie Calculator
-      </div>
-      <div class="sidebar-item" onclick="showScreen('exercise-lib')">
-        <span class="icon">📚</span> Exercise Library
-      </div>
-      <div class="sidebar-item" onclick="showScreen('meal-gen')">
-        <span class="icon">🍳</span> Meal Plan Generator
-      </div>
-      <div class="sidebar-item" onclick="showScreen('training-gen')">
-        <span class="icon">💪</span> Training Generator
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Work With Me</div>
-      <div class="sidebar-item" onclick="showScreen('coaching')">
-        <span class="icon">🎯</span> 1:1 Coaching
-      </div>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main-content">
-
-    <!-- DASHBOARD -->
-    <div id="screen-dashboard" class="screen active">
-      <div class="welcome-hero">
-        <div class="welcome-tag">Welcome to the programme</div>
-        <h1>The Ultimate<br>Performer</h1>
-        <p>For busy professionals who are ready to start putting themselves first. Everything you need is right here.</p>
-        <button class="btn-primary" onclick="showScreen('quiz')">Start Your Quiz</button>
-        <button class="btn-secondary" onclick="showScreen('welcome-video')">Watch Welcome Video</button>
-      </div>
-
-      <div style="margin-bottom: 24px;">
-        <div class="page-tag">Your Modules</div>
-        <h2 style="font-family:'DM Serif Display',serif; font-size:26px; margin-bottom:4px;">Where do you want to start?</h2>
-        <p style="color:#666; font-size:14px;">Take the quiz first to get your personalised plan, then work through each module at your own pace.</p>
-      </div>
-
-      <div class="modules-grid">
-        <div class="module-card" onclick="showScreen('quiz')">
-          <div class="module-icon">📋</div>
-          <div class="module-number">Step 1</div>
-          <h3>Take the Quiz</h3>
-          <p>Find out exactly where you are, what's holding you back, and what your priorities should be.</p>
-        </div>
-        <div class="module-card" onclick="showScreen('movement')">
-          <div class="module-icon">🏋️</div>
-          <div class="module-number">Module 1</div>
-          <h3>Movement</h3>
-          <p>Training sessions built around your schedule, your equipment, and your goals.</p>
-        </div>
-        <div class="module-card" onclick="showScreen('nutrition')">
-          <div class="module-icon">🥗</div>
-          <div class="module-number">Module 2</div>
-          <h3>Nutrition</h3>
-          <p>Simple, realistic eating that fits a busy life. No meal prep Sundays required.</p>
-        </div>
-        <div class="module-card" onclick="showScreen('recovery')">
-          <div class="module-icon">🧘</div>
-          <div class="module-number">Module 3</div>
-          <h3>Recovery</h3>
-          <p>Sleep, breathwork, and stress management — the stuff most people skip.</p>
-        </div>
-        <div class="module-card" onclick="showScreen('build-plan')">
-          <div class="module-icon">🗓️</div>
-          <div class="module-number">Module 4</div>
-          <h3>Build Your Plan</h3>
-          <p>Pull it all together into a week that actually works for your life.</p>
-        </div>
-        <div class="module-card" onclick="showScreen('coaching')">
-          <div class="module-icon">🎯</div>
-          <div class="module-number">Upgrade</div>
-          <h3>1:1 Coaching</h3>
-          <p>Ready to go faster? Work directly with Danny. AED 499/month, no lock-in.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- QUIZ -->
-    <div id="screen-quiz" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Step 1 — Start Here</div>
-        <h2>Your Performance Quiz</h2>
-        <p>This tells us where you are right now and builds your personalised starting point. Takes about 5 minutes.</p>
-      </div>
-      <div class="tool-embed">
-        <iframe src="https://dannyjfit.github.io/ultimate-performer-quiz/" title="Ultimate Performer Quiz"></iframe>
-      </div>
-    </div>
-
-    <!-- WELCOME VIDEO -->
-    <div id="screen-welcome-video" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Intro — Welcome</div>
-        <h2>Welcome to the Programme</h2>
-        <p>Watch this first. Danny walks you through exactly what this programme is, what to expect, and how to get the most out of it.</p>
-      </div>
-      <div class="video-embed">
-        <iframe src="https://www.youtube.com/embed/xeIilzlei4E" allowfullscreen></iframe>
-      </div>
-      <div class="callout">
-        <p><strong>Next up:</strong> Watch the Find Your Why video, then head into your quiz to get your personalised plan.</p>
-      </div>
-      <button class="btn-primary" onclick="showScreen('why-video')">Next: Find Your Why →</button>
-    </div>
-
-    <!-- WHY VIDEO -->
-    <div id="screen-why-video" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Intro — Find Your Why</div>
-        <h2>Find Your Why</h2>
-        <p>This is the foundation everything else is built on. Don't skip it.</p>
-      </div>
-      <div class="video-embed">
-        <iframe src="https://www.youtube.com/embed/7ila_L3CTP4" allowfullscreen></iframe>
-      </div>
-      <div class="callout">
-        <p><strong>Done?</strong> Good. Now go take the quiz — your why will inform everything about your plan.</p>
-      </div>
-      <button class="btn-primary" onclick="showScreen('quiz')">Take the Quiz →</button>
-    </div>
-
-    <!-- MOVEMENT -->
-    <div id="screen-movement" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Module 1</div>
-        <h2>Movement</h2>
-        <p>Training that fits your life. You don't need to be in the gym 5 days a week to see results.</p>
-      </div>
-
-      <div class="video-embed" style="margin-bottom:24px;">
-        <iframe src="https://www.youtube.com/embed/2k1gt5TiZLo" allowfullscreen></iframe>
-      </div>
-
-      <div class="content-section">
-        <h4>The Approach</h4>
-        <p>This isn't about grinding yourself into the ground. It's about building a consistent movement habit that raises your baseline and keeps you performing at work and at home. Three quality sessions a week beats six half-arsed ones every time.</p>
-      </div>
-
-      <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab(this, 'tab-training')">Generate My Plan</button>
-        <button class="tab-btn" onclick="switchTab(this, 'tab-exercises')">Exercise Library</button>
-      </div>
-
-      <div id="tab-training" class="tab-content active">
-        <div class="tool-embed">
-          <iframe src="https://dannyjfit.github.io/training-plan-generator/" title="Training Plan Generator"></iframe>
-        </div>
-      </div>
-
-      <div id="tab-exercises" class="tab-content">
-        <div class="tool-embed">
-          <iframe src="https://dannyjfit.github.io/exercise-library/" title="Exercise Library"></iframe>
-        </div>
-      </div>
-    </div>
-
-    <!-- NUTRITION -->
-    <div id="screen-nutrition" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Module 2</div>
-        <h2>Nutrition</h2>
-        <p>Eat well without it consuming your life. Simple principles, flexible execution.</p>
-      </div>
-
-      <div class="video-embed" style="margin-bottom:24px;">
-        <iframe src="https://www.youtube.com/embed/0aE7vTH4Fyk" allowfullscreen></iframe>
-      </div>
-
-      <div class="content-section">
-        <h4>The Approach</h4>
-        <p>You don't need a complicated diet. You need enough protein, the right calories for your goal, and a way of eating you can actually stick to. The tools below help you figure out exactly what that looks like for you.</p>
-      </div>
-
-      <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab(this, 'tab-calories')">Calorie Calculator</button>
-        <button class="tab-btn" onclick="switchTab(this, 'tab-meals')">Meal Plan Generator</button>
-      </div>
-
-      <div id="tab-calories" class="tab-content active">
-        <div class="tool-embed">
-          <iframe src="https://dannyjfit.github.io/calorie-calculator/" title="Calorie Calculator"></iframe>
-        </div>
-      </div>
-
-      <div id="tab-meals" class="tab-content">
-        <div class="tool-embed">
-          <iframe src="https://dannyjfit.github.io/meal-plan-generator/" title="Meal Plan Generator"></iframe>
-        </div>
-      </div>
-    </div>
-
-    <!-- RECOVERY -->
-    <div id="screen-recovery" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Module 3</div>
-        <h2>Recovery</h2>
-        <p>The module most people skip. It's also the one that unlocks everything else.</p>
-      </div>
-
-      <div class="video-embed" style="margin-bottom:24px;">
-        <iframe src="https://www.youtube.com/embed/0LAAa14Je1w" allowfullscreen></iframe>
-      </div>
-
-      <div class="content-section">
-        <h4>The Approach</h4>
-        <p>Sleep, stress management, and breathwork aren't soft skills — they're performance tools. If you're running on 5 hours and three coffees, no amount of training or nutrition will fix that. Start here.</p>
-      </div>
-
-      <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab(this, 'tab-breathing')">Box Breathing</button>
-        <button class="tab-btn" onclick="switchTab(this, 'tab-videos-recovery')">Recovery Videos</button>
-      </div>
-
-      <div id="tab-breathing" class="tab-content active">
-        <div class="callout">
-          <p>Use this daily. <strong>4 counts in, 4 hold, 4 out, 4 hold.</strong> Do it before a big meeting, after a hard workout, or before bed. Two minutes changes your state.</p>
-        </div>
-        <div class="tool-embed">
-          <iframe src="https://dannyjfit.github.io/recovery-box-breathing/" title="Box Breathing"></iframe>
-        </div>
-      </div>
-
-      <div id="tab-videos-recovery" class="tab-content">
-        <div class="video-list">
-          <div class="video-item">
-            <div class="video-item-header">
-              <div class="video-thumb">🎬</div>
-              <div class="video-item-info">
-                <h4>Full Body Cooldown Stretch</h4>
-                <p>5 minutes · Post-workout or before bed</p>
-              </div>
-              <button class="video-toggle-btn" onclick="toggleVideo(this, 'oN8xV3Kb5-Q')">Watch</button>
-            </div>
-            <div class="video-player-wrap">
-              <iframe src="" frameborder="0" allowfullscreen></iframe>
-            </div>
-          </div>
-          <div class="video-item">
-            <div class="video-item-header">
-              <div class="video-thumb">🎬</div>
-              <div class="video-item-info">
-                <h4>Zone 2 Cardio Explainer</h4>
-                <p>The most underrated tool for longevity and recovery</p>
-              </div>
-              <button class="video-toggle-btn" onclick="toggleVideo(this, 'FdUFhUuJl1E')">Watch</button>
-            </div>
-            <div class="video-player-wrap">
-              <iframe src="" frameborder="0" allowfullscreen></iframe>
-            </div>
-          </div>
-          <div class="video-item">
-            <div class="video-item-header">
-              <div class="video-thumb">🎬</div>
-              <div class="video-item-info">
-                <h4>Guided Meditation</h4>
-                <p>10 minutes · Use when your head won't switch off</p>
-              </div>
-              <button class="video-toggle-btn" onclick="toggleVideo(this, '5iG07sH-aG0')">Watch</button>
-            </div>
-            <div class="video-player-wrap">
-              <iframe src="" frameborder="0" allowfullscreen></iframe>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- BUILD YOUR PLAN -->
-    <div id="screen-build-plan" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Module 4</div>
-        <h2>Build Your Plan</h2>
-        <p>Pull everything together. This is where it becomes yours.</p>
-      </div>
-
-      <div class="video-embed" style="margin-bottom:24px;">
-        <iframe src="https://www.youtube.com/embed/dFElwPVdO3w" allowfullscreen></iframe>
-      </div>
-
-      <div class="content-section">
-        <h4>How to Use This</h4>
-        <p>You've been through the modules. You know what you need to eat, how to train, and how to recover. Now it's time to build a week that's actually sustainable — not perfect, but consistent.</p>
-        <p>Use the tool below to generate your weekly structure, then book a Performance Review call with Danny if you want to pressure-test it.</p>
-      </div>
-
-      <div class="tool-embed">
-        <iframe src="https://dannyjfit.github.io/dannyjfit-build-video/" title="Build Your Plan"></iframe>
-      </div>
-
-      <div class="coaching-card">
-        <h3>Want Danny to review your plan?</h3>
-        <p>Book a free 30-minute Performance Review. He'll look at what you've built, spot what's missing, and tell you exactly what to focus on first.</p>
-        <a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank" style="text-decoration:none;">
-          <button class="btn-primary">Book Your Free Review</button>
-        </a>
-      </div>
-    </div>
-
-    <!-- CALORIE CALCULATOR -->
-    <div id="screen-calorie-calc" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Tool</div>
-        <h2>Calorie Calculator</h2>
-        <p>Work out exactly how much you should be eating to hit your goal — whether that's fat loss, muscle building, or just feeling better.</p>
-      </div>
-      <div class="tool-embed">
-        <iframe src="https://dannyjfit.github.io/calorie-calculator/" title="Calorie Calculator"></iframe>
-      </div>
-    </div>
-
-    <!-- EXERCISE LIBRARY -->
-    <div id="screen-exercise-lib" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Tool</div>
-        <h2>Exercise Library</h2>
-        <p>95 exercises across bodyweight, dumbbell, barbell and kettlebell — every one filmed by Danny. Use this to check form or find alternatives.</p>
-      </div>
-      <div class="tool-embed" style="height: auto;">
-        <iframe src="https://dannyjfit.github.io/exercise-library/" title="Exercise Library" style="height: 750px; width: 100%; border: none;"></iframe>
-      </div>
-    </div>
-
-    <!-- MEAL PLAN GENERATOR -->
-    <div id="screen-meal-gen" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Tool</div>
-        <h2>Meal Plan Generator</h2>
-        <p>Get a 5-day meal plan built around your calories, your preferences, and your actual life. Air fryer or no air fryer, your call.</p>
-      </div>
-      <div class="tool-embed">
-        <iframe src="https://dannyjfit.github.io/meal-plan-generator/" title="Meal Plan Generator"></iframe>
-      </div>
-    </div>
-
-    <!-- TRAINING GENERATOR -->
-    <div id="screen-training-gen" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Tool</div>
-        <h2>Training Plan Generator</h2>
-        <p>Generate a training plan based on your available days, equipment, and goals. No fluff, no faff.</p>
-      </div>
-      <div class="tool-embed">
-        <iframe src="https://dannyjfit.github.io/training-plan-generator/" title="Training Plan Generator"></iframe>
-      </div>
-    </div>
-
-    <!-- 1:1 COACHING -->
-    <div id="screen-coaching" class="screen">
-      <div class="page-header">
-        <div class="page-tag">Work With Danny</div>
-        <h2>1:1 Coaching</h2>
-        <p>The programme gives you the framework. Danny gives you the accountability, the personalisation, and the push you actually need.</p>
-      </div>
-
-      <div class="content-section">
-        <h4>Who This Is For</h4>
-        <p>You've been through the programme. You know what to do. You're just not doing it consistently, or you want someone to hold you to a higher standard. That's what this is.</p>
-        <p>Danny works with a small number of clients at any one time — busy professionals who are serious about performing at their best, not just looking the part.</p>
-      </div>
-
-      <div class="coaching-card">
-        <h3>Monthly Coaching</h3>
-        <p>Rolling monthly, no contracts. Weekly check-ins, personalised programming, direct access to Danny. Cancel any time.</p>
-        <div class="price-tag">AED 499 <span>/ month</span></div>
-        <a href="https://theperformancecoach.ae/book-a-free-call/" target="_blank" style="text-decoration:none;">
-          <button class="btn-primary">Book a Free Call</button>
-        </a>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="content-section">
-        <h4>What People Say</h4>
-        <p style="font-style:italic; color:#555;">"Having Danny as a coach is really such an empowering experience." — <strong>Sharon K, Founder</strong></p>
-        <div class="divider"></div>
-        <p style="font-style:italic; color:#555;">"Danny is an outstanding PT, coach and mentor — far more than just showing you different exercises, he considers all your health and wellbeing circumstances and goes above and beyond." — <strong>James H, Founder</strong></p>
-        <div class="divider"></div>
-        <p style="font-style:italic; color:#555;">"Training with Danny is simply life changing." — <strong>Maan Hamadeh</strong></p>
-        <div class="divider"></div>
-        <p style="font-style:italic; color:#555;">"He helped me lose 6kgs in just a few months. Danny taught me to completely change my eating habits with a steady programme that manages around my busy work schedule." — <strong>Amy Ross</strong></p>
-      </div>
-
-      <div class="content-section">
-        <h4>Book a Performance Review</h4>
-        <p>Not ready to commit to monthly coaching? Book a free 30-minute Performance Review. Danny will review where you are, what you've built, and what to prioritise. No pitch, no pressure.</p>
-        <a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank" style="text-decoration:none;">
-          <button class="btn-primary" style="margin-top:12px;">Book Free Review</button>
-        </a>
-      </div>
-    </div>
-
-  </main>
+</main>
 </div>
 
 <script>
-  // ===== SUPABASE INIT =====
-  const { createClient } = supabase;
-  const _supabase = createClient(
-    'https://surkhxljptfidlmrjlmv.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmtoeGxqcHRmaWRsbXJqbG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTY2NjgsImV4cCI6MjA5MzYzMjY2OH0.lLOfYp004WMT2gw-_lWXNIEXpgxglRJzbzkhTZHRMu4'
-  );
+const{createClient}=supabase;
+const _supabase=createClient('https://surkhxljptfidlmrjlmv.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmtoeGxqcHRmaWRsbXJqbG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTY2NjgsImV4cCI6MjA5MzYzMjY2OH0.lLOfYp004WMT2gw-_lWXNIEXpgxglRJzbzkhTZHRMu4');
 
-  // ===== AUTH STATE =====
-  async function initAuth() {
-    const { data: { session } } = await _supabase.auth.getSession();
-    if (session) {
-      showApp(session.user.email);
-    } else {
-      showAuthScreen();
-    }
-
-    _supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        showApp(session.user.email);
-      }
-      if (event === 'SIGNED_OUT') {
-        showAuthScreen();
-      }
-    });
-  }
-
-  function showApp(email) {
-    document.getElementById('auth-screen').classList.remove('visible');
-    document.getElementById('nav-user-email').textContent = email;
-    showScreen('dashboard');
-  }
-
-  function showAuthScreen() {
-    document.getElementById('auth-screen').classList.add('visible');
-  }
-
-  // ===== LOGIN =====
-  async function handleLogin() {
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value;
-    const msg = document.getElementById('login-msg');
-    const btn = document.querySelector('#auth-login-view .auth-btn');
-
-    msg.className = 'auth-msg';
-    msg.textContent = '';
-
-    if (!email || !password) {
-      msg.className = 'auth-msg error';
-      msg.textContent = 'Please enter your email and password.';
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Signing in...';
-
-    const { error } = await _supabase.auth.signInWithPassword({ email, password });
-
-    btn.disabled = false;
-    btn.textContent = 'Sign In';
-
-    if (error) {
-      msg.className = 'auth-msg error';
-      msg.textContent = error.message === 'Invalid login credentials'
-        ? 'Email or password is incorrect.'
-        : error.message;
-    }
-  }
-
-  // ===== FORGOT PASSWORD =====
-  async function handleForgot() {
-    const email = document.getElementById('forgot-email').value.trim();
-    const msg = document.getElementById('forgot-msg');
-    const btn = document.querySelector('#auth-forgot-view .auth-btn');
-
-    msg.className = 'auth-msg';
-    msg.textContent = '';
-
-    if (!email) {
-      msg.className = 'auth-msg error';
-      msg.textContent = 'Please enter your email.';
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
-
-    const { error } = await _supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://app.theperformancecoach.ae'
-    });
-
-    btn.disabled = false;
-    btn.textContent = 'Send Reset Link';
-
-    if (error) {
-      msg.className = 'auth-msg error';
-      msg.textContent = error.message;
-    } else {
-      msg.className = 'auth-msg success';
-      msg.textContent = 'Reset link sent — check your inbox.';
-    }
-  }
-
-  // ===== SIGN OUT =====
-  async function handleSignOut() {
-    await _supabase.auth.signOut();
-  }
-
-  // ===== VIEW TOGGLES =====
-  function showForgot() {
-    document.getElementById('auth-login-view').style.display = 'none';
-    document.getElementById('auth-forgot-view').style.display = 'block';
-  }
-
-  function showLogin() {
-    document.getElementById('auth-forgot-view').style.display = 'none';
-    document.getElementById('auth-login-view').style.display = 'block';
-  }
-
-  // ===== ENTER KEY =====
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const authVisible = document.getElementById('auth-screen').classList.contains('visible');
-      if (authVisible) {
-        const forgotVisible = document.getElementById('auth-forgot-view').style.display === 'block';
-        forgotVisible ? handleForgot() : handleLogin();
-      }
-    }
+async function initAuth(){
+  const{data:{session}}=await _supabase.auth.getSession();
+  if(session){showApp(session.user.email);}else{showAuthScreen();}
+  _supabase.auth.onAuthStateChange((event,session)=>{
+    if(event==='SIGNED_IN'&&session)showApp(session.user.email);
+    if(event==='SIGNED_OUT')showAuthScreen();
   });
+}
+function showApp(email){document.getElementById('auth-screen').classList.remove('visible');document.getElementById('nav-user-email').textContent=email;showScreen('dashboard');}
+function showAuthScreen(){document.getElementById('auth-screen').classList.add('visible');}
 
-  // ===== NAV + SCREENS =====
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
-    const screen = document.getElementById('screen-' + id);
-    if (screen) screen.classList.add('active');
-    document.querySelectorAll('.sidebar-item').forEach(item => {
-      if (item.getAttribute('onclick') && item.getAttribute('onclick').includes("'" + id + "'")) {
-        item.classList.add('active');
-      }
-    });
-    document.querySelector('.main-content').scrollTop = 0;
-    window.scrollTo(0, 0);
+async function handleLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const password=document.getElementById('login-password').value;
+  const msg=document.getElementById('login-msg');
+  const btn=document.querySelector('#auth-login-view .auth-btn');
+  msg.className='auth-msg';
+  if(!email||!password){msg.className='auth-msg error';msg.textContent='Please enter your email and password.';return;}
+  btn.disabled=true;btn.textContent='Signing in...';
+  const{error}=await _supabase.auth.signInWithPassword({email,password});
+  btn.disabled=false;btn.textContent='Sign In';
+  if(error){msg.className='auth-msg error';msg.textContent=error.message==='Invalid login credentials'?'Email or password is incorrect.':error.message;}
+}
+
+async function handleForgot(){
+  const email=document.getElementById('forgot-email').value.trim();
+  const msg=document.getElementById('forgot-msg');
+  const btn=document.querySelector('#auth-forgot-view .auth-btn');
+  msg.className='auth-msg';
+  if(!email){msg.className='auth-msg error';msg.textContent='Please enter your email.';return;}
+  btn.disabled=true;btn.textContent='Sending...';
+  const{error}=await _supabase.auth.resetPasswordForEmail(email,{redirectTo:'https://app.theperformancecoach.ae'});
+  btn.disabled=false;btn.textContent='Send Reset Link';
+  if(error){msg.className='auth-msg error';msg.textContent=error.message;}
+  else{msg.className='auth-msg success';msg.textContent='Reset link sent — check your inbox.';}
+}
+
+async function handleSignOut(){await _supabase.auth.signOut();}
+function showForgot(){document.getElementById('auth-login-view').style.display='none';document.getElementById('auth-forgot-view').style.display='block';}
+function showLogin(){document.getElementById('auth-forgot-view').style.display='none';document.getElementById('auth-login-view').style.display='block';}
+
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='Enter'&&document.getElementById('auth-screen').classList.contains('visible')){
+    document.getElementById('auth-forgot-view').style.display==='block'?handleForgot():handleLogin();
   }
+});
 
-  function switchTab(btn, tabId) {
-    const container = btn.closest('.screen') || document.querySelector('.screen.active');
-    btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    container.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-    const target = document.getElementById(tabId);
-    if (target) target.classList.add('active');
-  }
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));
+  const screen=document.getElementById('screen-'+id);
+  if(screen)screen.classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(item=>{
+    if(item.getAttribute('onclick')&&item.getAttribute('onclick').includes("'"+id+"'"))item.classList.add('active');
+  });
+  window.scrollTo(0,0);
+}
 
-  function toggleVideo(btn, videoId) {
-    const wrap = btn.closest('.video-item').querySelector('.video-player-wrap');
-    const iframe = wrap.querySelector('iframe');
-    if (wrap.classList.contains('open')) {
-      wrap.classList.remove('open');
-      iframe.src = '';
-      btn.textContent = 'Watch';
-    } else {
-      wrap.classList.add('open');
-      iframe.src = 'https://www.youtube.com/embed/' + videoId;
-      btn.textContent = 'Close';
-    }
-  }
+function switchTab(btn,tabId){
+  const container=btn.closest('.screen')||document.querySelector('.screen.active');
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  container.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));
+  const target=document.getElementById(tabId);
+  if(target)target.classList.add('active');
+}
 
-  // ===== INIT =====
-  initAuth();
+function toggleVideo(btn,videoId){
+  const wrap=btn.closest('.video-item').querySelector('.video-player-wrap');
+  const iframe=wrap.querySelector('iframe');
+  if(wrap.classList.contains('open')){wrap.classList.remove('open');iframe.src='';btn.textContent='Watch';}
+  else{wrap.classList.add('open');iframe.src='https://www.youtube.com/embed/'+videoId;btn.textContent='Close';}
+}
+
+function toggleAccordion(el){el.classList.toggle('open');}
+function toggleInjury(el){const wasOpen=el.classList.contains('open');document.querySelectorAll('.injury-option').forEach(o=>o.classList.remove('open'));if(!wasOpen)el.classList.add('open');}
+
+initAuth();
 </script>
 </body>
 </html>

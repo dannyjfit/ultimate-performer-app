@@ -684,13 +684,22 @@ async function handleForgot(){
   else{msg.className='auth-msg success';msg.textContent='Reset link sent — check your inbox.';}
 }
 
-async function handleSignOut(){await _supabase.auth.signOut();} async function handlePasswordUpdate(){
-  const password = document.getElementById('reset-password').value;
-  const msg = document.getElementById('reset-msg');
+async function handleSignOut(){await _supabase.auth.signOut();}
+
+async function handlePasswordUpdate(){
+  const password=document.getElementById('reset-password').value;
+  const msg=document.getElementById('reset-msg');
   if(!password){msg.className='auth-msg error';msg.textContent='Please enter a new password.';return;}
-  const{error} = await _supabase.auth.updateUser({password});
+  const{error}=await _supabase.auth.updateUser({password});
   if(error){msg.className='auth-msg error';msg.textContent=error.message;}
-  else{msg.className='auth-msg success';msg.textContent='Password updated — signing you in...';setTimeout(()=>showApp(),2000);}
+  else{
+    msg.className='auth-msg success';
+    msg.textContent='Password updated — signing you in...';
+    setTimeout(async()=>{
+      const{data:{session}}=await _supabase.auth.getSession();
+      if(session)showApp(session.user.email);
+    },2000);
+  }
 }
 function showForgot(){document.getElementById('auth-login-view').style.display='none';document.getElementById('auth-forgot-view').style.display='block';}
 function showLogin(){document.getElementById('auth-forgot-view').style.display='none';document.getElementById('auth-login-view').style.display='block';}

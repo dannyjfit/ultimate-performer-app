@@ -637,8 +637,13 @@ async function initAuth(){
   if(session){showApp(session.user.email);}else{showAuthScreen();}
   _supabase.auth.onAuthStateChange((event,session)=>{
    if(event==='PASSWORD_RECOVERY'){document.getElementById('auth-screen').classList.add('visible');document.getElementById('auth-login-view').style.display='none';document.getElementById('auth-reset-view').style.display='block';}
-if(event==='SIGNED_IN'&&session)showApp(session.user.email);
-    if(event==='SIGNED_OUT')showAuthScreen();
+if(event==='PASSWORD_RECOVERY'){
+  document.getElementById('auth-screen').classList.add('visible');
+  document.getElementById('auth-login-view').style.display='none';
+  document.getElementById('auth-forgot-view').style.display='none';
+  document.getElementById('auth-reset-view').style.display='block';
+}
+if(event==='SIGNED_IN'&&session&&event!=='PASSWORD_RECOVERY')showApp(session.user.email);    if(event==='SIGNED_OUT')showAuthScreen();
   });
 }
 function showApp(email){document.getElementById('auth-screen').classList.remove('visible');document.getElementById('nav-user-email').textContent=email;showScreen('dashboard');}

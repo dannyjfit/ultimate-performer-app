@@ -254,13 +254,14 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
         <button class="auth-btn" onclick="handleForgot()">Send Reset Link</button>
         <div id="forgot-msg" class="auth-msg"></div>
         <div class="auth-divider"></div>
-        <div class="auth-toggle"><a onclick="showLogin()">← Back to sign in</a></div> <div id="auth-reset-view" style="display:none;">
-  <h2>Set new password</h2>
-  <p class="auth-sub">Enter your new password below.</p>
-  <div class="auth-field"><label>New Password</label><input type="password" id="reset-password" placeholder="••••••••"></div>
-  <button class="auth-btn" onclick="handlePasswordUpdate()">Update Password</button>
-  <div id="reset-msg" class="auth-msg"></div>
-</div>
+       <div class="auth-toggle"><a onclick="showLogin()">← Back to sign in</a></div>
+      </div>
+      <div id="auth-reset-view" style="display:none;">
+        <h2>Set new password</h2>
+        <p class="auth-sub">Enter your new password below.</p>
+        <div class="auth-field"><label>New Password</label><input type="password" id="reset-password" placeholder="••••••••"></div>
+        <button class="auth-btn" onclick="handlePasswordUpdate()">Update Password</button>
+        <div id="reset-msg" class="auth-msg"></div>
       </div>
     </div>
   </div>

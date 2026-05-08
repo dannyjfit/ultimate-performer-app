@@ -703,6 +703,13 @@ function toggleVideo(btn,videoId){
 function toggleAccordion(el){el.classList.toggle('open');}
 function toggleInjury(el){const wasOpen=el.classList.contains('open');document.querySelectorAll('.injury-option').forEach(o=>o.classList.remove('open'));if(!wasOpen)el.classList.add('open');}
 
+async function resetPassword(){
+  const{data:{user}}=await _supabase.auth.getUser();
+  const{error}=await _supabase.auth.resetPasswordForEmail(user.email,{redirectTo:'https://app.theperformancecoach.ae'});
+  if(!error){alert('Password reset email sent — check your inbox.');}
+  else{alert('Something went wrong. Try again.');}
+}
+
 initAuth();
 </script>
 </body>

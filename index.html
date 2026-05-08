@@ -740,8 +740,7 @@ function toggleVideo(btn,videoId){
 function toggleAccordion(el){el.classList.toggle('open');}
 function toggleInjury(el){const wasOpen=el.classList.contains('open');document.querySelectorAll('.injury-option').forEach(o=>o.classList.remove('open'));if(!wasOpen)el.classList.add('open');}
 
-async function resetPassword(){
-  const btn = event.currentTarget;
+async function resetPassword(btn){
   btn.style.opacity = '0.5';
   btn.style.pointerEvents = 'none';
   const{data:{user}}=await _supabase.auth.getUser();

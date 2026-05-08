@@ -741,18 +741,20 @@ function toggleAccordion(el){el.classList.toggle('open');}
 function toggleInjury(el){const wasOpen=el.classList.contains('open');document.querySelectorAll('.injury-option').forEach(o=>o.classList.remove('open'));if(!wasOpen)el.classList.add('open');}
 
 async function resetPassword(btn){
-  btn.style.opacity = '0.5';
-  btn.style.pointerEvents = 'none';
-  const{data:{user}}=await _supabase.auth.getUser();
-  const{error}=await _supabase.auth.resetPasswordForEmail(user.email,{redirectTo:'https://app.theperformancecoach.ae'});
-  btn.style.opacity = '1';
-  btn.style.pointerEvents = 'auto';
-  if(!error){
-    btn.innerHTML = '<span class="icon">✅</span> Reset email sent';
-    setTimeout(()=>{btn.innerHTML='<span class="icon">🔑</span> Change Password';},4000);
-  } else {
-    alert('Something went wrong. Try again.');
-  }
+  try{
+    btn.style.opacity='0.5';
+    btn.style.pointerEvents='none';
+    const{data:{session}}=await _supabase.auth.getSession();
+    if(!session){alert('Not logged in.');return;}
+    const{error}=await _supabase.auth.resetPasswordForEmail(session.user.email,{redirectTo:'https://app.theperformancecoach.ae'});
+    btn.style.opacity='1';
+    btn.style.pointerEvents='auto';
+    if(!error){
+      btn.innerHTML='<span class="icon">✅</span> Reset email sent';
+      setTimeout(()=>{btn.innerHTML='<span class="icon">🔑</span> Change Password';},4000);
+    }else{alert(error.message);}
+  }catch(e){alert(e.message);}
+}
 }
 
 initAuth();

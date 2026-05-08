@@ -678,8 +678,7 @@ async function handleForgot(){
   msg.className='auth-msg';
   if(!email){msg.className='auth-msg error';msg.textContent='Please enter your email.';return;}
   btn.disabled=true;btn.textContent='Sending...';
-  const{error}=await _supabase.auth.resetPasswordForEmail(email,{redirectTo:'https://app.theperformancecoach.ae'});
-  btn.disabled=false;btn.textContent='Send Reset Link';
+const{error}=await _supabase.auth.resetPasswordForEmail(email,{redirectTo:'https://app.theperformancecoach.ae/reset.html'});  btn.disabled=false;btn.textContent='Send Reset Link';
   if(error){msg.className='auth-msg error';msg.textContent=error.message;}
   else{msg.className='auth-msg success';msg.textContent='Reset link sent — check your inbox.';}
 }

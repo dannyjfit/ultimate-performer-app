@@ -704,10 +704,19 @@ function toggleAccordion(el){el.classList.toggle('open');}
 function toggleInjury(el){const wasOpen=el.classList.contains('open');document.querySelectorAll('.injury-option').forEach(o=>o.classList.remove('open'));if(!wasOpen)el.classList.add('open');}
 
 async function resetPassword(){
+  const btn = event.currentTarget;
+  btn.style.opacity = '0.5';
+  btn.style.pointerEvents = 'none';
   const{data:{user}}=await _supabase.auth.getUser();
   const{error}=await _supabase.auth.resetPasswordForEmail(user.email,{redirectTo:'https://app.theperformancecoach.ae'});
-  if(!error){alert('Password reset email sent — check your inbox.');}
-  else{alert('Something went wrong. Try again.');}
+  btn.style.opacity = '1';
+  btn.style.pointerEvents = 'auto';
+  if(!error){
+    btn.innerHTML = '<span class="icon">✅</span> Reset email sent';
+    setTimeout(()=>{btn.innerHTML='<span class="icon">🔑</span> Change Password';},4000);
+  } else {
+    alert('Something went wrong. Try again.');
+  }
 }
 
 initAuth();

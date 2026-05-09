@@ -224,7 +224,38 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 .sidebar::-webkit-scrollbar-track{background:transparent;}
 .sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
 
-@media(max-width:768px){.sidebar{display:none;}.main-content{padding:24px 20px;}.modules-grid,.golden-circle-grid,.includes-grid,.plate-grid{grid-template-columns:1fr;}.welcome-hero h1{font-size:28px;}}
+/* MOBILE NAV */
+.mobile-nav{display:none;background:var(--dark);border-top:1px solid rgba(255,255,255,0.08);position:fixed;bottom:0;left:0;right:0;z-index:200;padding:8px 0 max(8px,env(safe-area-inset-bottom));}
+.mobile-nav-scroll{display:flex;overflow-x:auto;gap:0;padding:0 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.mobile-nav-scroll::-webkit-scrollbar{display:none;}
+.mobile-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px;cursor:pointer;flex-shrink:0;color:rgba(255,255,255,0.5);font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:8px;transition:all 0.2s;white-space:nowrap;}
+.mobile-nav-item:active,.mobile-nav-item.active{color:var(--blue);background:rgba(70,130,180,0.15);}
+.mobile-nav-item .m-icon{font-size:18px;}
+
+@media(max-width:768px){
+  html,body{max-width:100%;overflow-x:hidden;}
+  .sidebar{display:none;}
+  .mobile-nav{display:block;}
+  .main-content{padding:20px 16px 90px;}
+  .modules-grid,.golden-circle-grid,.includes-grid,.plate-grid{grid-template-columns:1fr;}
+  .welcome-hero{padding:28px 20px;}
+  .welcome-hero h1{font-size:28px;}
+  .sales-hero{padding:32px 20px;}
+  .sales-hero h2{font-size:30px;}
+  .auth-card{padding:24px 20px;}
+  .input-table{display:block;}
+  .input-table tbody,.input-table tr{display:block;}
+  .input-table td{display:block;width:100%!important;border:none;padding:4px 0;}
+  .input-table td:first-child{font-size:13px;background:none;padding-top:12px;border-top:1px solid rgba(0,0,0,0.06);}
+  .input-table tr:first-child td:first-child{border-top:none;padding-top:0;}
+  .input-table input{margin-top:4px;}
+  .weekly-table{display:block;overflow-x:auto;}
+  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .data-table{font-size:12px;}
+  .data-table th,.data-table td{padding:7px 8px;}
+  .nav{padding:0 16px;}
+  .nav-title{font-size:11px;}
+}
 </style>
 </head>
 <body>
@@ -488,9 +519,9 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <h4>🧘 Recovery Videos</h4>
     <p>Use these alongside your breathwork. Even 5–10 minutes of guided practice changes how you process stress over time.</p>
     <div class="video-list">
-      <div class="video-item"><div class="video-item-header"><div class="video-thumb">🎬</div><div class="video-item-info"><h4>Full Body Cooldown Stretch</h4><p>Post-workout or before bed</p></div><button class="video-toggle-btn" onclick="toggleVideo(this,'oN8xV3Kb5-Q')">Watch</button></div><div class="video-player-wrap"><iframe src="" frameborder="0" allowfullscreen></iframe></div></div>
-      <div class="video-item"><div class="video-item-header"><div class="video-thumb">🎬</div><div class="video-item-info"><h4>Zone 2 Cardio Explainer</h4><p>The most underrated tool for longevity and recovery</p></div><button class="video-toggle-btn" onclick="toggleVideo(this,'FdUFhUuJl1E')">Watch</button></div><div class="video-player-wrap"><iframe src="" frameborder="0" allowfullscreen></iframe></div></div>
-      <div class="video-item"><div class="video-item-header"><div class="video-thumb">🎬</div><div class="video-item-info"><h4>Guided Meditation</h4><p>10 minutes — use when your head won't switch off</p></div><button class="video-toggle-btn" onclick="toggleVideo(this,'5iG07sH-aG0')">Watch</button></div><div class="video-player-wrap"><iframe src="" frameborder="0" allowfullscreen></iframe></div></div>
+      <div class="video-item"><div class="video-item-header"><div class="video-thumb">🎬</div><div class="video-item-info"><h4>Full Body Cooldown Stretch</h4><p>Post-workout or before bed</p></div><button class="video-toggle-btn" onclick="toggleVideo(this,'FdUFhUuJl1E')">Watch</button></div><div class="video-player-wrap"><iframe src="" frameborder="0" allowfullscreen></iframe></div></div>
+      <div class="video-item"><div class="video-item-header"><div class="video-thumb">🎬</div><div class="video-item-info"><h4>Zone 2 Cardio Explainer</h4><p>The most underrated tool for longevity and recovery</p></div><button class="video-toggle-btn" onclick="toggleVideo(this,'-uNG0Rf1r98')">Watch</button></div><div class="video-player-wrap"><iframe src="" frameborder="0" allowfullscreen></iframe></div></div>
+      <div class="video-item"><div class="video-item-header"><div class="video-thumb">🎬</div><div class="video-item-info"><h4>Guided Meditation</h4><p>10 minutes — use when your head won't switch off</p></div><button class="video-toggle-btn" onclick="toggleVideo(this,'inpok4MKVLM')">Watch</button></div><div class="video-player-wrap"><iframe src="" frameborder="0" allowfullscreen></iframe></div></div>
     </div>
     <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Your Commitment</p>
     <table class="input-table"><tr><td>Which session will you use?</td><td><input type="text" placeholder="e.g. Box breathing"></td></tr><tr><td>When will you do it?</td><td><input type="text" placeholder="e.g. Every evening before bed"></td></tr></table>
@@ -526,10 +557,10 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <h4>Before You Start — Checklist</h4>
     <p>Make sure you've worked through all the modules first. Your plan is built from your answers.</p>
     <ul class="checklist">
-      <li><input type="checkbox"> Completed the <strong>Why Workshop</strong> and have your why statement</li>
-      <li><input type="checkbox"> Chosen your training location, level, and frequency in <strong>Movement</strong></li>
-      <li><input type="checkbox"> Run your <strong>calorie calculator</strong> in Nutrition</li>
-      <li><input type="checkbox"> Set up your <strong>recovery non-negotiables</strong> in Recovery</li>
+      <li><input type="checkbox"> Completed the Why Workshop and have your why statement</li>
+      <li><input type="checkbox"> Chosen your training location, level, and frequency in Movement</li>
+      <li><input type="checkbox"> Run your calorie calculator in Nutrition</li>
+      <li><input type="checkbox"> Set up your recovery non-negotiables in Recovery</li>
     </ul>
   </div>
   <div class="content-section">
@@ -621,6 +652,22 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 </main>
 </div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-scroll">
+    <div class="mobile-nav-item active" onclick="showScreen('dashboard');setMobileActive(this)"><span class="m-icon">🏠</span>Home</div>
+    <div class="mobile-nav-item" onclick="showScreen('quiz');setMobileActive(this)"><span class="m-icon">📋</span>Quiz</div>
+    <div class="mobile-nav-item" onclick="showScreen('welcome-video');setMobileActive(this)"><span class="m-icon">▶</span>Intro</div>
+    <div class="mobile-nav-item" onclick="showScreen('why-workshop');setMobileActive(this)"><span class="m-icon">🎯</span>Why</div>
+    <div class="mobile-nav-item" onclick="showScreen('movement');setMobileActive(this)"><span class="m-icon">🏋️</span>Move</div>
+    <div class="mobile-nav-item" onclick="showScreen('nutrition');setMobileActive(this)"><span class="m-icon">🥗</span>Nutrition</div>
+    <div class="mobile-nav-item" onclick="showScreen('recovery');setMobileActive(this)"><span class="m-icon">🧘</span>Recovery</div>
+    <div class="mobile-nav-item" onclick="showScreen('build-plan');setMobileActive(this)"><span class="m-icon">🗓️</span>Plan</div>
+    <div class="mobile-nav-item" onclick="showScreen('coaching');setMobileActive(this)"><span class="m-icon">🎯</span>Upgrade</div>
+    <div class="mobile-nav-item" onclick="resetPassword(this)"><span class="m-icon">🔑</span>Password</div>
+  </div>
+</nav>
 
 <script>
 const { createClient } = supabase;
@@ -782,6 +829,11 @@ function toggleVideo(btn, videoId) {
     iframe.src = 'https://www.youtube.com/embed/' + videoId;
     btn.textContent = 'Close';
   }
+}
+
+function setMobileActive(el) {
+  document.querySelectorAll('.mobile-nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
 }
 
 function toggleAccordion(el) { el.classList.toggle('open'); }

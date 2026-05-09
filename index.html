@@ -254,14 +254,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
         <button class="auth-btn" onclick="handleForgot()">Send Reset Link</button>
         <div id="forgot-msg" class="auth-msg"></div>
         <div class="auth-divider"></div>
-       <div class="auth-toggle"><a onclick="showLogin()">← Back to sign in</a></div>
-      </div>
-      <div id="auth-reset-view" style="display:none;">
-        <h2>Set new password</h2>
-        <p class="auth-sub">Enter your new password below.</p>
-        <div class="auth-field"><label>New Password</label><input type="password" id="reset-password" placeholder="••••••••"></div>
-        <button class="auth-btn" onclick="handlePasswordUpdate()">Update Password</button>
-        <div id="reset-msg" class="auth-msg"></div>
+        <div class="auth-toggle"><a onclick="showLogin()">← Back to sign in</a></div>
       </div>
     </div>
   </div>
@@ -302,7 +295,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="sidebar-item" onclick="showScreen('coaching')"><span class="icon">🎯</span> Work With Me</div>
   </div>
   <div style="padding:12px;">
-<div class="sidebar-item" onclick="resetPassword(this)"><span class="icon">🔑</span> Change Password</div>
+    <div class="sidebar-item" onclick="resetPassword(this)"><span class="icon">🔑</span> Change Password</div>
   </div>
 </aside>
 
@@ -630,129 +623,173 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 </div>
 
 <script>
-const{createClient}=supabase;
-const _supabase=createClient('https://surkhxljptfidlmrjlmv.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmtoeGxqcHRmaWRsbXJqbG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTY2NjgsImV4cCI6MjA5MzYzMjY2OH0.lLOfYp004WMT2gw-_lWXNIEXpgxglRJzbzkhTZHRMu4');
+const { createClient } = supabase;
+const _supabase = createClient(
+  'https://surkhxljptfidlmrjlmv.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmtoeGxqcHRmaWRsbXJqbG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTY2NjgsImV4cCI6MjA5MzYzMjY2OH0.lLOfYp004WMT2gw-_lWXNIEXpgxglRJzbzkhTZHRMu4'
+);
 
-async function initAuth(){
-  const hashParams = new URLSearchParams(window.location.hash.substring(1));
-  if(hashParams.get('type')==='recovery'){
-    document.getElementById('auth-screen').classList.add('visible');
-    document.getElementById('auth-login-view').style.display='none';
-    document.getElementById('auth-forgot-view').style.display='none';
-    document.getElementById('auth-reset-view').style.display='block';
+async function initAuth() {
+  const { data: { session } } = await _supabase.auth.getSession();
+  if (session) {
+    showApp(session.user.email);
+  } else {
+    showAuthScreen();
+  }
+}
+
+function showApp(email) {
+  document.getElementById('auth-screen').classList.remove('visible');
+  document.getElementById('nav-user-email').textContent = email;
+  showScreen('dashboard');
+}
+
+function showAuthScreen() {
+  document.getElementById('auth-screen').classList.add('visible');
+}
+
+async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-msg');
+  const btn = document.querySelector('#auth-login-view .auth-btn');
+  msg.className = 'auth-msg';
+  if (!email || !password) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'Please enter your email and password.';
     return;
   }
-  const{data:{session}}=await _supabase.auth.getSession();
-  if(session){showApp(session.user.email);}else{showAuthScreen();}
-  _supabase.auth.onAuthStateChange((event,session)=>{
-    if(event==='PASSWORD_RECOVERY'){
-      document.getElementById('auth-screen').classList.add('visible');
-      document.getElementById('auth-login-view').style.display='none';
-      document.getElementById('auth-forgot-view').style.display='none';
-      document.getElementById('auth-reset-view').style.display='block';
-    }
-    
-  });
-}
-function showApp(email){document.getElementById('auth-screen').classList.remove('visible');document.getElementById('nav-user-email').textContent=email;showScreen('dashboard');}
-function showAuthScreen(){document.getElementById('auth-screen').classList.add('visible');}
-
-async function handleLogin(){
-  const email=document.getElementById('login-email').value.trim();
-  const password=document.getElementById('login-password').value;
-  const msg=document.getElementById('login-msg');
-  const btn=document.querySelector('#auth-login-view .auth-btn');
-  msg.className='auth-msg';
-  if(!email||!password){msg.className='auth-msg error';msg.textContent='Please enter your email and password.';return;}
-  btn.disabled=true;btn.textContent='Signing in...';
-  const{error}=await _supabase.auth.signInWithPassword({email,password});
-  btn.disabled=false;btn.textContent='Sign In';
-  if(error){msg.className='auth-msg error';msg.textContent=error.message==='Invalid login credentials'?'Email or password is incorrect.':error.message;}
-}
-
-async function handleForgot(){
-  const email=document.getElementById('forgot-email').value.trim();
-  const msg=document.getElementById('forgot-msg');
-  const btn=document.querySelector('#auth-forgot-view .auth-btn');
-  msg.className='auth-msg';
-  if(!email){msg.className='auth-msg error';msg.textContent='Please enter your email.';return;}
-  btn.disabled=true;btn.textContent='Sending...';
-const{error}=await _supabase.auth.resetPasswordForEmail(email,{redirectTo:'https://app.theperformancecoach.ae/reset.html'});  btn.disabled=false;btn.textContent='Send Reset Link';
-  if(error){msg.className='auth-msg error';msg.textContent=error.message;}
-  else{msg.className='auth-msg success';msg.textContent='Reset link sent — check your inbox.';}
-}
-
-async function handleSignOut(){await _supabase.auth.signOut();}
-
-async function handlePasswordUpdate(){
-  const password=document.getElementById('reset-password').value;
-  const msg=document.getElementById('reset-msg');
-  if(!password){msg.className='auth-msg error';msg.textContent='Please enter a new password.';return;}
-  const{error}=await _supabase.auth.updateUser({password});
-  if(error){msg.className='auth-msg error';msg.textContent=error.message;}
-  else{
-    msg.className='auth-msg success';
-    msg.textContent='Password updated — signing you in...';
-    setTimeout(async()=>{
-      const{data:{session}}=await _supabase.auth.getSession();
-      if(session)showApp(session.user.email);
-    },2000);
+  btn.disabled = true;
+  btn.textContent = 'Signing in...';
+  const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+  btn.disabled = false;
+  btn.textContent = 'Sign In';
+  if (error) {
+    msg.className = 'auth-msg error';
+    msg.textContent = error.message === 'Invalid login credentials'
+      ? 'Email or password is incorrect.'
+      : error.message;
+  } else if (data.session) {
+    showApp(data.session.user.email);
   }
 }
-function showForgot(){document.getElementById('auth-login-view').style.display='none';document.getElementById('auth-forgot-view').style.display='block';}
-function showLogin(){document.getElementById('auth-forgot-view').style.display='none';document.getElementById('auth-login-view').style.display='block';}
 
-document.addEventListener('keydown',(e)=>{
-  if(e.key==='Enter'&&document.getElementById('auth-screen').classList.contains('visible')){
-    document.getElementById('auth-forgot-view').style.display==='block'?handleForgot():handleLogin();
+async function handleForgot() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const msg = document.getElementById('forgot-msg');
+  const btn = document.querySelector('#auth-forgot-view .auth-btn');
+  msg.className = 'auth-msg';
+  if (!email) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'Please enter your email.';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://app.theperformancecoach.ae/reset.html'
+  });
+  btn.disabled = false;
+  btn.textContent = 'Send Reset Link';
+  if (error) {
+    msg.className = 'auth-msg error';
+    msg.textContent = error.message;
+  } else {
+    msg.className = 'auth-msg success';
+    msg.textContent = 'Reset link sent — check your inbox.';
+  }
+}
+
+async function handleSignOut() {
+  await _supabase.auth.signOut();
+  showAuthScreen();
+  showLogin();
+}
+
+function showForgot() {
+  document.getElementById('auth-login-view').style.display = 'none';
+  document.getElementById('auth-forgot-view').style.display = 'block';
+}
+
+function showLogin() {
+  document.getElementById('auth-forgot-view').style.display = 'none';
+  document.getElementById('auth-login-view').style.display = 'block';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && document.getElementById('auth-screen').classList.contains('visible')) {
+    if (document.getElementById('auth-forgot-view').style.display === 'block') {
+      handleForgot();
+    } else {
+      handleLogin();
+    }
   }
 });
 
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));
-  const screen=document.getElementById('screen-'+id);
-  if(screen)screen.classList.add('active');
-  document.querySelectorAll('.sidebar-item').forEach(item=>{
-    if(item.getAttribute('onclick')&&item.getAttribute('onclick').includes("'"+id+"'"))item.classList.add('active');
+async function resetPassword(btn) {
+  try {
+    btn.style.opacity = '0.5';
+    btn.style.pointerEvents = 'none';
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { alert('Not logged in.'); return; }
+    const { error } = await _supabase.auth.resetPasswordForEmail(session.user.email, {
+      redirectTo: 'https://app.theperformancecoach.ae/reset.html'
+    });
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+    if (!error) {
+      btn.innerHTML = '<span class="icon">✅</span> Reset email sent';
+      setTimeout(() => { btn.innerHTML = '<span class="icon">🔑</span> Change Password'; }, 4000);
+    } else {
+      alert(error.message);
+    }
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  const screen = document.getElementById('screen-' + id);
+  if (screen) screen.classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    if (item.getAttribute('onclick') && item.getAttribute('onclick').includes("'" + id + "'")) {
+      item.classList.add('active');
+    }
   });
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
-function switchTab(btn,tabId){
-  const container=btn.closest('.screen')||document.querySelector('.screen.active');
-  btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+function switchTab(btn, tabId) {
+  const container = btn.closest('.screen') || document.querySelector('.screen.active');
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  container.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));
-  const target=document.getElementById(tabId);
-  if(target)target.classList.add('active');
+  container.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
 }
 
-function toggleVideo(btn,videoId){
-  const wrap=btn.closest('.video-item').querySelector('.video-player-wrap');
-  const iframe=wrap.querySelector('iframe');
-  if(wrap.classList.contains('open')){wrap.classList.remove('open');iframe.src='';btn.textContent='Watch';}
-  else{wrap.classList.add('open');iframe.src='https://www.youtube.com/embed/'+videoId;btn.textContent='Close';}
+function toggleVideo(btn, videoId) {
+  const wrap = btn.closest('.video-item').querySelector('.video-player-wrap');
+  const iframe = wrap.querySelector('iframe');
+  if (wrap.classList.contains('open')) {
+    wrap.classList.remove('open');
+    iframe.src = '';
+    btn.textContent = 'Watch';
+  } else {
+    wrap.classList.add('open');
+    iframe.src = 'https://www.youtube.com/embed/' + videoId;
+    btn.textContent = 'Close';
+  }
 }
 
-function toggleAccordion(el){el.classList.toggle('open');}
-function toggleInjury(el){const wasOpen=el.classList.contains('open');document.querySelectorAll('.injury-option').forEach(o=>o.classList.remove('open'));if(!wasOpen)el.classList.add('open');}
+function toggleAccordion(el) { el.classList.toggle('open'); }
 
-async function resetPassword(btn){
-  try{
-    btn.style.opacity='0.5';
-    btn.style.pointerEvents='none';
-    const{data:{session}}=await _supabase.auth.getSession();
-    if(!session){alert('Not logged in.');return;}
-    const{error}=await _supabase.auth.resetPasswordForEmail(session.user.email,{redirectTo:'https://app.theperformancecoach.ae'});
-    btn.style.opacity='1';
-    btn.style.pointerEvents='auto';
-    if(!error){
-      btn.innerHTML='<span class="icon">✅</span> Reset email sent';
-      setTimeout(()=>{btn.innerHTML='<span class="icon">🔑</span> Change Password';},4000);
-    }else{alert(error.message);}
-  }catch(e){alert(e.message);}
-}
+function toggleInjury(el) {
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.injury-option').forEach(o => o.classList.remove('open'));
+  if (!wasOpen) el.classList.add('open');
 }
 
 initAuth();

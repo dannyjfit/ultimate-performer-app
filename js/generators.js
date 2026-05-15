@@ -29,7 +29,6 @@ function tgGenerate(ns, silent=false) {
     saveField('training_level', s.level);
     saveField('training_days', s.days);
     saveField('training_goal', s.goal);
-    // Mirror to the other namespace
     const other = ns==='tg' ? 'tg2' : 'tg';
     _tgState[other] = {...s};
     Object.entries(s).forEach(([grp,val]) => {
@@ -119,7 +118,9 @@ function tgExList(exs, goal) {
     const aLink = aName ? TGV[aName] : null;
     const aUid  = 'v'+Math.random().toString(36).slice(2,9);
     const alt   = aLink ? `<div><div class="gen-alt-label">Can't do this?</div><button class="gen-alt-watch-btn" id="vb-${aUid}" onclick="tgVid('${aUid}','${aLink}')">▶ ${aName}</button><div class="gen-video-container" id="vc-${aUid}"></div></div>` : '';
-    return `<div class="gen-ex-row-wrap"><div class="gen-ex-row-inner"><div class="gen-ex-num">${i+1}</div><div class="gen-ex-info"><div class="gen-ex-name">${ex.name}</div><div class="gen-ex-detail">${ex.sets} sets · ${reps}</div></div>${btn}</div>${vc}${alt}</div>`;
+    const safeId = ex.name.replace(/[^a-zA-Z0-9]/g, '_');
+    const logBtn = `<button class="tg-log-btn" onclick="tgLogExercise('${ex.name.replace(/'/g,"\\'")}', this)">+ Log</button>`;
+    return `<div class="gen-ex-row-wrap"><div class="gen-ex-row-inner"><div class="gen-ex-num">${i+1}</div><div class="gen-ex-info"><div class="gen-ex-name">${ex.name}</div><div class="gen-ex-detail">${ex.sets} sets · ${reps}</div></div><div style="display:flex;align-items:center;gap:4px;">${btn}${logBtn}</div></div>${vc}${alt}</div>`;
   }).join('');
 }
 
@@ -192,13 +193,11 @@ function mgGenerate(ns, silent=false) {
   if (!silent) {
     saveField('calorie_target', cals);
     saveField('dietary_pref', diet);
-    // Sync calories/protein to plan page
     const pc = document.getElementById('plan_calories');
     if (pc && !pc.value) pc.value = cals;
     const macros = diet==='veggie' ? MEAL_VMACROS[parseInt(cals)] : MEAL_MACROS[parseInt(cals)];
     const pp = document.getElementById('plan_protein');
     if (pp && !pp.value) pp.value = macros.p+'g';
-    // Mirror to other namespace
     const other = ns==='mg' ? 'mg2' : 'mg';
     _mgState[other] = {cals, diet};
     document.querySelectorAll(`#${other}-sel .gen-opt-btn[data-grp="cals"]`).forEach(b => b.classList.toggle('sel', b.dataset.val===cals));

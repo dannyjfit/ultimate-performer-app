@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{--cream:#f0eee7;--blue:#4682b4;--dark:#1a1a1a;--blue-dark:#2d5f8a;--blue-light:#6ba0c8;--border:rgba(70,130,180,0.2);}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -261,6 +262,44 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 .sidebar::-webkit-scrollbar{width:4px;}
 .sidebar::-webkit-scrollbar-track{background:transparent;}
 .sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+/* ═══════════════════════════ PROGRESS ═══════════════════════════ */
+.prog-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+@media(max-width:600px){.prog-form-grid{grid-template-columns:1fr;}}
+.prog-field{display:flex;flex-direction:column;gap:5px;}
+.prog-field-full{grid-column:1 / -1;}
+.prog-label{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:0.05em;}
+.prog-input{font-family:'Inter',sans-serif;font-size:14px;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;background:#fff;color:#222;transition:border-color 0.2s;width:100%;box-sizing:border-box;}
+.prog-input:focus{outline:none;border-color:#4682b4;}
+.prog-textarea{resize:vertical;min-height:72px;}
+.prog-select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+.prog-btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 22px;background:#4682b4;color:#fff;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.2s,opacity 0.2s;letter-spacing:0.03em;}
+.prog-btn:hover{background:#376a96;}
+.prog-btn:disabled{opacity:0.6;cursor:default;}
+.prog-btn-sm{padding:10px 16px;font-size:12px;flex-shrink:0;}
+.prog-chart-controls{display:flex;gap:12px;align-items:center;}
+.prog-empty{font-family:'Inter',sans-serif;font-size:13px;color:#999;text-align:center;padding:40px 16px;}
+.prog-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);padding:10px 20px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;z-index:9999;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;white-space:nowrap;}
+.prog-toast-success{background:#2e7d32;color:#fff;}
+.prog-toast-error{background:#c62828;color:#fff;}
+/* ─── Inline exercise log ─── */
+.tg-log-btn{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;padding:4px 10px;border:1.5px solid #4682b4;border-radius:6px;background:transparent;color:#4682b4;cursor:pointer;transition:background 0.15s,color 0.15s;white-space:nowrap;margin-left:6px;}
+.tg-log-btn:hover{background:#4682b4;color:#fff;}
+.tg-inline-log{background:#f4f8fc;border:1.5px solid #d0e3f0;border-radius:8px;padding:12px 14px;margin-top:10px;margin-bottom:4px;}
+.tg-log-fields{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.tg-log-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:80px;}
+.tg-log-field label{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.05em;}
+.tg-log-input{font-family:'Inter',sans-serif;font-size:13px;padding:7px 9px;border:1.5px solid #ccc;border-radius:6px;background:#fff;color:#222;width:100%;box-sizing:border-box;}
+.tg-log-input:focus{outline:none;border-color:#4682b4;}
+.tg-log-save-btn{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;padding:8px 18px;background:#4682b4;color:#fff;border:none;border-radius:6px;cursor:pointer;transition:background 0.15s;}
+.tg-log-save-btn:hover{background:#376a96;}
+.tg-log-save-btn:disabled{opacity:0.6;cursor:default;}
+.tg-log-history{margin-top:12px;border-top:1px solid #dce8f0;padding-top:10px;}
+.tg-log-history-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:#4682b4;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+.tg-log-history-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #eef3f7;}
+.tg-log-history-row:last-child{border-bottom:none;}
+.tg-log-history-date{font-family:'Inter',sans-serif;font-size:11px;color:#888;}
+.tg-log-history-detail{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:#333;}
+.tg-log-history-loading,.tg-log-history-empty{font-family:'Inter',sans-serif;font-size:11px;color:#aaa;font-style:italic;}
 .mobile-nav{display:none;background:var(--dark);border-top:1px solid rgba(255,255,255,0.08);position:fixed;bottom:0;left:0;right:0;z-index:200;padding:8px 0 max(8px,env(safe-area-inset-bottom));}
 .mobile-nav-scroll{display:flex;overflow-x:auto;gap:0;padding:0 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .mobile-nav-scroll::-webkit-scrollbar{display:none;}
@@ -291,6 +330,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   .nav-title{font-size:11px;}
   .gen-opt-grid{grid-template-columns:1fr 1fr;}
   .gen-wrap{padding:18px;}
+  .prog-chart-controls{flex-direction:column;align-items:stretch;}
 }
 </style>
 </head>
@@ -353,6 +393,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="sidebar-item" onclick="showScreen('nutrition')"><span class="icon">&#129361;</span> Nutrition</div>
     <div class="sidebar-item" onclick="showScreen('recovery')"><span class="icon">&#129688;</span> Recovery</div>
     <div class="sidebar-item" onclick="showScreen('build-plan')"><span class="icon">&#128197;</span> Your Plan</div>
+    <div class="sidebar-item" onclick="showScreen('progress')"><span class="icon">&#128200;</span> Progress</div>
   </div>
   <div><div class="sidebar-label">Tools</div>
     <div class="sidebar-item" onclick="showScreen('calorie-calc')"><span class="icon">&#128290;</span> Calorie Calculator</div>
@@ -701,6 +742,90 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   <a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank"><button class="btn-primary">Book Your Free Review &#8594;</button></a>
 </div>
 
+<!-- ═══════════════════ PROGRESS SCREEN ═══════════════════ -->
+<div id="screen-progress" class="screen">
+  <div class="page-header">
+    <div class="page-tag">Track</div>
+    <h2>Progress</h2>
+    <p>Track your body weight and see how your lifts are moving over time.</p>
+  </div>
+
+  <!-- WEEKLY CHECK-IN -->
+  <div class="content-section" style="margin-bottom:20px;">
+    <h4>Weekly Check-In</h4>
+    <p style="margin-bottom:16px;">Log your weight, energy, and sleep once a week to track trends.</p>
+    <div class="prog-form-grid">
+      <div class="prog-field">
+        <label class="prog-label" for="prog-bw">Body Weight (kg)</label>
+        <input class="prog-input" type="number" id="prog-bw" placeholder="e.g. 82.5" step="0.1" min="0">
+      </div>
+      <div class="prog-field">
+        <label class="prog-label" for="prog-energy">Energy (1–10)</label>
+        <input class="prog-input" type="number" id="prog-energy" placeholder="e.g. 7" min="1" max="10">
+      </div>
+      <div class="prog-field">
+        <label class="prog-label" for="prog-sleep">Sleep Quality (1–10)</label>
+        <input class="prog-input" type="number" id="prog-sleep" placeholder="e.g. 6" min="1" max="10">
+      </div>
+      <div class="prog-field prog-field-full">
+        <label class="prog-label" for="prog-notes">Notes (optional)</label>
+        <textarea class="prog-input prog-textarea" id="prog-notes" placeholder="Anything worth tracking this week..."></textarea>
+      </div>
+    </div>
+    <button class="prog-btn" id="prog-checkin-btn" onclick="progressSubmitCheckin()">Save Check-In</button>
+  </div>
+
+  <!-- BODY WEIGHT CHART -->
+  <div class="content-section" style="margin-bottom:20px;">
+    <h4>Body Weight Over Time</h4>
+    <div id="prog-bw-chart-wrap" style="position:relative;height:260px;margin-top:12px;">
+      <canvas id="prog-bw-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- EXERCISE LOG -->
+  <div class="content-section" style="margin-bottom:20px;">
+    <h4>Log an Exercise</h4>
+    <p style="margin-bottom:16px;">You can also log directly from the Movement section — this is here if you want to add something separately.</p>
+    <div class="prog-form-grid">
+      <div class="prog-field prog-field-full">
+        <label class="prog-label" for="prog-exercise-select">Exercise</label>
+        <select class="prog-input prog-select" id="prog-exercise-select"></select>
+      </div>
+      <div class="prog-field">
+        <label class="prog-label" for="prog-weight-used">Weight (kg)</label>
+        <input class="prog-input" type="number" id="prog-weight-used" placeholder="0 = bodyweight" min="0" step="0.5">
+      </div>
+      <div class="prog-field">
+        <label class="prog-label" for="prog-sets">Sets</label>
+        <input class="prog-input" type="number" id="prog-sets" placeholder="e.g. 3" min="1" max="20">
+      </div>
+      <div class="prog-field">
+        <label class="prog-label" for="prog-reps">Reps</label>
+        <input class="prog-input" type="number" id="prog-reps" placeholder="e.g. 12" min="1" max="100">
+      </div>
+      <div class="prog-field prog-field-full">
+        <label class="prog-label" for="prog-ex-notes">Notes (optional)</label>
+        <textarea class="prog-input prog-textarea" id="prog-ex-notes" placeholder="e.g. felt strong, increased weight..."></textarea>
+      </div>
+    </div>
+    <button class="prog-btn" id="prog-ex-log-btn" onclick="progressSubmitExerciseLog()">Log Exercise</button>
+  </div>
+
+  <!-- EXERCISE PROGRESSION CHART -->
+  <div class="content-section">
+    <h4>Exercise Progression</h4>
+    <p style="margin-bottom:16px;">Select an exercise to see your weight over time.</p>
+    <div class="prog-chart-controls">
+      <select class="prog-input prog-select" id="prog-chart-exercise" style="flex:1;"></select>
+      <button class="prog-btn prog-btn-sm" id="prog-ex-chart-btn" onclick="progressLoadExerciseChart()">View Progression</button>
+    </div>
+    <div id="prog-ex-chart-wrap" style="position:relative;height:260px;margin-top:16px;">
+      <canvas id="prog-ex-chart"></canvas>
+    </div>
+  </div>
+</div>
+
 <!-- STANDALONE TOOLS -->
 <div id="screen-calorie-calc" class="screen">
   <div class="page-header"><div class="page-tag">Tool</div><h2>Calorie Calculator</h2></div>
@@ -857,16 +982,26 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="mobile-nav-item" onclick="showScreen('nutrition');setMobileActive(this)"><span class="m-icon">&#129361;</span>Nutrition</div>
     <div class="mobile-nav-item" onclick="showScreen('recovery');setMobileActive(this)"><span class="m-icon">&#129688;</span>Recovery</div>
     <div class="mobile-nav-item" onclick="showScreen('build-plan');setMobileActive(this)"><span class="m-icon">&#128197;</span>Plan</div>
+    <div class="mobile-nav-item" onclick="showScreen('progress');setMobileActive(this)"><span class="m-icon">&#128200;</span>Progress</div>
     <div class="mobile-nav-item" onclick="showScreen('coaching');setMobileActive(this)"><span class="m-icon">&#127919;</span>Upgrade</div>
     <div class="mobile-nav-item" onclick="resetPassword(this)"><span class="m-icon">&#128273;</span>Password</div>
   </div>
 </nav>
 
-<!-- SCRIPTS — order matters: data first, then generators, then app -->
+<!-- SCRIPTS -->
 <script src="js/training-data.js"></script>
 <script src="js/meal-data.js"></script>
 <script src="js/generators.js"></script>
 <script src="js/app.js"></script>
+<script src="js/progress.js"></script>
+<script>
+// Patch showScreen to init progress when that screen opens
+const _origShowScreen = showScreen;
+showScreen = function(id) {
+  _origShowScreen(id);
+  if (id === 'progress' && typeof progressInit === 'function') progressInit();
+};
+</script>
 
 </body>
 </html>

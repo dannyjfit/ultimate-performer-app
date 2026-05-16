@@ -198,7 +198,7 @@ MPLANS.meat_1800 = [
       'Season chicken with paprika, cumin, salt. Griddle 5–6 mins per side. Slice peppers and onion and cook in same pan 4 mins. Slice chicken. Build bowl with rice, peppers, avocado, salsa and yoghurt.','🍳 Cook double chicken & peppers tonight — covers tomorrow\'s lunch wrap'),
     dinner: M('Teriyaki Salmon, Rice & Greens',480,42,40,16,
       [I('Salmon fillet','180g'),I('Jasmine rice (cooked)','120g'),I('Pak choi','80g'),I('Soy sauce','2 tbsp'),I('Honey','1 tsp'),I('Garlic','1 clove'),I('Sesame seeds','1 tsp'),I('Sesame oil','1 tsp')],
-      'Mix soy, honey and garlic. Marinate salmon 5 mins. Sear salmon in hot pan 3 mins per side, baste with marinade last minute. Stir-fry pak choi in sesame oil 2 mins. Serve over rice with sesame seeds.','🍳 Cook double salmon — flakes into tomorrow\'s rice bowl'),
+      'Mix soy, honey and garlic. Marinate salmon 5 mins. Sear salmon in hot pan 3 mins per side, baste with marinade last minute. Stir-fry pak choi in sesame oil 2 mins. Serve over rice with sesame seeds.','🍳 Cook double salmon tonight — covers Wednesday\'s breakfast bowl'),
     snack: M('Protein Yoghurt & Nuts',280,22,22,10,
       [I('Greek yoghurt (0%)','200g'),I('Mixed nuts','20g'),I('Honey','1 tsp'),I('Blueberries','60g')],
       'No cooking needed.')
@@ -279,7 +279,7 @@ MPLANS.meat_2000 = [
       'Season chicken with paprika, cumin, salt. Griddle 5–6 mins per side, rest and slice. Warm beans in pan 2 mins with cumin. Build bowl — rice, beans, chicken, avocado, salsa, yoghurt and lime.','🍳 Cook double chicken tonight — covers tomorrow\'s fajita wrap'),
     dinner: M('Teriyaki Salmon, Quinoa & Greens',520,44,42,18,
       [I('Salmon fillet','190g'),I('Quinoa (cooked)','130g'),I('Asparagus','80g'),I('Spinach','60g'),I('Soy sauce','2 tbsp'),I('Honey','1 tsp'),I('Garlic','1 clove'),I('Sesame oil','1 tsp')],
-      'Mix soy, honey and garlic. Marinate salmon 5 mins. Sear salmon in hot pan 3–4 mins per side, baste with marinade. Roast asparagus 200°C 10 mins. Wilt spinach. Serve over quinoa.','🍳 Cook double salmon — flakes into tomorrow\'s rice bowl'),
+      'Mix soy, honey and garlic. Marinate salmon 5 mins. Sear salmon in hot pan 3–4 mins per side, baste with marinade. Roast asparagus 200°C 10 mins. Wilt spinach. Serve over quinoa.','🍳 Cook double salmon tonight — covers Wednesday\'s breakfast bowl'),
     snack: M('Cottage Cheese, Nuts & Apple',300,24,24,12,
       [I('Cottage cheese','200g'),I('Mixed nuts','20g'),I('Apple','1 medium')],
       'No cooking needed.')
@@ -360,7 +360,7 @@ MPLANS.meat_2200 = [
       'Season chicken with paprika, cumin, salt. Griddle 5–6 mins per side. Slice peppers and onion, cook in same pan 4 mins. Build bowl — rice, beans, peppers, chicken, avocado, salsa, yoghurt.','🍳 Cook double chicken & peppers tonight — covers tomorrow\'s wrap'),
     dinner: M('Teriyaki Salmon, Rice & Greens',570,46,44,20,
       [I('Salmon fillet','200g'),I('Jasmine rice (cooked)','140g'),I('Pak choi','80g'),I('Tenderstem broccoli','80g'),I('Soy sauce','2 tbsp'),I('Honey','1 tsp'),I('Garlic','1 clove'),I('Sesame oil','1 tsp')],
-      'Mix soy, honey and garlic. Marinate salmon 5 mins. Sear in hot pan 3–4 mins per side, basting. Stir-fry pak choi and broccoli in sesame oil 3 mins. Serve over rice.','🍳 Cook double salmon — flakes into tomorrow\'s bowl'),
+      'Mix soy, honey and garlic. Marinate salmon 5 mins. Sear in hot pan 3–4 mins per side, basting. Stir-fry pak choi and broccoli in sesame oil 3 mins. Serve over rice.','🍳 Cook double salmon tonight — covers Wednesday\'s breakfast bowl'),
     snack: M('High Protein Yoghurt & Nuts',330,26,26,13,
       [I('Greek yoghurt (0%)','240g'),I('Mixed nuts','25g'),I('Honey','1 tsp'),I('Berries','60g')],
       'No cooking needed.')
@@ -441,7 +441,7 @@ MPLANS.meat_2400 = [
       'Season chicken with paprika, cumin, salt. Griddle 5–6 mins per side, rest and slice. Warm beans in pan 2 mins. Build bowl — rice, beans, chicken, avocado, salsa, yoghurt, cheese and lime.','🍳 Cook double chicken tonight — covers tomorrow\'s fajita wrap'),
     dinner: M('Teriyaki Salmon & Quinoa',620,48,48,22,
       [I('Salmon fillet','210g'),I('Quinoa (cooked)','150g'),I('Asparagus','100g'),I('Avocado','50g'),I('Soy sauce','2 tbsp'),I('Honey','1 tsp'),I('Garlic','1 clove'),I('Sesame oil','1.5 tsp')],
-      'Mix soy, honey and garlic. Marinate salmon 5 mins. Sear in hot pan 3–4 mins per side, basting. Roast asparagus 200°C 10 mins. Slice avocado. Serve over quinoa.','🍳 Cook double salmon — flakes into tomorrow\'s rice bowl'),
+      'Mix soy, honey and garlic. Marinate salmon 5 mins. Sear in hot pan 3–4 mins per side, basting. Roast asparagus 200°C 10 mins. Slice avocado. Serve over quinoa.','🍳 Cook double salmon tonight — covers Wednesday\'s breakfast bowl'),
     snack: M('Protein Yoghurt & Nuts',360,28,28,14,
       [I('Greek yoghurt (0%)','250g'),I('Mixed nuts','30g'),I('Honey','1 tsp'),I('Banana','half')],
       'No cooking needed.')
@@ -522,7 +522,7 @@ MPLANS.meat_2600 = [
       'Season chicken with paprika, cumin, salt. Griddle 5–6 mins per side. Rest and slice. Warm beans with cumin. Build bowl — rice, beans, chicken, avocado, salsa, yoghurt, cheese and lime.','🍳 Cook double chicken tonight — covers tomorrow\'s fajita wrap'),
     dinner: M('Teriyaki Salmon & Quinoa Power Bowl',670,52,52,24,
       [I('Salmon fillet','220g'),I('Quinoa (cooked)','160g'),I('Asparagus','100g'),I('Avocado','60g'),I('Edamame','60g'),I('Soy sauce','2 tbsp'),I('Honey','1 tsp'),I('Sesame oil','1.5 tsp')],
-      'Mix soy, honey and garlic. Marinate salmon 5 mins. Sear in hot pan 3–4 mins per side, basting. Roast asparagus 200°C 10 mins. Microwave edamame 2 mins. Slice avocado. Build bowl.','🍳 Cook double salmon — flakes into tomorrow\'s rice bowl'),
+      'Mix soy, honey and garlic. Marinate salmon 5 mins. Sear in hot pan 3–4 mins per side, basting. Roast asparagus 200°C 10 mins. Microwave edamame 2 mins. Slice avocado. Build bowl.','🍳 Cook double salmon tonight — covers Wednesday\'s breakfast bowl'),
     snack: M('Protein Shake & Nuts',400,36,30,16,
       [I('Whey protein','2 scoops'),I('Milk','300ml'),I('Banana','half'),I('Mixed nuts','25g')],
       'Blend protein, milk and banana 30–45 seconds. Eat nuts on the side.')

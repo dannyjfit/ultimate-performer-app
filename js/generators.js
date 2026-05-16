@@ -264,12 +264,14 @@ function mgBuildDay(day) {
     if (!meal) return '';
     const isSnack = m.key==='snack';
     const cookSection = isSnack ? '' : `<div class="meal-cook-note"><div class="meal-cook-heading">How to make it</div>${meal.method}</div>`;
+    const prepBadge = meal.prepNote ? `<div class="meal-prep-note">${meal.prepNote}</div>` : '';
     return `<div class="meal-card-item">
       <div class="meal-card-hdr">
         <span class="meal-card-type">${m.emoji} ${m.label}</span>
         <span class="meal-card-cals">${meal.cals} kcal</span>
       </div>
       <div class="meal-card-body">
+        ${prepBadge}
         <div class="meal-card-name">${meal.name}</div>
         <div class="meal-card-macros">
           <div class="meal-card-macro">Protein <span>${meal.p}g</span></div>

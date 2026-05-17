@@ -339,6 +339,31 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <div id="save-indicator"></div>
 
+<div id="waiver-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:12px;max-width:560px;width:100%;padding:40px;max-height:90vh;overflow-y:auto;">
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#4682b4;margin-bottom:8px;">Before You Get Started</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:26px;color:#1a1a1a;margin-bottom:8px;">Terms &amp; Disclaimer</h2>
+      <p style="font-size:13px;color:#888;font-family:'Inter',sans-serif;">Please read and agree before accessing the programme.</p>
+    </div>
+    <p style="font-size:13px;color:#555;font-family:'Inter',sans-serif;margin-bottom:20px;line-height:1.6;">This programme is provided by <strong style="color:#1a1a1a;">Danny Jones Coaching FZCO</strong> ("The Performance Coach"). By ticking the box below you confirm that you:</p>
+    <ul style="list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:12px;">
+      <li style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:#444;font-family:'Inter',sans-serif;line-height:1.6;padding:12px 14px;background:#f8f7f2;border-radius:8px;border-left:3px solid #4682b4;"><span style="flex-shrink:0;margin-top:1px;">&#9888;&#65039;</span><span>Understand that participating in any exercise or nutrition programme carries an inherent risk of injury or illness, and you do so <strong>entirely at your own risk</strong></span></li>
+      <li style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:#444;font-family:'Inter',sans-serif;line-height:1.6;padding:12px 14px;background:#f8f7f2;border-radius:8px;border-left:3px solid #4682b4;"><span style="flex-shrink:0;margin-top:1px;">&#128196;</span><span>Release and discharge Danny Jones Coaching FZCO, its representatives and assigns from any and all claims arising from your use of this programme, including injury, illness, loss or damage of any kind</span></li>
+      <li style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:#444;font-family:'Inter',sans-serif;line-height:1.6;padding:12px 14px;background:#f8f7f2;border-radius:8px;border-left:3px solid #4682b4;"><span style="flex-shrink:0;margin-top:1px;">&#129658;</span><span>Acknowledge that this programme is for <strong>educational and informational purposes only</strong> and is not a substitute for advice from a qualified medical, dietary or healthcare professional</span></li>
+      <li style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:#444;font-family:'Inter',sans-serif;line-height:1.6;padding:12px 14px;background:#f8f7f2;border-radius:8px;border-left:3px solid #4682b4;"><span style="flex-shrink:0;margin-top:1px;">&#128104;&#8205;&#9877;&#65039;</span><span>Will consult a doctor before beginning if you have any existing health conditions, injuries or medical concerns</span></li>
+      <li style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:#444;font-family:'Inter',sans-serif;line-height:1.6;padding:12px 14px;background:#f8f7f2;border-radius:8px;border-left:3px solid #4682b4;"><span style="flex-shrink:0;margin-top:1px;">&#128202;</span><span>Understand that individual results vary and nothing in this programme constitutes a guarantee of specific outcomes</span></li>
+      <li style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:#444;font-family:'Inter',sans-serif;line-height:1.6;padding:12px 14px;background:#f8f7f2;border-radius:8px;border-left:3px solid #4682b4;"><span style="flex-shrink:0;margin-top:1px;">&#128179;</span><span>Acknowledge that this is a digital product and that <strong>no refunds will be issued</strong> once access has been granted</span></li>
+    </ul>
+    <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:24px;padding:16px;border:2px solid #4682b4;border-radius:8px;background:rgba(70,130,180,0.05);">
+      <input type="checkbox" id="waiver-checkbox" style="width:18px;height:18px;accent-color:#4682b4;flex-shrink:0;margin-top:2px;cursor:pointer;">
+      <span style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#1a1a1a;line-height:1.5;">I have read, understood and agree to the above terms</span>
+    </label>
+    <button id="waiver-btn" disabled style="width:100%;background:#4682b4;color:white;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:16px;border-radius:6px;border:none;cursor:pointer;transition:background 0.2s,opacity 0.2s;opacity:0.4;">I Agree &amp; Continue</button>
+    <p style="text-align:center;font-size:11px;color:#aaa;font-family:'Inter',sans-serif;margin-top:12px;">Your agreement is recorded with a timestamp for your records.</p>
+  </div>
+</div>
+
 <!-- AUTH -->
 <div id="auth-screen" class="visible">
   <div class="auth-box">

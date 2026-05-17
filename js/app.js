@@ -15,12 +15,23 @@ let _weeklyTimer = null;
 // ─── AUTH ────────────────────────────────────────────────────────
 async function initAuth() {
   const { data: { session } } = await _db.auth.getSession();
-  if (session) { _uid = session.user.id; showApp(session.user.email); await loadData(); }
-  else showAuthScreen();
+  if (session) {
+    _uid = session.user.id;
+    await loadData();
+    const agreed = await checkWaiverAgreed();
+    if (agreed) {
+      showApp(session.user.email);
+    } else {
+      showWaiverModal(session.user.email);
+    }
+  } else {
+    showAuthScreen();
+  }
 }
 
 function showApp(email) {
   document.getElementById('auth-screen').classList.remove('visible');
+  hideWaiverModal();
   document.getElementById('nav-user-email').textContent = email;
   showScreen('dashboard');
 }
@@ -41,8 +52,14 @@ async function handleLogin() {
     msg.textContent = error.message==='Invalid login credentials' ? 'Email or password is incorrect.' : error.message;
   } else if (data.session) {
     _uid = data.session.user.id;
-    showApp(data.session.user.email);
     await loadData();
+    const agreed = await checkWaiverAgreed();
+    if (agreed) {
+      showApp(data.session.user.email);
+    } else {
+      document.getElementById('auth-screen').classList.remove('visible');
+      showWaiverModal(data.session.user.email);
+    }
   }
 }
 
@@ -79,26 +96,59 @@ async function resetPassword(btn) {
   else alert(error.message);
 }
 
+// ─── WAIVER ──────────────────────────────────────────────────────
+async function checkWaiverAgreed() {
+  if (!_uid) return false;
+  const { data } = await _db.from('user_data').select('waiver_agreed_at').eq('id', _uid).single();
+  return !!(data && data.waiver_agreed_at);
+}
+
+async function handleWaiverAgree(email) {
+  const checkbox = document.getElementById('waiver-checkbox');
+  const btn      = document.getElementById('waiver-btn');
+  if (!checkbox.checked) return;
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  await _db.from('user_data').upsert(
+    { id: _uid, waiver_agreed_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { onConflict: 'id' }
+  );
+  showApp(email);
+}
+
+function showWaiverModal(email) {
+  document.getElementById('waiver-modal').style.display = 'flex';
+  // Wire up the agree button with this user's email
+  const btn = document.getElementById('waiver-btn');
+  btn.onclick = () => handleWaiverAgree(email);
+  // Checkbox enables/disables the button
+  const cb = document.getElementById('waiver-checkbox');
+  cb.checked = false;
+  btn.disabled = true;
+  cb.onchange = () => { btn.disabled = !cb.checked; };
+}
+
+function hideWaiverModal() {
+  const m = document.getElementById('waiver-modal');
+  if (m) m.style.display = 'none';
+}
+
 // ─── LOAD DATA ───────────────────────────────────────────────────
 async function loadData() {
   if (!_uid) return;
   const { data } = await _db.from('user_data').select('*').eq('id', _uid).single();
   if (!data) return;
 
-  // Simple text fields
   ['why_statement','reflection_1','reflection_2','reflection_3','reflection_4',
    'sleep_bedtime','sleep_waketime','recovery_breathwork','recovery_session','recovery_when'].forEach(f => {
     const el = document.getElementById(f);
     if (el && data[f]) el.value = data[f];
   });
 
-  // Cross-populate why statement
   if (data.why_statement) {
     const pw = document.getElementById('plan_why');
     if (pw) pw.value = data.why_statement;
   }
-
-  // Cross-populate calories/protein to plan page
   if (data.calorie_target) {
     const pc = document.getElementById('plan_calories');
     if (pc) pc.value = data.calorie_target;
@@ -108,10 +158,8 @@ async function loadData() {
     if (pp) pp.value = data.protein_target;
   }
 
-  // Cross-populate sleep window
   crossPopulateSleep();
 
-  // Weekly plan
   if (data.weekly_plan && typeof data.weekly_plan === 'object') {
     document.querySelectorAll('.weekly-table textarea[data-day]').forEach(ta => {
       const day = ta.dataset.day, col = ta.dataset.col;
@@ -119,7 +167,6 @@ async function loadData() {
     });
   }
 
-  // Auto-restore training generator if saved
   if (data.training_loc && data.training_level && data.training_days && data.training_goal) {
     const s = { loc:data.training_loc, level:data.training_level, days:data.training_days, goal:data.training_goal };
     ['tg','tg2'].forEach(ns => {
@@ -132,7 +179,6 @@ async function loadData() {
     });
   }
 
-  // Auto-restore meal generator if saved
   if (data.calorie_target && data.dietary_pref) {
     ['mg','mg2'].forEach(ns => {
       _mgState[ns] = { cals:data.calorie_target, diet:data.dietary_pref };
@@ -206,6 +252,7 @@ function showScreen(id) {
   document.querySelectorAll('.sidebar-item').forEach(item => {
     if ((item.getAttribute('onclick')||'').includes("'"+id+"'")) item.classList.add('active');
   });
+  if (id === 'progress' && typeof progressInit === 'function') progressInit();
   window.scrollTo(0,0);
 }
 

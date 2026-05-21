@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════
 // PROGRESS TRACKER
-// Depends on: _supabase (from app.js), TGV (from training-data.js)
+// Depends on: _db (from app.js), TGV (from training-data.js)
 // ═══════════════════════════════════════════════════════════════
 
 let _progressChartInstance = null;
@@ -8,18 +8,18 @@ let _exerciseChartInstance = null;
 
 // ─── SUPABASE HELPERS ────────────────────────────────────────────
 async function progressInsert(row) {
-  const { data: { user } } = await _supabase.auth.getUser();
+  const { data: { user } } = await _db.auth.getUser();
   if (!user) return false;
-  const { error } = await _supabase
+  const { error } = await _db
     .from('progress_logs')
     .insert({ ...row, user_id: user.id, logged_at: new Date().toISOString() });
   return !error;
 }
 
 async function progressFetchCheckins() {
-  const { data: { user } } = await _supabase.auth.getUser();
+  const { data: { user } } = await _db.auth.getUser();
   if (!user) return [];
-  const { data, error } = await _supabase
+  const { data, error } = await _db
     .from('progress_logs')
     .select('*')
     .eq('user_id', user.id)
@@ -30,9 +30,9 @@ async function progressFetchCheckins() {
 }
 
 async function progressFetchByExercise(name) {
-  const { data: { user } } = await _supabase.auth.getUser();
+  const { data: { user } } = await _db.auth.getUser();
   if (!user) return [];
-  const { data, error } = await _supabase
+  const { data, error } = await _db
     .from('progress_logs')
     .select('*')
     .eq('user_id', user.id)

@@ -422,7 +422,17 @@ const _orig = window.showScreen;
 if (_orig) {
   window.showScreen = function(id) {
     _orig(id);
-    if (id === 'movement') setTimeout(injectStartButton, 50);
+    const bar = document.getElementById('workout-timer-bar');
+    if (id === 'movement') {
+      setTimeout(injectStartButton, 50);
+      // Show bar only if session is running
+      if (bar && timerState.session.running) bar.classList.add('visible');
+    } else {
+      // Hide bar when leaving movement screen
+      if (bar) bar.classList.remove('visible');
+      // Stop rest timer if running
+      if (timerState.rest.running) timerStopRest();
+    }
   };
 }
 

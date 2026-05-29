@@ -974,24 +974,46 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 <script src="js/progress.js"></script>
 <script src="js/timer.js"></script>
 <script>
-document.addEventListener("deviceready", async function() {
-  if (!window.Capacitor || !window.Capacitor.Plugins.PushNotifications) return;
-  var PushNotifications = window.Capacitor.Plugins.PushNotifications;
-  PushNotifications.requestPermissions().then(function(permission) {
-    if (permission.receive === "granted") {
-      PushNotifications.register();
+window.addEventListener("load", function() {
+  setTimeout(function() {
+    if (!window.Capacitor || !window.Capacitor.Plugins || !window.Capacitor.Plugins.PushNotifications) {
+      console.log("PushNotifications plugin not available");
+      return;
     }
-  });
-  PushNotifications.addListener("registration", function(token) {
-    console.log("Push token:", token.value);
-  });
-  PushNotifications.addListener("pushNotificationReceived", function(notification) {
-    console.log("Notification received:", JSON.stringify(notification));
-  });
-  PushNotifications.addListener("pushNotificationActionPerformed", function(action) {
-    console.log("Notification tapped:", JSON.stringify(action));
-  });
-}, false);
+    var PushNotifications = window.Capacitor.Plugins.PushNotifications;
+
+    PushNotifications.addListener("registration", function(token) {
+      console.log("Push registration token:", token.value);
+    });
+
+    PushNotifications.addListener("registrationError", function(err) {
+      console.error("Push registration error:", JSON.stringify(err));
+    });
+
+    PushNotifications.addListener("pushNotificationReceived", function(notification) {
+      console.log("Push received:", JSON.stringify(notification));
+    });
+
+    PushNotifications.addListener("pushNotificationActionPerformed", function(action) {
+      console.log("Push tapped:", JSON.stringify(action));
+    });
+
+    PushNotifications.requestPermissions().then(function(result) {
+      console.log("Push permission result:", JSON.stringify(result));
+      if (result.receive === "granted") {
+        PushNotifications.register().then(function() {
+          console.log("Push registered successfully");
+        }).catch(function(err) {
+          console.error("Push register error:", err);
+        });
+      } else {
+        console.log("Push permission denied");
+      }
+    }).catch(function(err) {
+      console.error("Push requestPermissions error:", err);
+    });
+  }, 2000);
+});
 </script>
 <script>
 function playVideo(el, videoId) {

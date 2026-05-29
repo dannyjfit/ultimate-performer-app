@@ -61,7 +61,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 .btn-primary{display:inline-block;background:var(--blue);color:white;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 24px;border-radius:4px;cursor:pointer;border:none;transition:background 0.2s;-webkit-appearance:none;touch-action:manipulation;}
 .btn-primary:active{background:var(--blue-dark);}
 .modules-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
-.module-card{background:white;border-radius:10px;padding:16px;cursor:pointer;border:1px solid rgba(0,0,0,0.06);position:relative;overflow:hidden;touch-action:manipulation;}
+.module-card{background:white;border-radius:10px;padding:16px;cursor:pointer;border:1px solid rgba(0,0,0,0.06);position:relative;overflow:hidden;touch-action:manipulation;text-align:center;}
 .module-card:active{border-color:var(--blue);transform:scale(0.98);}
 .module-number{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:6px;}
 .module-card h3{font-family:'DM Serif Display',serif;font-size:17px;color:var(--dark);margin-bottom:6px;}
@@ -415,7 +415,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- DASHBOARD -->
 <div id="screen-dashboard" class="screen active">
-  <div class="welcome-hero">
+  <div class="welcome-hero" style="text-align:center;">
     <div class="welcome-tag">Welcome to the program</div>
     <h1>The Ultimate<br>Performer</h1>
     <p>For busy professionals who are ready to start putting themselves first. Work through it in order — everything is here for a reason.</p>
@@ -447,7 +447,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Next step is the quiz.</p></div>
-  <button class="btn-primary" onclick="showScreen('quiz')">Next: Take the Quiz &#8594;</button>
+  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('quiz')">Next: Take the Quiz &#8594;</button></div>
 </div>
 
 <!-- QUIZ -->
@@ -455,7 +455,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   <div class="page-header" style="text-align:center;"><div class="page-tag">Step 1</div><h2>Your Performance Quiz</h2><p>Takes about 5 minutes.</p></div>
   <div class="tool-embed"><iframe src="https://dannyjfit.github.io/ultimate-performer-quiz/" title="Ultimate Performer Quiz"></iframe></div>
   <div class="callout" style="text-align:center;"><p><strong>Finished?</strong> Head into the Why Workshop next.</p></div>
-  <button class="btn-primary" onclick="showScreen('why-workshop')">Next: Why Workshop &#8594;</button>
+  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('why-workshop')">Next: Why Workshop &#8594;</button></div>
 </div>
 
 <!-- WHY WORKSHOP -->
@@ -493,12 +493,12 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   <div class="content-section">
     <h4 style="text-align:center;">Step 3 — Build Your Why Statement</h4>
     <div class="quote-block" style="margin:14px 0;"><p>"I am committed to my health because I want to [feel/achieve], so that I can [impact on your life or the people around you]."</p></div>
-    <label style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:8px;">Your Why Statement</label>
+    <label style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:8px;text-align:center;">Your Why Statement</label>
     <textarea class="why-input" id="why_statement" placeholder="Write it here — then screenshot it. This is your anchor." oninput="debounceSave('why_statement',this.value);crossPopulateWhy(this.value)"></textarea>
-    <p style="font-size:13px;color:#888;margin-top:8px;">&#128247; Screenshot it. Save it somewhere you'll see it every day.</p>
+    <p style="font-size:13px;color:#888;margin-top:8px;text-align:center;">&#128247; Screenshot it. Save it somewhere you'll see it every day.</p>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Move to Movement next.</p></div>
-  <button class="btn-primary" onclick="showScreen('movement')">Next: Movement &#8594;</button>
+  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('movement')">Next: Movement &#8594;</button></div>
 </div>
 
 <!-- MOVEMENT -->
@@ -577,7 +577,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="tool-embed" style="height:auto;"><iframe src="https://dannyjfit.github.io/exercise-library/" style="height:600px;width:100%;border:none;"></iframe></div>
   </div>
   <div class="callout" style="margin-top:16px;text-align:center;"><p><strong>Done?</strong> Move to Nutrition next.</p></div>
-  <button class="btn-primary" onclick="showScreen('nutrition')">Next: Nutrition &#8594;</button>
+  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('nutrition')">Next: Nutrition &#8594;</button></div>
 </div>
 
 <!-- NUTRITION -->
@@ -593,7 +593,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   </div>
   <div class="content-section">
     <h4 style="text-align:center;">Your Meal Plans</h4>
-    <p>Pick your calorie target and preference — your 5-day plan generates instantly.</p>
+    <p style="text-align:center;">Pick your calorie target and preference — your 5-day plan generates instantly.</p>
     <div class="generator-wrap">
       <div id="mg-sel" class="gen-wrap">
         <div class="gen-eyebrow">The Ultimate Performer</div>
@@ -632,7 +632,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   </div>
   <div class="content-section">
     <h4 style="text-align:center;">The Three Defaults</h4>
-    <p>The most effective nutrition habit for busy people isn't tracking. It's having a default for each meal so you're never starting from scratch.</p>
+    <p style="text-align:center;">The most effective nutrition habit for busy people isn't tracking. It's having a default for each meal so you're never starting from scratch.</p>
     <ul>
       <li><strong>A default breakfast</strong> — high protein, no thought required, done in under 5 minutes.</li>
       <li><strong>A default lunch</strong> — something you can grab or put together quickly.</li>
@@ -649,7 +649,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </div>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Move to Recovery next.</p></div>
-  <button class="btn-primary" onclick="showScreen('recovery')">Next: Recovery &#8594;</button>
+  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('recovery')">Next: Recovery &#8594;</button></div>
 </div>
 
 <!-- RECOVERY -->
@@ -661,7 +661,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   </div>
   <div class="content-section">
     <h4 style="text-align:center;">&#128564; Sleep</h4>
-    <p>Most clients are losing more ground here than anywhere else. Poor sleep wrecks your energy, mood, decision-making, and results.</p>
+    <p style="text-align:center;">Most clients are losing more ground here than anywhere else. Poor sleep wrecks your energy, mood, decision-making, and results.</p>
     <table class="data-table" style="margin-top:14px;">
       <tr><th>Rule</th><th>Why it matters</th></tr>
       <tr><td>7-9 hours per night</td><td>Non-negotiable for performance and recovery</td></tr>
@@ -670,7 +670,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
       <tr><td>No caffeine after 2pm</td><td>Caffeine has a 6 hour half-life</td></tr>
       <tr><td>Cool, dark room</td><td>Core body temp needs to drop to initiate sleep</td></tr>
     </table>
-    <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;margin-top:14px;">Your Commitment</p>
+    <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;margin-top:14px;text-align:center;">Your Commitment</p>
     <table class="input-table">
       <tr><td>What time will you be in bed by?</td><td><input type="text" id="sleep_bedtime" placeholder="e.g. 10:30pm" oninput="debounceSave('sleep_bedtime',this.value);crossPopulateSleep()"></td></tr>
       <tr><td>What time will your alarm be set for?</td><td><input type="text" id="sleep_waketime" placeholder="e.g. 6:30am" oninput="debounceSave('sleep_waketime',this.value);crossPopulateSleep()"></td></tr>
@@ -678,7 +678,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   </div>
   <div class="content-section">
     <h4 style="text-align:center;">&#127748; Breathwork — Box Breathing</h4>
-    <p>Inhale 4 &#8594; Hold 4 &#8594; Exhale 4 &#8594; Hold 4. Repeat 4 rounds. Use this daily.</p>
+    <p style="text-align:center;">Inhale 4 &#8594; Hold 4 &#8594; Exhale 4 &#8594; Hold 4. Repeat 4 rounds. Use this daily.</p>
     <div class="tool-embed"><iframe src="https://dannyjfit.github.io/recovery-box-breathing/" title="Box Breathing"></iframe></div>
     <table class="input-table"><tr><td>When will you do your box breathing?</td><td><input type="text" id="recovery_breathwork" placeholder="Morning / Evening / Both" oninput="debounceSave('recovery_breathwork',this.value)"></td></tr></table>
   </div>
@@ -706,7 +706,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </ul>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Last step — build your plan.</p></div>
-  <button class="btn-primary" onclick="showScreen('build-plan')">Next: Your Plan &#8594;</button>
+  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('build-plan')">Next: Your Plan &#8594;</button></div>
 </div>
 
 <!-- YOUR PLAN -->
@@ -760,7 +760,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   </div>
   <div class="quote-block"><p>You've got everything you need here. The only variable now is whether you actually use it. Start today. Adjust as you go.</p></div>
   <div class="callout" style="text-align:center;"><p><strong>One last step.</strong> Book a free 30-minute Performance Review — I'll look at what you've built and tell you exactly what to focus on first.</p></div>
-  <a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank"><button class="btn-primary">Book Your Free Review &#8594;</button></a>
+  <div style="text-align:center;"><a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank"><button class="btn-primary">Book Your Free Review &#8594;</button></a></div>
 </div>
 
 <!-- PROGRESS -->
@@ -768,7 +768,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   <div class="page-header" style="text-align:center;"><div class="page-tag">Track</div><h2>Progress</h2><p>Track your body weight and see how your lifts are moving over time.</p></div>
   <div class="content-section" style="margin-bottom:16px;">
     <h4 style="text-align:center;">Weekly Check-In</h4>
-    <p style="margin-bottom:14px;">Log your weight, energy, and sleep once a week to track trends.</p>
+    <p style="margin-bottom:14px;text-align:center;">Log your weight, energy, and sleep once a week to track trends.</p>
     <div class="prog-form-grid">
       <div class="prog-field"><label class="prog-label" for="prog-bw">Body Weight (kg)</label><input class="prog-input" type="number" id="prog-bw" placeholder="e.g. 82.5" step="0.1" min="0"></div>
       <div class="prog-field"><label class="prog-label" for="prog-energy">Energy (1-10)</label><input class="prog-input" type="number" id="prog-energy" placeholder="e.g. 7" min="1" max="10"></div>
@@ -783,7 +783,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   </div>
   <div class="content-section" style="margin-bottom:16px;">
     <h4 style="text-align:center;">Log an Exercise</h4>
-    <p style="margin-bottom:14px;">You can also log directly from the Movement section.</p>
+    <p style="margin-bottom:14px;text-align:center;">You can also log directly from the Movement section.</p>
     <div class="prog-form-grid">
       <div class="prog-field prog-field-full"><label class="prog-label" for="prog-exercise-select">Exercise</label><select class="prog-input prog-select" id="prog-exercise-select"></select></div>
       <div class="prog-field"><label class="prog-label" for="prog-weight-used">Weight (kg)</label><input class="prog-input" type="number" id="prog-weight-used" placeholder="0 = bodyweight" min="0" step="0.5"></div>
@@ -795,7 +795,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   </div>
   <div class="content-section">
     <h4 style="text-align:center;">Exercise Progression</h4>
-    <p style="margin-bottom:14px;">Select an exercise to see your weight over time.</p>
+    <p style="margin-bottom:14px;text-align:center;">Select an exercise to see your weight over time.</p>
     <div class="prog-chart-controls">
       <select class="prog-input prog-select" id="prog-chart-exercise"></select>
       <button class="prog-btn prog-btn-sm" id="prog-ex-chart-btn" onclick="progressLoadExerciseChart()">View Progression</button>

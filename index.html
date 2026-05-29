@@ -976,42 +976,37 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 <script>
 window.addEventListener("load", function() {
   setTimeout(function() {
-    if (!window.Capacitor || !window.Capacitor.Plugins || !window.Capacitor.Plugins.PushNotifications) {
-      console.log("PushNotifications plugin not available");
+    if (typeof window.plugins === "undefined" || typeof window.plugins.OneSignal === "undefined") {
+      console.log("OneSignal plugin not available, trying Capacitor fallback");
+      // Capacitor fallback
+      if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.PushNotifications) {
+        var PushNotifications = window.Capacitor.Plugins.PushNotifications;
+        PushNotifications.requestPermissions().then(function(result) {
+          if (result.receive === "granted") {
+            PushNotifications.register();
+          }
+        });
+      }
       return;
     }
-    var PushNotifications = window.Capacitor.Plugins.PushNotifications;
 
-    PushNotifications.addListener("registration", function(token) {
-      console.log("Push registration token:", token.value);
+    // OneSignal Cordova plugin
+    var OneSignal = window.plugins.OneSignal;
+    OneSignal.initialize("33da46f0-baf0-4bef-848a-1c6e2be45a4f");
+
+    OneSignal.Notifications.requestPermission(true).then(function(accepted) {
+      console.log("OneSignal permission accepted:", accepted);
     });
 
-    PushNotifications.addListener("registrationError", function(err) {
-      console.error("Push registration error:", JSON.stringify(err));
+    OneSignal.Notifications.addEventListener("click", function(event) {
+      console.log("OneSignal notification clicked:", JSON.stringify(event));
     });
 
-    PushNotifications.addListener("pushNotificationReceived", function(notification) {
-      console.log("Push received:", JSON.stringify(notification));
+    OneSignal.Notifications.addEventListener("foregroundWillDisplay", function(event) {
+      event.notification.display();
     });
 
-    PushNotifications.addListener("pushNotificationActionPerformed", function(action) {
-      console.log("Push tapped:", JSON.stringify(action));
-    });
-
-    PushNotifications.requestPermissions().then(function(result) {
-      console.log("Push permission result:", JSON.stringify(result));
-      if (result.receive === "granted") {
-        PushNotifications.register().then(function() {
-          console.log("Push registered successfully");
-        }).catch(function(err) {
-          console.error("Push register error:", err);
-        });
-      } else {
-        console.log("Push permission denied");
-      }
-    }).catch(function(err) {
-      console.error("Push requestPermissions error:", err);
-    });
+    console.log("OneSignal initialised");
   }, 2000);
 });
 </script>

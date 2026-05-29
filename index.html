@@ -974,6 +974,26 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 <script src="js/progress.js"></script>
 <script src="js/timer.js"></script>
 <script>
+document.addEventListener("deviceready", async function() {
+  if (!window.Capacitor || !window.Capacitor.Plugins.PushNotifications) return;
+  var PushNotifications = window.Capacitor.Plugins.PushNotifications;
+  PushNotifications.requestPermissions().then(function(permission) {
+    if (permission.receive === "granted") {
+      PushNotifications.register();
+    }
+  });
+  PushNotifications.addListener("registration", function(token) {
+    console.log("Push token:", token.value);
+  });
+  PushNotifications.addListener("pushNotificationReceived", function(notification) {
+    console.log("Notification received:", JSON.stringify(notification));
+  });
+  PushNotifications.addListener("pushNotificationActionPerformed", function(action) {
+    console.log("Notification tapped:", JSON.stringify(action));
+  });
+}, false);
+</script>
+<script>
 function playVideo(el, videoId) {
   el.innerHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1" allowfullscreen allow="autoplay; encrypted-media"></iframe>';
   el.style.cursor = 'default';

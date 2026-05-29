@@ -319,8 +319,8 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 .steps-bar-bg{background:rgba(0,0,0,0.08);border-radius:4px;height:6px;overflow:hidden;margin-bottom:8px;}
 .steps-bar-fill{background:#4682b4;height:100%;border-radius:4px;transition:width 0.6s ease;}
 .steps-remaining{font-size:12px;color:#888;}
-.steps-week-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dark);opacity:0.5;margin:16px 0 10px;}
-.steps-week-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin-bottom:8px;}
+.steps-week-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dark);opacity:0.5;margin:20px 0 12px;}
+.steps-week-chart{display:flex;align-items:flex-end;gap:6px;height:100px;margin-bottom:8px;}
 .steps-bar-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .steps-bar-day-fill{width:100%;border-radius:3px 3px 0 0;}
 .steps-bar-day-lbl{font-size:10px;color:#aaa;}
@@ -613,6 +613,23 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   </div>
   <div id="tab-exlib" class="tab-content">
     <div class="tool-embed" style="height:auto;"><iframe src="https://dannyjfit.github.io/exercise-library/" style="height:600px;width:100%;border:none;"></iframe></div>
+  </div>
+  <div class="content-section" style="margin-top:16px;">
+    <h4 style="text-align:center;">&#127939; Daily Step Goal</h4>
+    <p style="text-align:center;">Set your daily step target — this shows on your home screen and tracks your progress each week.</p>
+    <table class="input-table" style="margin-top:12px;">
+      <tr><td>Daily step target</td><td>
+        <select id="step_goal_select" onchange="saveStepGoal(this.value)" style="width:100%;border:1.5px solid rgba(0,0,0,0.12);border-radius:6px;padding:10px 12px;font-size:15px;font-family:'Inter',sans-serif;background:white;outline:none;margin-top:4px;-webkit-appearance:none;">
+          <option value="5000">5,000 steps</option>
+          <option value="6000">6,000 steps</option>
+          <option value="8000" selected>8,000 steps</option>
+          <option value="10000">10,000 steps</option>
+          <option value="12000">12,000 steps</option>
+          <option value="custom">Custom...</option>
+        </select>
+        <input type="number" id="step_goal_custom" placeholder="Enter your target" min="1000" max="30000" step="500" style="display:none;width:100%;border:1.5px solid rgba(0,0,0,0.12);border-radius:6px;padding:10px 12px;font-size:15px;font-family:'Inter',sans-serif;background:white;outline:none;margin-top:8px;-webkit-appearance:none;" oninput="saveStepGoalCustom(this.value)">
+      </td></tr>
+    </table>
   </div>
   <div class="callout" style="margin-top:16px;text-align:center;"><p><strong>Done?</strong> Move to Nutrition next.</p></div>
   <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('nutrition')">Next: Nutrition &#8594;</button></div>
@@ -1070,10 +1087,48 @@ function playVideo(el, videoId) {
   el.innerHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1" allowfullscreen allow="autoplay; encrypted-media"></iframe>';
   el.style.cursor = 'default';
 }
+
+function saveStepGoal(val) {
+  var customInput = document.getElementById('step_goal_custom');
+  if (val === 'custom') {
+    if (customInput) customInput.style.display = 'block';
+    return;
+  }
+  if (customInput) customInput.style.display = 'none';
+  var goal = parseInt(val);
+  localStorage.setItem('step_goal', goal);
+  if (window.HK) { HK.goal = goal; HK.fetchSteps(); }
+  debounceSave('step_goal', goal);
+}
+
+function saveStepGoalCustom(val) {
+  var goal = parseInt(val);
+  if (!goal || goal < 1000) return;
+  localStorage.setItem('step_goal', goal);
+  if (window.HK) { HK.goal = goal; HK.fetchSteps(); }
+  debounceSave('step_goal', goal);
+}
+
+function loadStepGoal() {
+  var saved = localStorage.getItem('step_goal');
+  if (!saved) return;
+  var goal = parseInt(saved);
+  var sel = document.getElementById('step_goal_select');
+  if (!sel) return;
+  var validOptions = ['5000','6000','8000','10000','12000'];
+  if (validOptions.indexOf(String(goal)) !== -1) {
+    sel.value = String(goal);
+  } else {
+    sel.value = 'custom';
+    var customInput = document.getElementById('step_goal_custom');
+    if (customInput) { customInput.style.display = 'block'; customInput.value = goal; }
+  }
+}
 const _origShowScreen = showScreen;
 showScreen = function(id) {
   _origShowScreen(id);
   if (id === 'progress' && typeof progressInit === 'function') progressInit();
+  if (id === 'movement') loadStepGoal();
 };
 </script>
 </body>

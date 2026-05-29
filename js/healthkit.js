@@ -1,4 +1,4 @@
-// healthkit.js — step tracking via Capacitor HealthKit bridge
+// healthkit.js — step tracking via @perfood/capacitor-healthkit
 
 var HK = {
   goal: 8000,
@@ -26,49 +26,81 @@ var HK = {
   },
 
   requestPermission: function() {
-    var plugin = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.HealthKitBridge;
+    var plugin = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHealthkit;
     if (!plugin) {
-      console.log('HealthKitBridge plugin not found - checking alternatives');
-      // Try calling via Capacitor core directly
-      if (window.Capacitor) {
-        window.Capacitor.nativeCallback('HealthKitBridge', 'requestPermission', {}, function(result) {
-          if (result && result.granted) {
-            HK.granted = true;
-            localStorage.setItem('hk_granted', 'true');
-            var btn = document.getElementById('steps-enable-btn');
-            if (btn) btn.style.display = 'none';
-            HK.fetchSteps();
-          }
-        });
-      }
+      console.log('CapacitorHealthkit plugin not available');
       return;
     }
-    plugin.requestPermission().then(function(result) {
-      if (result.granted) {
-        HK.granted = true;
-        localStorage.setItem('hk_granted', 'true');
-        var btn = document.getElementById('steps-enable-btn');
-        if (btn) btn.style.display = 'none';
-        HK.fetchSteps();
-      }
+    plugin.requestAuthorization({
+      all: [],
+      read: ['steps'],
+      write: []
+    }).then(function() {
+      HK.granted = true;
+      localStorage.setItem('hk_granted', 'true');
+      var btn = document.getElementById('steps-enable-btn');
+      if (btn) btn.style.display = 'none';
+      HK.fetchSteps();
     }).catch(function(err) {
-      console.error('HealthKit permission error:', err);
+      console.error('HealthKit auth error:', err);
     });
   },
 
   fetchSteps: function() {
-    var plugin = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.HealthKitBridge;
+    var plugin = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHealthkit;
     if (!plugin) return;
 
-    plugin.getStepsToday().then(function(result) {
-      HK.renderTodayCard(result.steps || 0);
+    var now = new Date();
+    var startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    // Today's steps
+    plugin.queryHKitSampleType({
+      sampleName: 'stepCount',
+      startDate: startOfDay.toISOString(),
+      endDate: now.toISOString(),
+      limit: 0
+    }).then(function(result) {
+      var steps = 0;
+      if (result && result.resultData) {
+        result.resultData.forEach(function(entry) {
+          steps += (entry.quantity || 0);
+        });
+      }
+      HK.renderTodayCard(Math.round(steps));
     }).catch(function() {
       HK.renderTodayCard(0);
     });
 
-    plugin.getStepsWeek().then(function(result) {
-      HK.renderWeekChart(result.days || []);
-    }).catch(function() {});
+    // Week steps — query last 7 days one at a time
+    var weekSteps = [0,0,0,0,0,0,0];
+    var todayIdx = (now.getDay() + 6) % 7;
+    var pending = 0;
+
+    for (var d = 0; d < 7; d++) {
+      (function(dayOffset) {
+        var dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOffset);
+        var dayEnd = new Date(dayStart.getTime() + 86400000);
+        var weekIdx = (todayIdx - dayOffset + 7) % 7;
+        pending++;
+        plugin.queryHKitSampleType({
+          sampleName: 'stepCount',
+          startDate: dayStart.toISOString(),
+          endDate: dayEnd.toISOString(),
+          limit: 0
+        }).then(function(result) {
+          var steps = 0;
+          if (result && result.resultData) {
+            result.resultData.forEach(function(entry) { steps += (entry.quantity || 0); });
+          }
+          weekSteps[weekIdx] = Math.round(steps);
+          pending--;
+          if (pending === 0) HK.renderWeekChart(weekSteps);
+        }).catch(function() {
+          pending--;
+          if (pending === 0) HK.renderWeekChart(weekSteps);
+        });
+      })(d);
+    }
   },
 
   renderTodayCard: function(steps) {
@@ -93,7 +125,7 @@ var HK = {
     els.denom.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = '/ ' + goal.toLocaleString(); });
     els.bar.forEach(function(id) { var el = document.getElementById(id); if(el) el.style.width = pct + '%'; });
     els.goal.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = 'Goal: ' + goal.toLocaleString(); });
-    els.rem.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = remaining > 0 ? remaining.toLocaleString() + ' steps to go' : 'Goal reached!'; });
+    els.rem.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = remaining > 0 ? remaining.toLocaleString() + ' steps to go' : 'Goal reached! 🎯'; });
   },
 
   renderWeekChart: function(days) {

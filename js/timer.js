@@ -396,6 +396,7 @@ function injectStartButton() {
   const wrap = document.createElement('div');
   wrap.id = 'session-start-wrap';
   wrap.className = 'start-session-wrap';
+  wrap.style.textAlign = 'center';
   wrap.innerHTML = `
     <button class="start-session-btn" id="main-session-btn" onclick="timerToggleSession()">
       <span>⏱</span>

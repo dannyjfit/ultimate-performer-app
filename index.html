@@ -421,7 +421,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <p>For busy professionals who are ready to start putting themselves first. Work through it in order — everything is here for a reason.</p>
     <button class="btn-primary" onclick="showScreen('welcome-video')">Start Here — Watch Welcome Video</button>
   </div>
-  <div style="margin-bottom:20px;">
+  <div style="margin-bottom:20px;text-align:center;">
     <div class="page-tag">Your Journey</div>
     <h2 style="font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:4px;">Work through it in order</h2>
     <p style="color:#666;font-size:14px;">Start with the welcome video, take the quiz, then work through each module. Don't skip ahead.</p>
@@ -441,47 +441,47 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- WELCOME VIDEO -->
 <div id="screen-welcome-video" class="screen">
-  <div class="page-header"><div class="page-tag">Start Here</div><h2>Welcome to the Program</h2><p>Watch this before anything else.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Start Here</div><h2>Welcome to the Program</h2><p>Watch this before anything else.</p></div>
   <div class="video-embed" onclick="playVideo(this,'djhCrVHWJKE')">
     <img src="https://img.youtube.com/vi/djhCrVHWJKE/maxresdefault.jpg" alt="Welcome Video">
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
   </div>
-  <div class="callout"><p><strong>Done?</strong> Next step is the quiz.</p></div>
+  <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Next step is the quiz.</p></div>
   <button class="btn-primary" onclick="showScreen('quiz')">Next: Take the Quiz &#8594;</button>
 </div>
 
 <!-- QUIZ -->
 <div id="screen-quiz" class="screen">
-  <div class="page-header"><div class="page-tag">Step 1</div><h2>Your Performance Quiz</h2><p>Takes about 5 minutes.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Step 1</div><h2>Your Performance Quiz</h2><p>Takes about 5 minutes.</p></div>
   <div class="tool-embed"><iframe src="https://dannyjfit.github.io/ultimate-performer-quiz/" title="Ultimate Performer Quiz"></iframe></div>
-  <div class="callout"><p><strong>Finished?</strong> Head into the Why Workshop next.</p></div>
+  <div class="callout" style="text-align:center;"><p><strong>Finished?</strong> Head into the Why Workshop next.</p></div>
   <button class="btn-primary" onclick="showScreen('why-workshop')">Next: Why Workshop &#8594;</button>
 </div>
 
 <!-- WHY WORKSHOP -->
 <div id="screen-why-workshop" class="screen">
-  <div class="page-header"><div class="page-tag">Module 1</div><h2>The Why Workshop</h2><p>Every client who fell off the wagon had the same problem — when life got in the way, they didn't have a strong enough reason to keep going. That changes here.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Module 1</div><h2>The Why Workshop</h2><p>Every client who fell off the wagon had the same problem — when life got in the way, they didn't have a strong enough reason to keep going. That changes here.</p></div>
   <div class="video-embed" onclick="playVideo(this,'5DmExunCeb0')">
     <img src="https://img.youtube.com/vi/5DmExunCeb0/maxresdefault.jpg" alt="Why Workshop">
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
   </div>
   <div class="content-section">
-    <h4>Why Your Why Matters</h4>
-    <p>Motivation is unreliable. It disappears the moment you need it most. What doesn't disappear is a reason that actually means something to you personally.</p>
+    <h4 style="text-align:center;">Why Your Why Matters</h4>
+    <p style="text-align:center;">Motivation is unreliable. It disappears the moment you need it most. What doesn't disappear is a reason that actually means something to you personally.</p>
   </div>
   <div class="golden-circle-grid">
     <div class="gc-card why"><div class="gc-label">Start with</div><div class="gc-title">&#127919; WHY</div><p>Your purpose — the reason behind everything you do</p></div>
     <div class="gc-card how"><div class="gc-label">Then</div><div class="gc-title">&#9881; HOW</div><p>Your process — how you show up every day</p></div>
     <div class="gc-card what"><div class="gc-label">Then</div><div class="gc-title">&#128230; WHAT</div><p>Your outcomes — the results you're working towards</p></div>
   </div>
-  <div class="callout" style="margin-bottom:20px;"><p>Most people start with WHAT they want to change. High performers start with <strong>WHY</strong>.</p></div>
+  <div class="callout" style="margin-bottom:20px;text-align:center;"><p>Most people start with WHAT they want to change. High performers start with <strong>WHY</strong>.</p></div>
   <div class="content-section">
-    <h4>Step 1 — Screen Time Audit</h4>
+    <h4 style="text-align:center;">Step 1 — Screen Time Audit</h4>
     <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">&#128241; iPhone — how to check <span class="acc-icon">&#9662;</span></div><div class="accordion-body"><p>Settings &#8594; Screen Time &#8594; See All Activity &#8594; Week &#8594; Most Used</p></div></div>
     <div class="accordion" onclick="toggleAccordion(this)"><div class="accordion-header">&#129302; Android — how to check <span class="acc-icon">&#9662;</span></div><div class="accordion-body"><p>Settings &#8594; Digital Wellbeing and Parental Controls &#8594; tap the chart</p></div></div>
   </div>
   <div class="content-section">
-    <h4>Step 2 — Reflection Questions</h4>
+    <h4 style="text-align:center;">Step 2 — Reflection Questions</h4>
     <table class="input-table" style="margin-top:12px;">
       <tr><th colspan="2">Your Answers</th></tr>
       <tr><td>What do you want to feel more of in your daily life?</td><td><input type="text" id="reflection_1" placeholder="Your answer..." oninput="debounceSave('reflection_1',this.value)"></td></tr>
@@ -491,25 +491,25 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </table>
   </div>
   <div class="content-section">
-    <h4>Step 3 — Build Your Why Statement</h4>
+    <h4 style="text-align:center;">Step 3 — Build Your Why Statement</h4>
     <div class="quote-block" style="margin:14px 0;"><p>"I am committed to my health because I want to [feel/achieve], so that I can [impact on your life or the people around you]."</p></div>
     <label style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:8px;">Your Why Statement</label>
     <textarea class="why-input" id="why_statement" placeholder="Write it here — then screenshot it. This is your anchor." oninput="debounceSave('why_statement',this.value);crossPopulateWhy(this.value)"></textarea>
     <p style="font-size:13px;color:#888;margin-top:8px;">&#128247; Screenshot it. Save it somewhere you'll see it every day.</p>
   </div>
-  <div class="callout"><p><strong>Done?</strong> Move to Movement next.</p></div>
+  <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Move to Movement next.</p></div>
   <button class="btn-primary" onclick="showScreen('movement')">Next: Movement &#8594;</button>
 </div>
 
 <!-- MOVEMENT -->
 <div id="screen-movement" class="screen">
-  <div class="page-header"><div class="page-tag">Module 2</div><h2>Movement</h2><p>Built around your schedule, your level, and your goal.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Module 2</div><h2>Movement</h2><p>Built around your schedule, your level, and your goal.</p></div>
   <div class="video-embed" onclick="playVideo(this,'Z2eVikbPsl0')">
     <img src="https://img.youtube.com/vi/Z2eVikbPsl0/maxresdefault.jpg" alt="Movement Module">
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
   </div>
   <div class="content-section">
-    <h4>Injury Check</h4>
+    <h4 style="text-align:center;">Injury Check</h4>
     <div class="injury-option" onclick="toggleInjury(this)"><div class="injury-option-header">&#9989; No — I'm good to go</div><div class="injury-option-body"><p>Good. Use the training plan builder below.</p></div></div>
     <div class="injury-option" onclick="toggleInjury(this)"><div class="injury-option-header">&#9888; Yes — I have an injury or concern</div><div class="injury-option-body"><p>Don't guess. Book a free 20 minute call first.</p><a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank"><button class="btn-primary" style="margin-top:8px;">Book a Free Call</button></a></div></div>
   </div>
@@ -576,23 +576,23 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   <div id="tab-exlib" class="tab-content">
     <div class="tool-embed" style="height:auto;"><iframe src="https://dannyjfit.github.io/exercise-library/" style="height:600px;width:100%;border:none;"></iframe></div>
   </div>
-  <div class="callout" style="margin-top:16px;"><p><strong>Done?</strong> Move to Nutrition next.</p></div>
+  <div class="callout" style="margin-top:16px;text-align:center;"><p><strong>Done?</strong> Move to Nutrition next.</p></div>
   <button class="btn-primary" onclick="showScreen('nutrition')">Next: Nutrition &#8594;</button>
 </div>
 
 <!-- NUTRITION -->
 <div id="screen-nutrition" class="screen">
-  <div class="page-header"><div class="page-tag">Module 3</div><h2>Nutrition</h2><p>Simplifying nutrition so it actually works for your life.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Module 3</div><h2>Nutrition</h2><p>Simplifying nutrition so it actually works for your life.</p></div>
   <div class="video-embed" onclick="playVideo(this,'Y3LLGC2SpUI')">
     <img src="https://img.youtube.com/vi/Y3LLGC2SpUI/maxresdefault.jpg" alt="Nutrition Module">
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
   </div>
   <div class="content-section">
-    <h4>Step 1 — Get Your Numbers</h4>
+    <h4 style="text-align:center;">Step 1 — Get Your Numbers</h4>
     <div class="tool-embed"><iframe src="https://dannyjfit.github.io/calorie-calculator/" title="Calorie Calculator"></iframe></div>
   </div>
   <div class="content-section">
-    <h4>Your Meal Plans</h4>
+    <h4 style="text-align:center;">Your Meal Plans</h4>
     <p>Pick your calorie target and preference — your 5-day plan generates instantly.</p>
     <div class="generator-wrap">
       <div id="mg-sel" class="gen-wrap">
@@ -631,7 +631,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </div>
   </div>
   <div class="content-section">
-    <h4>The Three Defaults</h4>
+    <h4 style="text-align:center;">The Three Defaults</h4>
     <p>The most effective nutrition habit for busy people isn't tracking. It's having a default for each meal so you're never starting from scratch.</p>
     <ul>
       <li><strong>A default breakfast</strong> — high protein, no thought required, done in under 5 minutes.</li>
@@ -640,7 +640,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </ul>
   </div>
   <div class="content-section">
-    <h4>Building Your Plate (Without Tracking)</h4>
+    <h4 style="text-align:center;">Building Your Plate (Without Tracking)</h4>
     <div class="plate-grid">
       <div class="plate-item"><span class="plate-icon">&#9995;</span><div><h4>Protein</h4><p>Palm-sized portion (~25-35g protein)</p></div></div>
       <div class="plate-item"><span class="plate-icon">&#9994;</span><div><h4>Carbs</h4><p>Fist-sized portion</p></div></div>
@@ -648,19 +648,19 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
       <div class="plate-item"><span class="plate-icon">&#129382;</span><div><h4>Veg</h4><p>Fill the rest of the plate</p></div></div>
     </div>
   </div>
-  <div class="callout"><p><strong>Done?</strong> Move to Recovery next.</p></div>
+  <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Move to Recovery next.</p></div>
   <button class="btn-primary" onclick="showScreen('recovery')">Next: Recovery &#8594;</button>
 </div>
 
 <!-- RECOVERY -->
 <div id="screen-recovery" class="screen">
-  <div class="page-header"><div class="page-tag">Module 4</div><h2>Recovery</h2><p>The clients who make the biggest changes take this as seriously as their training.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Module 4</div><h2>Recovery</h2><p>The clients who make the biggest changes take this as seriously as their training.</p></div>
   <div class="video-embed" onclick="playVideo(this,'7QJKcCYIFN0')">
     <img src="https://img.youtube.com/vi/7QJKcCYIFN0/maxresdefault.jpg" alt="Recovery Module">
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
   </div>
   <div class="content-section">
-    <h4>&#128564; Sleep</h4>
+    <h4 style="text-align:center;">&#128564; Sleep</h4>
     <p>Most clients are losing more ground here than anywhere else. Poor sleep wrecks your energy, mood, decision-making, and results.</p>
     <table class="data-table" style="margin-top:14px;">
       <tr><th>Rule</th><th>Why it matters</th></tr>
@@ -677,13 +677,13 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </table>
   </div>
   <div class="content-section">
-    <h4>&#127748; Breathwork — Box Breathing</h4>
+    <h4 style="text-align:center;">&#127748; Breathwork — Box Breathing</h4>
     <p>Inhale 4 &#8594; Hold 4 &#8594; Exhale 4 &#8594; Hold 4. Repeat 4 rounds. Use this daily.</p>
     <div class="tool-embed"><iframe src="https://dannyjfit.github.io/recovery-box-breathing/" title="Box Breathing"></iframe></div>
     <table class="input-table"><tr><td>When will you do your box breathing?</td><td><input type="text" id="recovery_breathwork" placeholder="Morning / Evening / Both" oninput="debounceSave('recovery_breathwork',this.value)"></td></tr></table>
   </div>
   <div class="content-section">
-    <h4>&#129496; Recovery Videos</h4>
+    <h4 style="text-align:center;">&#129496; Recovery Videos</h4>
     <div class="video-list">
       <div class="video-item"><div class="video-item-header"><div class="video-thumb">&#127916;</div><div class="video-item-info"><h4>Full Body Cooldown Stretch</h4><p>Post-workout or before bed</p></div><button class="video-toggle-btn" onclick="toggleVideo(this,'FdUFhUuJl1E')">Watch</button></div><div class="video-player-wrap"><iframe src="" frameborder="0" allowfullscreen></iframe></div></div>
       <div class="video-item"><div class="video-item-header"><div class="video-thumb">&#127916;</div><div class="video-item-info"><h4>Zone 2 Cardio Explainer</h4><p>The most underrated tool for longevity</p></div><button class="video-toggle-btn" onclick="toggleVideo(this,'-uNG0Rf1r98')">Watch</button></div><div class="video-player-wrap"><iframe src="" frameborder="0" allowfullscreen></iframe></div></div>
@@ -695,7 +695,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </table>
   </div>
   <div class="content-section">
-    <h4>&#9989; Weekly Recovery Checklist</h4>
+    <h4 style="text-align:center;">&#9989; Weekly Recovery Checklist</h4>
     <ul class="checklist">
       <li><input type="checkbox"> Got 7+ hours sleep at least 5 nights</li>
       <li><input type="checkbox"> Completed at least one box breathing session</li>
@@ -705,19 +705,19 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
       <li><input type="checkbox"> Journalled at least twice</li>
     </ul>
   </div>
-  <div class="callout"><p><strong>Done?</strong> Last step — build your plan.</p></div>
+  <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Last step — build your plan.</p></div>
   <button class="btn-primary" onclick="showScreen('build-plan')">Next: Your Plan &#8594;</button>
 </div>
 
 <!-- YOUR PLAN -->
 <div id="screen-build-plan" class="screen">
-  <div class="page-header"><div class="page-tag">Module 5</div><h2>Your Plan</h2><p>Everything in one place, built around you.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Module 5</div><h2>Your Plan</h2><p>Everything in one place, built around you.</p></div>
   <div class="video-embed" onclick="playVideo(this,'2v3AOYfQh54')">
     <img src="https://img.youtube.com/vi/2v3AOYfQh54/maxresdefault.jpg" alt="Your Plan">
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
   </div>
   <div class="content-section">
-    <h4>Before You Start</h4>
+    <h4 style="text-align:center;">Before You Start</h4>
     <ul class="checklist">
       <li><input type="checkbox"> Completed the Why Workshop and have your why statement</li>
       <li><input type="checkbox"> Chosen your training location, level, and frequency</li>
@@ -726,12 +726,12 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </ul>
   </div>
   <div class="content-section">
-    <h4>Your Why Statement</h4>
-    <p>Read it before you train. Read it when you don't want to.</p>
+    <h4 style="text-align:center;">Your Why Statement</h4>
+    <p style="text-align:center;">Read it before you train. Read it when you don't want to.</p>
     <textarea class="why-input" id="plan_why" placeholder="Your why statement will appear here once you've written it in the Why Workshop..." oninput="debounceSave('why_statement',this.value);crossPopulateWhy(this.value)"></textarea>
   </div>
   <div class="content-section">
-    <h4>Your Daily Targets</h4>
+    <h4 style="text-align:center;">Your Daily Targets</h4>
     <table class="input-table">
       <tr><th colspan="2">Nutrition Targets</th></tr>
       <tr><td>Daily Calories</td><td><input type="text" id="plan_calories" placeholder="From your calculator" oninput="debounceSave('calorie_target',this.value)"></td></tr>
@@ -746,7 +746,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </table>
   </div>
   <div class="content-section">
-    <h4>&#128197; Your Weekly Structure</h4>
+    <h4 style="text-align:center;">&#128197; Your Weekly Structure</h4>
     <table class="weekly-table">
       <tr><th>Day</th><th>Training / Rest</th><th>Nutrition Focus</th><th>Recovery</th></tr>
       <tr><td>Mon</td><td><textarea data-day="monday" data-col="training" placeholder="e.g. Upper body" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="monday" data-col="nutrition" placeholder="e.g. Hit protein" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="monday" data-col="recovery" placeholder="e.g. Box breathing" oninput="debounceWeekly()"></textarea></td></tr>
@@ -759,15 +759,15 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </table>
   </div>
   <div class="quote-block"><p>You've got everything you need here. The only variable now is whether you actually use it. Start today. Adjust as you go.</p></div>
-  <div class="callout"><p><strong>One last step.</strong> Book a free 30-minute Performance Review — I'll look at what you've built and tell you exactly what to focus on first.</p></div>
+  <div class="callout" style="text-align:center;"><p><strong>One last step.</strong> Book a free 30-minute Performance Review — I'll look at what you've built and tell you exactly what to focus on first.</p></div>
   <a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank"><button class="btn-primary">Book Your Free Review &#8594;</button></a>
 </div>
 
 <!-- PROGRESS -->
 <div id="screen-progress" class="screen">
-  <div class="page-header"><div class="page-tag">Track</div><h2>Progress</h2><p>Track your body weight and see how your lifts are moving over time.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Track</div><h2>Progress</h2><p>Track your body weight and see how your lifts are moving over time.</p></div>
   <div class="content-section" style="margin-bottom:16px;">
-    <h4>Weekly Check-In</h4>
+    <h4 style="text-align:center;">Weekly Check-In</h4>
     <p style="margin-bottom:14px;">Log your weight, energy, and sleep once a week to track trends.</p>
     <div class="prog-form-grid">
       <div class="prog-field"><label class="prog-label" for="prog-bw">Body Weight (kg)</label><input class="prog-input" type="number" id="prog-bw" placeholder="e.g. 82.5" step="0.1" min="0"></div>
@@ -778,11 +778,11 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <button class="prog-btn" id="prog-checkin-btn" onclick="progressSubmitCheckin()">Save Check-In</button>
   </div>
   <div class="content-section" style="margin-bottom:16px;">
-    <h4>Body Weight Over Time</h4>
+    <h4 style="text-align:center;">Body Weight Over Time</h4>
     <div id="prog-bw-chart-wrap" style="position:relative;height:220px;margin-top:12px;"><canvas id="prog-bw-chart"></canvas></div>
   </div>
   <div class="content-section" style="margin-bottom:16px;">
-    <h4>Log an Exercise</h4>
+    <h4 style="text-align:center;">Log an Exercise</h4>
     <p style="margin-bottom:14px;">You can also log directly from the Movement section.</p>
     <div class="prog-form-grid">
       <div class="prog-field prog-field-full"><label class="prog-label" for="prog-exercise-select">Exercise</label><select class="prog-input prog-select" id="prog-exercise-select"></select></div>
@@ -794,7 +794,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <button class="prog-btn" id="prog-ex-log-btn" onclick="progressSubmitExerciseLog()">Log Exercise</button>
   </div>
   <div class="content-section">
-    <h4>Exercise Progression</h4>
+    <h4 style="text-align:center;">Exercise Progression</h4>
     <p style="margin-bottom:14px;">Select an exercise to see your weight over time.</p>
     <div class="prog-chart-controls">
       <select class="prog-input prog-select" id="prog-chart-exercise"></select>
@@ -806,18 +806,18 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- STANDALONE TOOLS -->
 <div id="screen-calorie-calc" class="screen">
-  <div class="page-header"><div class="page-tag">Tool</div><h2>Calorie Calculator</h2></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Tool</div><h2>Calorie Calculator</h2></div>
   <div class="tool-embed"><iframe src="https://dannyjfit.github.io/calorie-calculator/"></iframe></div>
 </div>
 
 <div id="screen-exercise-lib" class="screen">
-  <div class="page-header"><div class="page-tag">Tool</div><h2>Exercise Library</h2></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Tool</div><h2>Exercise Library</h2></div>
   <div class="tool-embed" style="height:auto;"><iframe src="https://dannyjfit.github.io/exercise-library/" style="height:600px;width:100%;border:none;"></iframe></div>
 </div>
 
 <!-- MEAL GENERATOR -->
 <div id="screen-meal-gen" class="screen">
-  <div class="page-header"><div class="page-tag">Tool</div><h2>Meal Plan Generator</h2></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Tool</div><h2>Meal Plan Generator</h2></div>
   <div class="generator-wrap">
     <div id="mg2-sel" class="gen-wrap">
       <div class="gen-eyebrow">The Ultimate Performer</div>
@@ -857,7 +857,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- TRAINING GENERATOR -->
 <div id="screen-training-gen" class="screen">
-  <div class="page-header"><div class="page-tag">Tool</div><h2>Training Plan Generator</h2></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Tool</div><h2>Training Plan Generator</h2></div>
   <div class="generator-wrap">
     <div id="tg2-sel" class="gen-wrap">
       <div class="gen-eyebrow">The Ultimate Performer</div>

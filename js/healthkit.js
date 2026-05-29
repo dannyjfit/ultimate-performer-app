@@ -148,7 +148,7 @@ var HK = {
         var isToday = i === todayIdx;
         var hitGoal = stepVal >= goal;
         var isFuture = i > todayIdx;
-        var barColor = isFuture ? 'rgba(255,255,255,0.06)' : hitGoal ? '#4682b4' : 'rgba(70,130,180,0.35)';
+        var barColor = isFuture ? 'rgba(0,0,0,0.08)' : hitGoal ? '#4682b4' : 'rgba(70,130,180,0.35)';
         var minH = isFuture ? 6 : Math.max(6, heightPct);
         var dayDiv = document.createElement('div');
         dayDiv.className = 'steps-bar-day';

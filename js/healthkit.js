@@ -9,7 +9,7 @@ var HK = {
     var greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
     var greetEl = document.getElementById('dash-greeting');
     if (greetEl) {
-      greetEl.innerHTML = '<p style="font-family:\'DM Serif Display\',serif;font-size:22px;color:var(--dark);padding:0 0 4px;text-align:center;">' + greeting + '</p>';
+      greetEl.innerHTML = '<p style="font-family:\'DM Serif Display\',serif;font-size:22px;color:white;padding:0 0 4px;text-align:center;">' + greeting + '</p>';
     }
 
     var savedGoal = localStorage.getItem('step_goal');
@@ -63,25 +63,27 @@ var HK = {
       var steps = 0;
       if (result && result.resultData) {
         result.resultData.forEach(function(entry) {
-          steps += (entry.quantity || 0);
+          // plugin returns 'value' field for quantity samples
+          steps += (entry.value || entry.quantity || 0);
         });
       }
       HK.renderTodayCard(Math.round(steps));
-    }).catch(function() {
+    }).catch(function(err) {
+      console.error('Steps today error:', err);
       HK.renderTodayCard(0);
     });
 
-    // Week steps — query last 7 days one at a time
+    // Week steps — query each of last 7 days
     var weekSteps = [0,0,0,0,0,0,0];
     var todayIdx = (now.getDay() + 6) % 7;
-    var pending = 0;
+    var pending = 7;
 
     for (var d = 0; d < 7; d++) {
       (function(dayOffset) {
         var dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOffset);
         var dayEnd = new Date(dayStart.getTime() + 86400000);
         var weekIdx = (todayIdx - dayOffset + 7) % 7;
-        pending++;
+
         plugin.queryHKitSampleType({
           sampleName: 'stepCount',
           startDate: dayStart.toISOString(),
@@ -90,7 +92,9 @@ var HK = {
         }).then(function(result) {
           var steps = 0;
           if (result && result.resultData) {
-            result.resultData.forEach(function(entry) { steps += (entry.quantity || 0); });
+            result.resultData.forEach(function(entry) {
+              steps += (entry.value || entry.quantity || 0);
+            });
           }
           weekSteps[weekIdx] = Math.round(steps);
           pending--;
@@ -125,7 +129,7 @@ var HK = {
     els.denom.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = '/ ' + goal.toLocaleString(); });
     els.bar.forEach(function(id) { var el = document.getElementById(id); if(el) el.style.width = pct + '%'; });
     els.goal.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = 'Goal: ' + goal.toLocaleString(); });
-    els.rem.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = remaining > 0 ? remaining.toLocaleString() + ' steps to go' : 'Goal reached! 🎯'; });
+    els.rem.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = remaining > 0 ? remaining.toLocaleString() + ' steps to go' : 'Goal reached!'; });
   },
 
   renderWeekChart: function(days) {

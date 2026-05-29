@@ -439,10 +439,10 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <p>For busy professionals who are ready to start putting themselves first. Work through it in order — everything is here for a reason.</p>
     <button class="btn-primary" onclick="showScreen('welcome-video')">Start Here — Watch Welcome Video</button>
   </div>
-  
-  <div id="dash-greeting" style="padding:16px 16px 0;"></div>
-  <div id="steps-section" style="display:none;">
-    <div class="steps-card">
+
+  <div id="dash-greeting" style="padding:20px 16px 4px;text-align:center;"></div>
+  <div id="steps-section" style="display:none;background:var(--dark);padding:0 0 4px;">
+    <div class="steps-card" style="margin:0 16px 12px;">
       <div class="steps-card-header">
         <span class="steps-card-label">&#127939; Today's Steps</span>
         <span class="steps-card-goal" id="steps-goal-label">Goal: 8,000</span>
@@ -454,10 +454,12 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
       <div class="steps-bar-bg"><div class="steps-bar-fill" id="steps-bar" style="width:0%;"></div></div>
       <div class="steps-remaining" id="steps-remaining-text"></div>
     </div>
-    <div class="steps-week-label">This Week</div>
-    <div class="steps-week-chart" id="steps-week-chart"></div>
+    <div class="steps-week-label" style="color:rgba(255,255,255,0.4);padding:0 16px 8px;">This Week</div>
+    <div class="steps-week-chart" id="steps-week-chart" style="padding:0 16px 16px;"></div>
   </div>
-  <button class="steps-enable-btn" id="steps-enable-btn" onclick="requestHealthKit()" style="display:none;">&#127939; Enable Step Tracking</button>
+  <button class="steps-enable-btn" id="steps-enable-btn" onclick="requestHealthKit()" style="display:none;background:var(--dark);border-radius:0;margin:0;width:100%;padding:16px;">&#127939; Enable Step Tracking</button>
+  
+
 
   <div style="margin-bottom:20px;text-align:center;">
     <div class="page-tag">Your Journey</div>

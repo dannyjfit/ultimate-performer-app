@@ -9,7 +9,7 @@ var HK = {
     var greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
     var greetEl = document.getElementById('dash-greeting');
     if (greetEl) {
-      greetEl.innerHTML = '<p style="font-family:\'DM Serif Display\',serif;font-size:22px;color:white;padding:0 0 4px;text-align:center;">' + greeting + '</p>';
+      greetEl.innerHTML = '<p style="font-family:\'DM Serif Display\',serif;font-size:22px;color:var(--dark);padding:0 0 4px;text-align:center;">' + greeting + '</p>';
     }
 
     var savedGoal = localStorage.getItem('step_goal');

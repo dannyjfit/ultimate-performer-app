@@ -5,36 +5,45 @@ var HK = {
   granted: false,
 
   init: function() {
-    // Set greeting
     var hour = new Date().getHours();
     var greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
     var greetEl = document.getElementById('dash-greeting');
     if (greetEl) {
-      greetEl.innerHTML = '<p style="font-family:\'DM Serif Display\',serif;font-size:22px;color:var(--dark);padding:0 0 4px;">' + greeting + '</p>';
+      greetEl.innerHTML = '<p style="font-family:\'DM Serif Display\',serif;font-size:22px;color:var(--dark);padding:0 0 4px;text-align:center;">' + greeting + '</p>';
     }
 
-    // Load saved step goal from localStorage
     var savedGoal = localStorage.getItem('step_goal');
     if (savedGoal) HK.goal = parseInt(savedGoal);
 
-    // Check if permission already granted
     var hkGranted = localStorage.getItem('hk_granted');
     if (hkGranted === 'true') {
       HK.granted = true;
       HK.fetchSteps();
     } else {
-      // Show enable button
       var btn = document.getElementById('steps-enable-btn');
       if (btn) btn.style.display = 'block';
     }
   },
 
   requestPermission: function() {
-    if (!window.Capacitor || !window.Capacitor.Plugins || !window.Capacitor.Plugins.HealthKitBridge) {
-      console.log('HealthKitBridge not available');
+    var plugin = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.HealthKitBridge;
+    if (!plugin) {
+      console.log('HealthKitBridge plugin not found - checking alternatives');
+      // Try calling via Capacitor core directly
+      if (window.Capacitor) {
+        window.Capacitor.nativeCallback('HealthKitBridge', 'requestPermission', {}, function(result) {
+          if (result && result.granted) {
+            HK.granted = true;
+            localStorage.setItem('hk_granted', 'true');
+            var btn = document.getElementById('steps-enable-btn');
+            if (btn) btn.style.display = 'none';
+            HK.fetchSteps();
+          }
+        });
+      }
       return;
     }
-    window.Capacitor.Plugins.HealthKitBridge.requestPermission().then(function(result) {
+    plugin.requestPermission().then(function(result) {
       if (result.granted) {
         HK.granted = true;
         localStorage.setItem('hk_granted', 'true');
@@ -48,17 +57,16 @@ var HK = {
   },
 
   fetchSteps: function() {
-    if (!window.Capacitor || !window.Capacitor.Plugins || !window.Capacitor.Plugins.HealthKitBridge) return;
+    var plugin = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.HealthKitBridge;
+    if (!plugin) return;
 
-    // Today's steps
-    window.Capacitor.Plugins.HealthKitBridge.getStepsToday().then(function(result) {
+    plugin.getStepsToday().then(function(result) {
       HK.renderTodayCard(result.steps || 0);
     }).catch(function() {
       HK.renderTodayCard(0);
     });
 
-    // Week steps
-    window.Capacitor.Plugins.HealthKitBridge.getStepsWeek().then(function(result) {
+    plugin.getStepsWeek().then(function(result) {
       HK.renderWeekChart(result.days || []);
     }).catch(function() {});
   },
@@ -68,43 +76,30 @@ var HK = {
     var pct = Math.min(100, Math.round((steps / goal) * 100));
     var remaining = Math.max(0, goal - steps);
 
-    // Show sections
     var sec = document.getElementById('steps-section');
     if (sec) sec.style.display = 'block';
     var secP = document.getElementById('steps-section-progress');
     if (secP) secP.style.display = 'block';
 
-    // Update home card
-    var countEl = document.getElementById('steps-today-count');
-    if (countEl) countEl.textContent = steps.toLocaleString();
-    var denomEl = document.getElementById('steps-today-denom');
-    if (denomEl) denomEl.textContent = '/ ' + goal.toLocaleString();
-    var barEl = document.getElementById('steps-bar');
-    if (barEl) barEl.style.width = pct + '%';
-    var goalLbl = document.getElementById('steps-goal-label');
-    if (goalLbl) goalLbl.textContent = 'Goal: ' + goal.toLocaleString();
-    var remEl = document.getElementById('steps-remaining-text');
-    if (remEl) remEl.textContent = remaining > 0 ? remaining.toLocaleString() + ' steps to go' : 'Goal reached!';
+    var els = {
+      count: ['steps-today-count', 'steps-today-count-p'],
+      denom: ['steps-today-denom', 'steps-today-denom-p'],
+      bar: ['steps-bar', 'steps-bar-p'],
+      goal: ['steps-goal-label', 'steps-goal-label-p'],
+      rem: ['steps-remaining-text', 'steps-remaining-text-p']
+    };
 
-    // Update progress card
-    var countElP = document.getElementById('steps-today-count-p');
-    if (countElP) countElP.textContent = steps.toLocaleString();
-    var denomElP = document.getElementById('steps-today-denom-p');
-    if (denomElP) denomElP.textContent = '/ ' + goal.toLocaleString();
-    var barElP = document.getElementById('steps-bar-p');
-    if (barElP) barElP.style.width = pct + '%';
-    var goalLblP = document.getElementById('steps-goal-label-p');
-    if (goalLblP) goalLblP.textContent = 'Goal: ' + goal.toLocaleString();
-    var remElP = document.getElementById('steps-remaining-text-p');
-    if (remElP) remElP.textContent = remaining > 0 ? remaining.toLocaleString() + ' steps to go' : 'Goal reached!';
+    els.count.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = steps.toLocaleString(); });
+    els.denom.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = '/ ' + goal.toLocaleString(); });
+    els.bar.forEach(function(id) { var el = document.getElementById(id); if(el) el.style.width = pct + '%'; });
+    els.goal.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = 'Goal: ' + goal.toLocaleString(); });
+    els.rem.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = remaining > 0 ? remaining.toLocaleString() + ' steps to go' : 'Goal reached!'; });
   },
 
   renderWeekChart: function(days) {
     var goal = HK.goal;
     var dayLabels = ['M','T','W','T','F','S','S'];
-    var todayIdx = new Date().getDay();
-    // Convert Sunday=0 to Monday=0 index
-    todayIdx = (todayIdx + 6) % 7;
+    var todayIdx = (new Date().getDay() + 6) % 7;
     var maxSteps = Math.max(goal, Math.max.apply(null, days.concat([1])));
 
     function buildChart(containerId) {

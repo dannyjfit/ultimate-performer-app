@@ -82,7 +82,7 @@ function tgChange(ns) {
 
 function tgBuildSession(day, goal, level) {
   const g = TGGOALS[goal];
-  const sets = level==='advanced' ? 4 : 3;
+  const sets = level==='advanced' ? 3 : 2;
   let h = `<div class="gen-session-title">${day.name}</div><div class="gen-session-sub">${sets} rounds per block · ${g.rest}</div>`;
   h += tgBlock('🔥 Warm Up','', tgWarmup(day.warmup), '');
   h += tgBlock('💪 Tri-Set A',`${sets} rounds — back to back`, tgExList(day.triA,goal), `<div class="gen-rest-note">⏱ ${g.rest} after final exercise. Repeat ${sets} rounds.</div>`);

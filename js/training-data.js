@@ -71,7 +71,7 @@ const TGGOALS = {
       advanced:"You know that fat loss comes down to consistency, intensity, and progressive overload. Your plan pushes rep ranges and keeps rest tight. Track your weights and push for progression week on week."
     },
     reps:{compound:'12–15',isolation:'15–18',core:'20'},
-    rest:'45 seconds rest between tri-sets'
+    rest:'60 seconds rest between tri-sets'
   },
   muscle:{
     label:'Muscle Building',

@@ -152,7 +152,7 @@ function tgVid(uid, url) {
     if(pv){pv.style.display='none';pv.innerHTML='';}
     if(pb){pb.textContent='▶ Watch';pb.classList.remove('vactive');}
   }
-  const m = url.match(/(?:youtu\.be\/|v=|embed\/)([^?&"'>]+)/);
+  const m = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([^?&"'>]+)/);
   if (!m) return;
   c.innerHTML = `<div class="gen-video-wrap"><iframe src="https://www.youtube.com/embed/${m[1]}?rel=0&playsinline=1" frameborder="0" allowfullscreen></iframe></div>`;
   c.style.display='block'; b.textContent='✕ Close'; b.classList.add('vactive');

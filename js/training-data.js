@@ -106,7 +106,7 @@ const TGPLANS = {
        core:[R('Plank Hold','core',2),R('Shoulder Taps','core',2),R('Heel Taps','core',2)]},
       {name:'Day 2 — Lower Body',warmup:['10 Bodyweight Squats','10 Single Leg Glute Bridge','10 DB Alt Lunges'],
        triA:[R('DB Goblet Squat','compound',3),R('DB Reverse Lunges','compound',3),R('DB Sumo Deadlift','compound',3)],triANote:'Back to back. Rest after Sumo Deadlift.',
-       triB:[R('DB Single Leg Deadlift','compound',3),R('DB Hip Thrust','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
+       triB:[R('DB Reverse Lunges','compound',3),R('DB Hip Thrust','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
        core:[R('Leg Raises','core',2),R('Heel Taps','core',2),R('Side Plank','core',2)]}
     ],
     intermediate:[
@@ -142,7 +142,7 @@ const TGPLANS = {
        core:[R('Bicycle Crunches','core',2),R('Flutter Kicks','core',2),R('Side Plank','core',2)]},
       {name:'Day 3 — Legs',warmup:['10 Bodyweight Squats','10 Single Leg Glute Bridge','10 DB Alt Lunges (light)'],
        triA:[R('DB Goblet Squat','compound',3),R('DB Alt Lunges','compound',3),R('DB Sumo Deadlift','compound',3)],triANote:'Back to back. Rest after Sumo Deadlift.',
-       triB:[R('DB Hip Thrust','compound',3),R('DB Single Leg Deadlift','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
+       triB:[R('DB Hip Thrust','compound',3),R('DB Reverse Lunges','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
        core:[R('Leg Raises','core',2),R('Heel Taps','core',2),R('Plank Taps','core',2)]}
     ],
     intermediate:[
@@ -186,7 +186,7 @@ const TGPLANS = {
        core:[R('Bicycle Crunches','core',2),R('Flutter Kicks','core',2),R('Side Plank','core',2)]},
       {name:'Day 3 — Legs',warmup:['10 Bodyweight Squats','10 Single Leg Glute Bridge','10 DB Alt Lunges (light)'],
        triA:[R('DB Goblet Squat','compound',3),R('DB Alt Lunges','compound',3),R('DB Sumo Deadlift','compound',3)],triANote:'Back to back. Rest after Sumo Deadlift.',
-       triB:[R('DB Hip Thrust','compound',3),R('DB Single Leg Deadlift','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
+       triB:[R('DB Hip Thrust','compound',3),R('DB Reverse Lunges','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
        core:[R('Leg Raises','core',2),R('Heel Taps','core',2),R('Side Plank','core',2)]},
       {name:'Day 4 — Full Body Conditioning',warmup:['5 Walk Outs','10 Bodyweight Squats','20 Mountain Climbers'],
        triA:[R('DB Swings','compound',3),R('DB Goblet Squat','compound',3),R('Push Ups','compound',3)],triANote:'Back to back. Rest after Push Ups.',
@@ -238,7 +238,7 @@ const TGPLANS = {
        core:[R('Plank Hold','core',2),R('Shoulder Taps','core',2),R('Heel Taps','core',2)]},
       {name:'Day 2 — Lower Body',warmup:['10 Bodyweight Squats','10 Single Leg Glute Bridge','10 DB Reverse Lunges (light)'],
        triA:[R('DB Goblet Squat','compound',3),R('DB Alt Lunges','compound',3),R('DB Sumo Deadlift','compound',3)],triANote:'Back to back. Rest after Sumo Deadlift.',
-       triB:[R('DB Hip Thrust','compound',3),R('DB Single Leg Deadlift','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
+       triB:[R('DB Hip Thrust','compound',3),R('DB Reverse Lunges','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
        core:[R('Leg Raises','core',2),R('Heel Taps','core',2),R('Side Plank','core',2)]}
     ],
     intermediate:[
@@ -274,7 +274,7 @@ const TGPLANS = {
        core:[R('Bicycle Crunches','core',2),R('Flutter Kicks','core',2),R('Side Plank','core',2)]},
       {name:'Day 3 — Legs',warmup:['10 Bodyweight Squats','10 Single Leg Glute Bridge','10 DB Alt Lunges (light)'],
        triA:[R('DB Goblet Squat','compound',3),R('DB Alt Lunges','compound',3),R('DB Sumo Deadlift','compound',3)],triANote:'Back to back. Rest after Sumo Deadlift.',
-       triB:[R('DB Hip Thrust','compound',3),R('DB Single Leg Deadlift','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
+       triB:[R('DB Hip Thrust','compound',3),R('DB Reverse Lunges','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
        core:[R('Leg Raises','core',2),R('Heel Taps','core',2),R('Plank Taps','core',2)]}
     ],
     intermediate:[
@@ -318,7 +318,7 @@ const TGPLANS = {
        core:[R('Bicycle Crunches','core',2),R('Flutter Kicks','core',2),R('Side Plank','core',2)]},
       {name:'Day 3 — Legs',warmup:['10 Bodyweight Squats','10 Single Leg Glute Bridge','10 DB Alt Lunges (light)'],
        triA:[R('DB Goblet Squat','compound',3),R('DB Alt Lunges','compound',3),R('DB Sumo Deadlift','compound',3)],triANote:'Back to back. Rest after Sumo Deadlift.',
-       triB:[R('DB Hip Thrust','compound',3),R('DB Single Leg Deadlift','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
+       triB:[R('DB Hip Thrust','compound',3),R('DB Reverse Lunges','compound',3),R('DB Single Leg Glute Bridge','isolation',3)],triBNote:'Back to back. Rest after Single Leg Glute Bridge.',
        core:[R('Leg Raises','core',2),R('Heel Taps','core',2),R('Side Plank','core',2)]},
       {name:'Day 4 — Full Body Conditioning',warmup:['5 Walk Outs','10 Bodyweight Squats','20 Mountain Climbers'],
        triA:[R('DB Swings','compound',3),R('DB Goblet Squat','compound',3),R('Push Ups','compound',3)],triANote:'Back to back. Rest after Push Ups.',

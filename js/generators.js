@@ -85,9 +85,9 @@ function tgBuildSession(day, goal, level) {
   const sets = level==='advanced' ? 3 : 2;
   let h = `<div class="gen-session-title">${day.name}</div><div class="gen-session-sub">${sets} rounds per block · ${g.rest}</div>`;
   h += tgBlock('🔥 Warm Up','', tgWarmup(day.warmup), '');
-  h += tgBlock('💪 Tri-Set A',`${sets} rounds — back to back`, tgExList(day.triA,goal), `<div class="gen-rest-note">⏱ ${g.rest} after final exercise. Repeat ${sets} rounds.</div>`);
-  h += tgBlock('🔁 Tri-Set B',`${sets} rounds — back to back`, tgExList(day.triB,goal), `<div class="gen-rest-note">⏱ ${g.rest} after final exercise. Repeat ${sets} rounds.</div>`);
-  h += tgBlock('🧠 Core Finisher','2 rounds', tgExList(day.core,goal), '');
+  h += tgBlock('💪 Tri-Set A',`${sets} rounds — back to back`, tgExList(day.triA,goal,sets), `<div class="gen-rest-note">⏱ ${g.rest} after final exercise. Repeat ${sets} rounds.</div>`);
+  h += tgBlock('🔁 Tri-Set B',`${sets} rounds — back to back`, tgExList(day.triB,goal,sets), `<div class="gen-rest-note">⏱ ${g.rest} after final exercise. Repeat ${sets} rounds.</div>`);
+  h += tgBlock('🧠 Core Finisher','2 rounds', tgExList(day.core,goal,2), '');
   return h;
 }
 
@@ -107,7 +107,7 @@ function tgReps(type, goal) {
   return (type==='core' ? r.core : type==='compound' ? r.compound : r.isolation)+' reps';
 }
 
-function tgExList(exs, goal) {
+function tgExList(exs, goal, sets) {
   return exs.map((ex,i) => {
     const reps = tgReps(ex.type, goal);
     const link = TGV[ex.name];
@@ -120,7 +120,7 @@ function tgExList(exs, goal) {
     const alt   = aLink ? `<div><div class="gen-alt-label">Can't do this?</div><button class="gen-alt-watch-btn" id="vb-${aUid}" onclick="tgVid('${aUid}','${aLink}')">▶ ${aName}</button><div class="gen-video-container" id="vc-${aUid}"></div></div>` : '';
     const safeId = ex.name.replace(/[^a-zA-Z0-9]/g, '_');
     const logBtn = `<button class="tg-log-btn" onclick="tgLogExercise('${ex.name.replace(/'/g,"\\'")}', this)">+ Log</button>`;
-    return `<div class="gen-ex-row-wrap"><div class="gen-ex-row-inner"><div class="gen-ex-num">${i+1}</div><div class="gen-ex-info"><div class="gen-ex-name">${ex.name}</div><div class="gen-ex-detail">${ex.sets} sets · ${reps}</div></div><div style="display:flex;align-items:center;gap:4px;">${btn}${logBtn}</div></div>${vc}${alt}</div>`;
+    return `<div class="gen-ex-row-wrap"><div class="gen-ex-row-inner"><div class="gen-ex-num">${i+1}</div><div class="gen-ex-info"><div class="gen-ex-name">${ex.name}</div><div class="gen-ex-detail">${sets} sets · ${reps}</div></div><div style="display:flex;align-items:center;gap:4px;">${btn}${logBtn}</div></div>${vc}${alt}</div>`;
   }).join('');
 }
 

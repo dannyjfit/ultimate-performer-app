@@ -30,7 +30,7 @@ const TGV = {
   'DB Alt Bicep Curl':'https://youtu.be/GzO3pfDSI80','DB Bicep Curls':'https://youtu.be/GdETt4HFQ3Q',
   'DB Hammer Curls':'https://youtu.be/jYQ8peSq2Jc','DB Concentrated Curl':'https://youtu.be/eg44sKb8DY4',
   'DB Single Arm Preacher Curl':'https://youtu.be/8S-k29BuPzw','BB Bent Over Row':'https://youtu.be/TVZd8_LeFfo',
-  'BB Curl':'https://youtu.be/d-H2Z9e0Qyc','Bodyweight Squat':'https://youtu.be/ef_sL49w7M8',
+  'BB Curl':'https://youtu.be/d-H2Z9e0Qyc','Bodyweight Squat':'https://youtube.com/shorts/ef_sL49w7M8',
   'Jumping Squat':'https://youtu.be/CYNsX2nIi0I','Pistol Squat':'https://youtu.be/Jmk9ah8hK6I',
   'Alternating Step Ups':'https://youtu.be/4aKLWcnnl24','Single Leg Glute Bridge':'https://youtu.be/UVEmU7jMPRw',
   'DB Goblet Squat':'https://youtu.be/gs3RYDA4xpo','DB Front Squat':'https://youtu.be/1gXKOOmIcMI',

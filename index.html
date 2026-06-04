@@ -421,8 +421,8 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="sidebar-item" onclick="showScreen('meal-gen')"><span class="icon">&#127859;</span> Meal Plan Generator</div>
     <div class="sidebar-item" onclick="showScreen('training-gen')"><span class="icon">&#128170;</span> Training Generator</div>
   </div>
-  <div><div class="sidebar-label">Upgrade</div>
-    <div class="sidebar-item" onclick="showScreen('coaching')"><span class="icon">&#127919;</span> Work With Me</div>
+  <div><div class="sidebar-label">Contact</div>
+    <div class="sidebar-item" onclick="showScreen('coaching')"><span class="icon">&#9993;</span> Get In Touch</div>
   </div>
   <div style="padding:12px;">
     <div class="sidebar-item" onclick="resetPassword(this)"><span class="icon">&#128273;</span> Change Password</div>
@@ -473,7 +473,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="module-card" onclick="showScreen('recovery')"><div class="module-icon">&#129688;</div><div class="module-number">Module 4</div><h3>Recovery</h3><p>Sleep, breathwork, and stress management.</p></div>
     <div class="module-card" onclick="showScreen('build-plan')"><div class="module-icon">&#128197;</div><div class="module-number">Module 5</div><h3>Your Plan</h3><p>Pull it all together into a week that actually works.</p></div>
     <div class="module-card" onclick="showScreen('progress')"><div class="module-icon">&#128200;</div><div class="module-number">Track</div><h3>Progress</h3><p>Log your weight, track your lifts, and see how far you've come.</p></div>
-    <div class="module-card" onclick="showScreen('coaching')"><div class="module-icon">&#127919;</div><div class="module-number">Upgrade</div><h3>Work With Me</h3><p>Want to go faster? AED 499/month, no contracts.</p></div>
+    <div class="module-card" onclick="showScreen('coaching')"><div class="module-icon">&#9993;</div><div class="module-number">Contact</div><h3>Get In Touch</h3><p>Questions about the programme? Reach out directly.</p></div>
   </div>
 </div>
 
@@ -986,34 +986,48 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- COACHING -->
 <div id="screen-coaching" class="screen">
-  <div class="sales-hero">
-    <div class="tag">Work With Me</div>
-    <h2>Ready to go faster?</h2>
-    <p>The program gives you the framework. I give you the accountability, the personalisation, and the push you need to follow through.</p>
-    <div class="price-block"><div class="price">AED 499</div><div class="period">per month · no contracts · cancel any time</div></div><br>
-    <a href="https://theperformancecoach.ae/book-a-free-call/" target="_blank" style="text-decoration:none;"><button class="btn-primary" style="font-size:13px;padding:14px 28px;">Book a Free Call</button></a>
+  <div style="padding:8px 0 24px;">
+    <div class="page-tag" style="margin-bottom:12px;">Get In Touch</div>
+    <h2 style="font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:8px;">Let's talk</h2>
+    <p style="color:#555;font-size:15px;line-height:1.6;">Got a question about the programme, want to discuss your goals, or just not sure where to start? Reach out directly and I'll get back to you.</p>
   </div>
-  <div class="includes-grid">
-    <div class="include-item"><span class="inc-icon">&#128203;</span><div><h4>Personalised Programming</h4><p>Training and nutrition built specifically around your schedule, goals, and life.</p></div></div>
-    <div class="include-item"><span class="inc-icon">&#128222;</span><div><h4>Weekly Check-ins</h4><p>We review what's working, what's not, and adjust.</p></div></div>
-    <div class="include-item"><span class="inc-icon">&#128172;</span><div><h4>Direct Access</h4><p>Message me when something comes up.</p></div></div>
-    <div class="include-item"><span class="inc-icon">&#127919;</span><div><h4>Accountability</h4><p>I hold you to the standard you say you want.</p></div></div>
-    <div class="include-item"><span class="inc-icon">&#129504;</span><div><h4>Mindset Coaching</h4><p>The physical side is only part of it.</p></div></div>
-    <div class="include-item"><span class="inc-icon">&#128260;</span><div><h4>No Lock-in</h4><p>Rolling monthly. If it's not working, you leave.</p></div></div>
+
+  <div style="display:flex;flex-direction:column;gap:16px;">
+
+    <a href="mailto:danny@theperformancecoach.ae" style="text-decoration:none;">
+      <div style="display:flex;align-items:center;gap:16px;background:white;border-radius:12px;padding:20px;border:1px solid rgba(0,0,0,0.08);">
+        <div style="width:44px;height:44px;background:var(--dark);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;">&#128140;</div>
+        <div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:2px;">Email</div>
+          <div style="font-size:15px;font-weight:600;color:var(--dark);">danny@theperformancecoach.ae</div>
+        </div>
+      </div>
+    </a>
+
+    <a href="https://wa.me/971561657473" target="_blank" style="text-decoration:none;">
+      <div style="display:flex;align-items:center;gap:16px;background:white;border-radius:12px;padding:20px;border:1px solid rgba(0,0,0,0.08);">
+        <div style="width:44px;height:44px;background:#25D366;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;">&#128172;</div>
+        <div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:2px;">WhatsApp</div>
+          <div style="font-size:15px;font-weight:600;color:var(--dark);">+971 56 165 7473</div>
+        </div>
+      </div>
+    </a>
+
+    <a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank" style="text-decoration:none;">
+      <div style="display:flex;align-items:center;gap:16px;background:white;border-radius:12px;padding:20px;border:1px solid rgba(0,0,0,0.08);">
+        <div style="width:44px;height:44px;background:var(--dark);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;">&#128197;</div>
+        <div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:2px;">Free Call</div>
+          <div style="font-size:15px;font-weight:600;color:var(--dark);">Book a 30-min performance review</div>
+        </div>
+      </div>
+    </a>
+
   </div>
-  <div style="margin-top:20px;">
-    <div style="background:var(--dark);border-radius:12px;padding:24px;">
-      <div class="testimonial-card"><p>"Having Danny as a coach is really such an empowering experience."</p><div class="attr">Sharon K — Founder</div></div>
-      <div class="testimonial-card"><p>"Danny is an outstanding PT, coach and mentor — far more than just showing you different exercises."</p><div class="attr">James H — Founder</div></div>
-      <div class="testimonial-card"><p>"Training with Danny is simply life changing."</p><div class="attr">Maan Hamadeh</div></div>
-      <div class="testimonial-card"><p>"He helped me lose 6kgs in just a few months."</p><div class="attr">Amy Ross</div></div>
-    </div>
-  </div>
-  <div style="text-align:center;margin-top:20px;padding:28px 20px;background:white;border-radius:12px;border:1px solid rgba(0,0,0,0.06);">
-    <div class="page-tag" style="margin-bottom:8px;">Not Ready to Commit?</div>
-    <h3 style="font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:10px;">Book a Free 30-Min Performance Review</h3>
-    <p style="color:#555;margin:0 auto 20px;font-size:14px;">No pitch, no pressure. I'll tell you exactly what to focus on first.</p>
-    <a href="https://calendly.com/danny-theperformancecoach/30-min-coaching-call" target="_blank" style="text-decoration:none;"><button class="btn-primary">Book Free Review</button></a>
+
+  <div style="margin-top:24px;background:var(--dark);border-radius:12px;padding:24px;">
+    <p style="color:rgba(255,255,255,0.7);font-size:13px;text-align:center;margin:0;">Based in Dubai · Available for 1:1 coaching, corporate workshops, and speaking</p>
   </div>
 </div>
 
@@ -1032,7 +1046,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="mobile-nav-item" onclick="showScreen('recovery');setMobileActive(this)"><span class="m-icon">&#129688;</span>Recovery</div>
     <div class="mobile-nav-item" onclick="showScreen('build-plan');setMobileActive(this)"><span class="m-icon">&#128197;</span>Plan</div>
     <div class="mobile-nav-item" onclick="showScreen('progress');setMobileActive(this)"><span class="m-icon">&#128200;</span>Progress</div>
-    <div class="mobile-nav-item" onclick="showScreen('coaching');setMobileActive(this)"><span class="m-icon">&#127919;</span>Upgrade</div>
+    <div class="mobile-nav-item" onclick="showScreen('coaching');setMobileActive(this)"><span class="m-icon">&#9993;</span>Contact</div>
     <div class="mobile-nav-item" onclick="resetPassword(this)"><span class="m-icon">&#128273;</span>Password</div>
   </div>
 </nav>

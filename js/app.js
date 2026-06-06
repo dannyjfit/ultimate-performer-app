@@ -5,7 +5,7 @@
 const { createClient } = supabase;
 const _db = createClient(
   'https://surkhxljptfidlmrjlmv.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmtoeGxqcHRmaWRsbXJqbG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTY2NjgsImV4cCI6MjA5MzYzMjY2OH0.lLOfYp004WMT2gw-_lWXNIEXpgxglRJzbzkhTZHRMu4'
+  'sb_publishable_bp0oePwT4E8yTAaa_RsNmw_MFRtv-WE'
 );
 
 let _uid = null;

@@ -20,8 +20,6 @@
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-serif; min-height: 100vh; }
-
-/* AUTH */
 #auth-screen { display: none; position: fixed; inset: 0; background: var(--dark); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
 #auth-screen.visible { display: flex; }
 .auth-box { width: 100%; max-width: 400px; }
@@ -42,71 +40,47 @@ body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-
 #access-denied.visible { display: flex; }
 #access-denied p { color: rgba(255,255,255,0.6); font-size: 15px; }
 #access-denied button { background: var(--blue); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
-
-/* NAV */
 .nav { background: var(--dark); padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; }
 .nav-brand { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--blue); }
 .nav-tag { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.06); padding: 5px 12px; border-radius: 20px; }
 .nav-signout { font-size: 12px; color: rgba(255,255,255,0.45); cursor: pointer; padding: 7px 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
-.nav-signout:hover { color: white; border-color: rgba(255,255,255,0.3); }
-
-/* MAIN */
 #app { display: none; }
 #app.visible { display: block; }
 .container { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
-
-/* HEADER */
 .page-header { margin-bottom: 36px; }
 .page-tag { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
 .page-header h1 { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--dark); margin-bottom: 8px; }
 .page-header p { color: var(--mid); font-size: 15px; }
-
-/* USER SELECT */
 .select-wrap { background: white; border-radius: 12px; padding: 24px; border: 1px solid rgba(0,0,0,0.07); margin-bottom: 32px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
 .select-wrap label { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--mid); white-space: nowrap; }
 .user-select { flex: 1; min-width: 240px; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 12px 16px; font-size: 15px; font-family: 'Inter', sans-serif; color: var(--dark); background: white; outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
 .user-select:focus { border-color: var(--blue); }
 .user-count { font-size: 13px; color: #888; white-space: nowrap; }
-
-/* LOADING / EMPTY */
 .state-msg { text-align: center; padding: 60px 20px; color: #888; font-size: 15px; }
 .state-msg .icon { font-size: 36px; margin-bottom: 12px; }
-
-/* PROFILE */
 #user-profile { display: none; }
 #user-profile.visible { display: block; }
-
 .profile-meta { display: flex; align-items: center; gap: 16px; background: var(--dark); border-radius: 12px; padding: 24px 28px; margin-bottom: 28px; flex-wrap: wrap; }
 .profile-avatar { width: 52px; height: 52px; background: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: white; flex-shrink: 0; }
 .profile-info { flex: 1; }
 .profile-email { font-size: 17px; font-weight: 600; color: white; margin-bottom: 4px; }
-.profile-joined { font-size: 12px; color: rgba(255,255,255,0.4); font-family: 'Montserrat', sans-serif; letter-spacing: 0.5px; }
+.profile-joined { font-size: 12px; color: rgba(255,255,255,0.4); }
 .profile-updated { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 2px; }
-
-/* SECTIONS */
 .section { background: white; border-radius: 12px; padding: 24px 28px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.06); }
 .section-title { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--blue); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
-.section-title .icon { font-size: 14px; }
-
-/* GRID */
 .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
 .info-item { display: flex; flex-direction: column; gap: 4px; }
 .info-label { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #aaa; }
 .info-value { font-size: 15px; color: var(--dark); font-weight: 500; line-height: 1.4; }
 .info-value.empty { color: #bbb; font-style: italic; font-weight: 400; font-size: 13px; }
-
-/* WHY STATEMENT */
 .why-block { background: var(--dark); border-left: 4px solid var(--blue); border-radius: 0 8px 8px 0; padding: 18px 20px; margin-bottom: 18px; }
 .why-block p { font-family: 'DM Serif Display', serif; font-size: 17px; color: white; line-height: 1.6; font-style: italic; }
-.why-block.empty p { color: rgba(255,255,255,0.3); font-style: italic; font-size: 14px; }
-
+.why-block.empty p { color: rgba(255,255,255,0.3); font-size: 14px; }
 .reflection-list { display: flex; flex-direction: column; gap: 14px; }
 .reflection-item { border-left: 2px solid var(--border); padding-left: 14px; }
 .reflection-q { font-size: 11px; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.5px; color: #888; margin-bottom: 4px; }
 .reflection-a { font-size: 14px; color: var(--dark); line-height: 1.5; }
 .reflection-a.empty { color: #bbb; font-style: italic; }
-
-/* CHECKINS */
 .checkin-list { display: flex; flex-direction: column; gap: 12px; }
 .checkin-card { background: var(--cream); border-radius: 8px; padding: 16px 18px; border: 1px solid rgba(0,0,0,0.06); }
 .checkin-date { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
@@ -117,19 +91,15 @@ body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-
 .checkin-stat-val.na { font-size: 13px; color: #ccc; font-weight: 400; }
 .checkin-notes { font-size: 13px; color: #555; background: white; border-radius: 6px; padding: 10px 12px; margin-top: 8px; line-height: 1.5; border: 1px solid rgba(0,0,0,0.06); }
 .checkin-empty { font-size: 14px; color: #bbb; text-align: center; padding: 24px; font-style: italic; }
-
-/* WEEKLY PLAN */
 .weekly-grid { display: flex; flex-direction: column; gap: 8px; }
 .weekly-row { display: grid; grid-template-columns: 70px 1fr 1fr 1fr; gap: 10px; align-items: start; }
 .weekly-day { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--blue); padding-top: 4px; }
 .weekly-col-hdr { font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #aaa; }
 .weekly-cell { font-size: 13px; color: #444; line-height: 1.4; background: var(--cream); border-radius: 6px; padding: 8px 10px; min-height: 34px; }
 .weekly-cell.empty { color: #ccc; font-style: italic; }
-
 @media (max-width: 600px) {
   .nav { padding: 0 16px; }
   .container { padding: 24px 16px 60px; }
-  .profile-meta { padding: 18px; }
   .section { padding: 18px; }
   .weekly-row { grid-template-columns: 50px 1fr; }
   .weekly-row .weekly-cell:nth-child(4), .weekly-row .weekly-cell:nth-child(3) { display: none; }
@@ -139,7 +109,6 @@ body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
 <div id="auth-screen" class="visible">
   <div class="auth-box">
     <div class="auth-logo">
@@ -157,20 +126,17 @@ body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-
   </div>
 </div>
 
-<!-- ACCESS DENIED -->
 <div id="access-denied">
   <p>This page is restricted to the coach account only.</p>
   <button onclick="handleSignOut()">Sign Out</button>
 </div>
 
-<!-- NAV -->
 <nav class="nav">
   <span class="nav-brand">The Ultimate Performer</span>
   <span class="nav-tag">Coach View</span>
   <span class="nav-signout" onclick="handleSignOut()">Sign Out</span>
 </nav>
 
-<!-- APP -->
 <div id="app">
   <div class="container">
     <div class="page-header">
@@ -197,10 +163,7 @@ body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-
       <p>Loading...</p>
     </div>
 
-    <!-- USER PROFILE -->
     <div id="user-profile">
-
-      <!-- META -->
       <div class="profile-meta">
         <div class="profile-avatar" id="profile-avatar"></div>
         <div class="profile-info">
@@ -210,35 +173,19 @@ body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-
         </div>
       </div>
 
-      <!-- WHY -->
       <div class="section">
-        <div class="section-title"><span class="icon">🎯</span> Why Statement</div>
-        <div class="why-block" id="why-block">
-          <p id="why-statement-text"></p>
-        </div>
+        <div class="section-title">🎯 Why Statement</div>
+        <div class="why-block" id="why-block"><p id="why-statement-text"></p></div>
         <div class="reflection-list">
-          <div class="reflection-item">
-            <div class="reflection-q">What do you want to feel more of in your daily life?</div>
-            <div class="reflection-a" id="reflection-1"></div>
-          </div>
-          <div class="reflection-item">
-            <div class="reflection-q">What has your health and energy cost you so far?</div>
-            <div class="reflection-a" id="reflection-2"></div>
-          </div>
-          <div class="reflection-item">
-            <div class="reflection-q">If you felt stronger and healthier, what would actually change?</div>
-            <div class="reflection-a" id="reflection-3"></div>
-          </div>
-          <div class="reflection-item">
-            <div class="reflection-q">Who in your life would benefit from you showing up at your best?</div>
-            <div class="reflection-a" id="reflection-4"></div>
-          </div>
+          <div class="reflection-item"><div class="reflection-q">What do you want to feel more of in your daily life?</div><div class="reflection-a" id="reflection-1"></div></div>
+          <div class="reflection-item"><div class="reflection-q">What has your health and energy cost you so far?</div><div class="reflection-a" id="reflection-2"></div></div>
+          <div class="reflection-item"><div class="reflection-q">If you felt stronger and healthier, what would actually change?</div><div class="reflection-a" id="reflection-3"></div></div>
+          <div class="reflection-item"><div class="reflection-q">Who in your life would benefit from you showing up at your best?</div><div class="reflection-a" id="reflection-4"></div></div>
         </div>
       </div>
 
-      <!-- TRAINING -->
       <div class="section">
-        <div class="section-title"><span class="icon">🏋️</span> Training Setup</div>
+        <div class="section-title">🏋️ Training Setup</div>
         <div class="info-grid">
           <div class="info-item"><div class="info-label">Location</div><div class="info-value" id="training-loc"></div></div>
           <div class="info-item"><div class="info-label">Level</div><div class="info-value" id="training-level"></div></div>
@@ -248,9 +195,8 @@ body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-
         </div>
       </div>
 
-      <!-- NUTRITION -->
       <div class="section">
-        <div class="section-title"><span class="icon">🥗</span> Nutrition</div>
+        <div class="section-title">🥗 Nutrition</div>
         <div class="info-grid">
           <div class="info-item"><div class="info-label">Daily Calories</div><div class="info-value" id="calorie-target"></div></div>
           <div class="info-item"><div class="info-label">Daily Protein</div><div class="info-value" id="protein-target"></div></div>
@@ -258,9 +204,8 @@ body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-
         </div>
       </div>
 
-      <!-- RECOVERY -->
       <div class="section">
-        <div class="section-title"><span class="icon">🧘</span> Recovery Commitments</div>
+        <div class="section-title">🧘 Recovery Commitments</div>
         <div class="info-grid">
           <div class="info-item"><div class="info-label">Bed by</div><div class="info-value" id="sleep-bedtime"></div></div>
           <div class="info-item"><div class="info-label">Wake time</div><div class="info-value" id="sleep-waketime"></div></div>
@@ -270,9 +215,8 @@ body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-
         </div>
       </div>
 
-      <!-- WEEKLY PLAN -->
       <div class="section">
-        <div class="section-title"><span class="icon">📅</span> Weekly Plan</div>
+        <div class="section-title">📅 Weekly Plan</div>
         <div class="weekly-grid" id="weekly-plan-grid">
           <div class="weekly-row">
             <div></div>
@@ -283,26 +227,21 @@ body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-
         </div>
       </div>
 
-      <!-- CHECK-INS -->
       <div class="section">
-        <div class="section-title"><span class="icon">📊</span> Weekly Check-Ins</div>
+        <div class="section-title">📊 Weekly Check-Ins</div>
         <div class="checkin-list" id="checkin-list"></div>
       </div>
-
     </div>
   </div>
 </div>
 
 <script>
-// ============================================================
-// CONFIG - ADD YOUR SERVICE ROLE KEY BELOW
-// ============================================================
 const SUPABASE_URL = 'https://surkhxljptfidlmrjlmv.supabase.co';
-const SUPABASE_SERVICE_KEY = 'sb_secret_EEo4wF8ssIMwFABoZiPP1g_N3490x8y';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1cmtoeGxqcHRmaWRsbXJqbG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNTY2NjgsImV4cCI6MjA5MzYzMjY2OH0.lLOfYp004WMT2gw-_lWXNIEXpgxglRJzbzkhTZHRMu4';
+const WORKER_URL = 'https://ultimate-performer-admin.danny-8d1.workers.dev';
 const ADMIN_EMAIL = 'dannyjones1081@gmail.com';
-// ============================================================
 
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function handleLogin() {
   const email = document.getElementById('login-email').value.trim();
@@ -330,7 +269,6 @@ async function handleSignOut() {
   location.reload();
 }
 
-// Check if already signed in
 (async () => {
   const { data: { session } } = await _supabase.auth.getSession();
   if (session) {
@@ -346,131 +284,67 @@ async function handleSignOut() {
 })();
 
 async function loadUserList() {
-  const { data, error } = await _supabase
-    .from('user_data')
-    .select('id, updated_at')
-    .order('updated_at', { ascending: false });
-
-  if (error || !data) return;
-
-  // Get emails from auth - using admin API via service key
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users?per_page=1000`, {
-    headers: {
-      'apikey': SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
-    }
-  });
-  const authData = await res.json();
-  const users = authData.users || [];
+  const res = await fetch(`${WORKER_URL}?action=list_users`);
+  const data = await res.json();
+  const users = (data.users || []).filter(u => u.email !== ADMIN_EMAIL);
 
   const select = document.getElementById('user-select');
   select.innerHTML = '<option value="">- Choose a user -</option>';
-
   users.forEach(u => {
-    if (u.email === ADMIN_EMAIL) return;
     const opt = document.createElement('option');
     opt.value = u.id;
     opt.textContent = u.email;
     select.appendChild(opt);
   });
-
-  const count = users.filter(u => u.email !== ADMIN_EMAIL).length;
-  document.getElementById('user-count').textContent = `${count} user${count !== 1 ? 's' : ''}`;
+  document.getElementById('user-count').textContent = `${users.length} user${users.length !== 1 ? 's' : ''}`;
 }
 
 async function loadUser(userId) {
   if (!userId) {
     document.getElementById('user-profile').classList.remove('visible');
     document.getElementById('empty-state').style.display = 'block';
-    document.getElementById('loading-state').style.display = 'none';
     return;
   }
-
   document.getElementById('empty-state').style.display = 'none';
   document.getElementById('loading-state').style.display = 'block';
   document.getElementById('user-profile').classList.remove('visible');
 
-  // Get auth user info
-  const authRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${userId}`, {
-    headers: {
-      'apikey': SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
-    }
-  });
-  const authUser = await authRes.json();
-
-  // Get user_data
-  const { data: userData } = await _supabase
-    .from('user_data')
-    .select('*')
-    .eq('id', userId)
-    .single();
-
-  // Get check-ins (only rows where body_weight or energy or sleep_quality is not null)
-  const { data: checkIns } = await _supabase
-    .from('progress_logs')
-    .select('logged_at, body_weight, energy, sleep_quality, notes')
-    .eq('user_id', userId)
-    .not('body_weight', 'is', null)
-    .order('logged_at', { ascending: false });
+  const res = await fetch(`${WORKER_URL}?action=get_user&user_id=${userId}`);
+  const result = await res.json();
 
   document.getElementById('loading-state').style.display = 'none';
-
-  renderProfile(authUser, userData || {}, checkIns || []);
+  renderProfile(result.auth, result.data || {}, result.checkins || []);
   document.getElementById('user-profile').classList.add('visible');
 }
 
-function val(v, suffix) {
-  if (v === null || v === undefined || v === '') return null;
-  return suffix ? `${v} ${suffix}` : String(v);
-}
-
-function setField(id, value, fallback) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const v = val(value);
-  if (v) {
-    el.textContent = v;
-    el.classList.remove('empty');
-  } else {
-    el.textContent = fallback || 'Not set';
-    el.classList.add('empty');
-  }
-}
-
-const TRAINING_LABELS = {
+const LABELS = {
   loc: { gym: 'Gym', home_db: 'Home - Dumbbells', home_bw: 'Bodyweight Only' },
   level: { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' },
   goal: { loss: 'Weight Loss', muscle: 'Muscle Building', health: 'Health & Longevity' },
   diet: { meat: 'Meat & Fish', veggie: 'Vegetarian' }
 };
 
-function renderProfile(authUser, d, checkIns) {
-  // Meta
-  const email = authUser.email || '';
-  const initials = email.charAt(0).toUpperCase();
-  document.getElementById('profile-avatar').textContent = initials;
-  document.getElementById('profile-email').textContent = email;
-  document.getElementById('profile-joined').textContent = authUser.created_at
-    ? 'Joined ' + new Date(authUser.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-    : '';
-  document.getElementById('profile-updated').textContent = d.updated_at
-    ? 'Last active ' + new Date(d.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-    : '';
+function setField(id, value) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (value) { el.textContent = value; el.classList.remove('empty'); }
+  else { el.textContent = 'Not set'; el.classList.add('empty'); }
+}
 
-  // Why statement
+function renderProfile(auth, d, checkIns) {
+  const email = auth.email || '';
+  document.getElementById('profile-avatar').textContent = email.charAt(0).toUpperCase();
+  document.getElementById('profile-email').textContent = email;
+  document.getElementById('profile-joined').textContent = auth.created_at
+    ? 'Joined ' + new Date(auth.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+  document.getElementById('profile-updated').textContent = d.updated_at
+    ? 'Last active ' + new Date(d.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+
   const whyBlock = document.getElementById('why-block');
   const whyText = document.getElementById('why-statement-text');
-  if (d.why_statement) {
-    whyText.textContent = d.why_statement;
-    whyBlock.classList.remove('empty');
-  } else {
-    whyText.textContent = 'No why statement written yet';
-    whyBlock.classList.add('empty');
-  }
+  if (d.why_statement) { whyText.textContent = d.why_statement; whyBlock.classList.remove('empty'); }
+  else { whyText.textContent = 'No why statement written yet'; whyBlock.classList.add('empty'); }
 
-  // Reflections
-  const reflQs = ['', 'What do you want to feel more of?', 'What has your health cost you?', 'What would change?', 'Who would benefit?'];
   [1,2,3,4].forEach(i => {
     const el = document.getElementById(`reflection-${i}`);
     if (!el) return;
@@ -479,64 +353,40 @@ function renderProfile(authUser, d, checkIns) {
     else { el.textContent = 'Not answered yet'; el.classList.add('empty'); }
   });
 
-  // Training
-  setField('training-loc', TRAINING_LABELS.loc[d.training_loc] || d.training_loc);
-  setField('training-level', TRAINING_LABELS.level[d.training_level] || d.training_level);
+  setField('training-loc', LABELS.loc[d.training_loc] || d.training_loc);
+  setField('training-level', LABELS.level[d.training_level] || d.training_level);
   setField('training-days', d.training_days ? `${d.training_days} days/week` : null);
-  setField('training-goal', TRAINING_LABELS.goal[d.training_goal] || d.training_goal);
+  setField('training-goal', LABELS.goal[d.training_goal] || d.training_goal);
   setField('step-goal', d.step_goal ? Number(d.step_goal).toLocaleString() + ' steps/day' : null);
-
-  // Nutrition
   setField('calorie-target', d.calorie_target ? `${d.calorie_target} kcal` : null);
   setField('protein-target', d.protein_target ? `${d.protein_target}g` : null);
-  setField('dietary-pref', TRAINING_LABELS.diet[d.dietary_pref] || d.dietary_pref);
-
-  // Recovery
+  setField('dietary-pref', LABELS.diet[d.dietary_pref] || d.dietary_pref);
   setField('sleep-bedtime', d.sleep_bedtime);
   setField('sleep-waketime', d.sleep_waketime);
   setField('recovery-breathwork', d.recovery_breathwork);
   setField('recovery-session', d.recovery_session);
   setField('recovery-when', d.recovery_when);
 
-  // Weekly plan
   const days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
   const dayLabels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   const grid = document.getElementById('weekly-plan-grid');
-  // Clear existing day rows but keep header
   while (grid.children.length > 1) grid.removeChild(grid.lastChild);
-
   const plan = d.weekly_plan || {};
-  let hasPlan = false;
-
   days.forEach((day, i) => {
-    const dayPlan = plan[day] || {};
-    const training = dayPlan.training || '';
-    const nutrition = dayPlan.nutrition || '';
-    const recovery = dayPlan.recovery || '';
-    if (training || nutrition || recovery) hasPlan = true;
-
+    const p = plan[day] || {};
     const row = document.createElement('div');
     row.className = 'weekly-row';
     row.innerHTML = `
       <div class="weekly-day">${dayLabels[i]}</div>
-      <div class="weekly-cell${!training ? ' empty' : ''}">${training || 'Not set'}</div>
-      <div class="weekly-cell${!nutrition ? ' empty' : ''}">${nutrition || 'Not set'}</div>
-      <div class="weekly-cell${!recovery ? ' empty' : ''}">${recovery || 'Not set'}</div>
+      <div class="weekly-cell${!p.training ? ' empty' : ''}">${p.training || 'Not set'}</div>
+      <div class="weekly-cell${!p.nutrition ? ' empty' : ''}">${p.nutrition || 'Not set'}</div>
+      <div class="weekly-cell${!p.recovery ? ' empty' : ''}">${p.recovery || 'Not set'}</div>
     `;
     grid.appendChild(row);
   });
 
-  if (!hasPlan) {
-    const msg = document.createElement('div');
-    msg.style.cssText = 'text-align:center;color:#bbb;font-size:14px;font-style:italic;padding:20px;';
-    msg.textContent = 'Weekly plan not filled in yet';
-    grid.appendChild(msg);
-  }
-
-  // Check-ins
   const checkinList = document.getElementById('checkin-list');
   checkinList.innerHTML = '';
-
   if (!checkIns.length) {
     checkinList.innerHTML = '<div class="checkin-empty">No check-ins logged yet</div>';
   } else {
@@ -547,18 +397,9 @@ function renderProfile(authUser, d, checkIns) {
       card.innerHTML = `
         <div class="checkin-date">${date}</div>
         <div class="checkin-stats">
-          <div class="checkin-stat">
-            <div class="checkin-stat-label">Weight</div>
-            <div class="checkin-stat-val${!c.body_weight ? ' na' : ''}">${c.body_weight ? c.body_weight + ' kg' : '-'}</div>
-          </div>
-          <div class="checkin-stat">
-            <div class="checkin-stat-label">Energy</div>
-            <div class="checkin-stat-val${!c.energy ? ' na' : ''}">${c.energy ? c.energy + '/10' : '-'}</div>
-          </div>
-          <div class="checkin-stat">
-            <div class="checkin-stat-label">Sleep</div>
-            <div class="checkin-stat-val${!c.sleep_quality ? ' na' : ''}">${c.sleep_quality ? c.sleep_quality + '/10' : '-'}</div>
-          </div>
+          <div class="checkin-stat"><div class="checkin-stat-label">Weight</div><div class="checkin-stat-val${!c.body_weight ? ' na' : ''}">${c.body_weight ? c.body_weight + ' kg' : '-'}</div></div>
+          <div class="checkin-stat"><div class="checkin-stat-label">Energy</div><div class="checkin-stat-val${!c.energy ? ' na' : ''}">${c.energy ? c.energy + '/10' : '-'}</div></div>
+          <div class="checkin-stat"><div class="checkin-stat-label">Sleep</div><div class="checkin-stat-val${!c.sleep_quality ? ' na' : ''}">${c.sleep_quality ? c.sleep_quality + '/10' : '-'}</div></div>
         </div>
         ${c.notes ? `<div class="checkin-notes">${c.notes}</div>` : ''}
       `;

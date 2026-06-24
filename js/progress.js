@@ -153,7 +153,9 @@ async function progressLoadStats() {
   const streakEl = document.getElementById('prog-streak-num');
   if (total) total.textContent = data ? data.length : 0;
   if (!data || !data.length) { if (streakEl) streakEl.textContent = 0; if (weekEl) weekEl.textContent = 0; return; }
-  const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); weekStart.setHours(0,0,0,0);
+  const now = new Date();
+  const dayOfWeek = now.getUTCDay() === 0 ? 7 : now.getUTCDay();
+  const weekStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - dayOfWeek + 1));
   if (weekEl) weekEl.textContent = data.filter(s => new Date(s.logged_at) >= weekStart).length;
   const days = [...new Set(data.map(s => s.logged_at.slice(0, 10)))].sort().reverse();
   const today = new Date().toISOString().slice(0, 10);

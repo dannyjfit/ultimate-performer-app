@@ -311,7 +311,55 @@ function isUnlocked(id) {
   return getCompleted().includes(MODULE_ORDER[idx - 1]);
 }
 
+function canComplete(id) {
+  switch(id) {
+    case 'welcome-video':
+      return localStorage.getItem('up_wv_' + (_uid||'guest')) === '1';
+    case 'quiz': {
+      const cb = document.getElementById('quiz-done-cb');
+      return cb && cb.checked;
+    }
+    case 'why-workshop': {
+      const el = document.getElementById('why_statement');
+      return el && el.value.trim().length >= 5;
+    }
+    case 'movement': {
+      const plan = document.getElementById('tg-plan');
+      return plan && plan.style.display !== 'none';
+    }
+    case 'nutrition': {
+      const plan = document.getElementById('mg-plan');
+      return plan && plan.style.display !== 'none';
+    }
+    case 'recovery': {
+      const bed  = document.getElementById('sleep_bedtime');
+      const wake = document.getElementById('sleep_waketime');
+      return !!(bed && bed.value.trim() && wake && wake.value.trim());
+    }
+    case 'build-plan': {
+      let filled = false;
+      document.querySelectorAll('.weekly-table textarea[data-day]').forEach(ta => { if (ta.value.trim()) filled = true; });
+      return filled;
+    }
+    default: return true;
+  }
+}
+
+function getCompletionHint(id) {
+  const hints = {
+    'welcome-video': 'Watch the video first',
+    'quiz':          'Tick the box to confirm you\'ve completed the quiz',
+    'why-workshop':  'Write your why statement first',
+    'movement':      'Build your training plan first',
+    'nutrition':     'Build your meal plan first',
+    'recovery':      'Fill in your sleep times first',
+    'build-plan':    'Fill in at least one day in your weekly plan'
+  };
+  return hints[id] || 'Complete this section first';
+}
+
 function completeAndGo(current, next) {
+  if (!canComplete(current)) { _showToast(getCompletionHint(current)); return; }
   markComplete(current);
   showScreen(next);
 }
@@ -337,6 +385,11 @@ function _showToast(msg) {
 
 function updateLockUI() {
   const done = getCompleted();
+
+  // Hide Start Here button once welcome video is watched
+  const startBtn = document.querySelector('#screen-dashboard .btn-primary');
+  if (startBtn) startBtn.style.display = done.includes('welcome-video') ? 'none' : '';
+
   MODULE_ORDER.forEach(id => {
     const unlocked = isUnlocked(id);
     const completed = done.includes(id);

@@ -67,6 +67,21 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 .module-card h3{font-family:'DM Serif Display',serif;font-size:17px;color:var(--dark);margin-bottom:6px;}
 .module-card p{font-size:12px;color:#666;line-height:1.4;}
 .module-icon{font-size:24px;margin-bottom:10px;}
+/* Lock states */
+.module-card{position:relative;}
+.module-card.module-locked{opacity:0.5;pointer-events:auto;}
+.module-card.module-locked .lock-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(240,238,231,0.6);border-radius:10px;font-size:22px;}
+.module-card.module-done .done-tick{position:absolute;top:8px;right:10px;color:var(--blue);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;}
+.sidebar-item.module-locked{opacity:0.45;}
+.sidebar-item .sb-lock{margin-left:auto;font-size:12px;}
+.sidebar-item .sb-done{margin-left:auto;color:var(--blue);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;}
+.mobile-nav-item.module-locked{opacity:0.4;}
+#lock-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--dark);color:white;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:10px 18px;border-radius:20px;opacity:0;transition:opacity 0.25s,transform 0.25s;z-index:999;pointer-events:none;white-space:nowrap;}
+#lock-toast.visible{opacity:1;transform:translateX(-50%) translateY(0);}
+/* Daily quote */
+.daily-quote-card{background:var(--dark);border-radius:10px;padding:18px 20px;margin-bottom:20px;text-align:center;}
+.daily-quote-label{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:10px;}
+.daily-quote-text{font-family:'DM Serif Display',serif;font-size:16px;color:white;line-height:1.5;font-style:italic;}
 .page-header{margin-bottom:24px;}
 .page-tag{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
 .page-header h2{font-family:'DM Serif Display',serif;font-size:28px;color:var(--dark);margin-bottom:8px;}
@@ -473,6 +488,11 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </div>
   </div>
 
+  <div class="daily-quote-card">
+    <div class="daily-quote-label">Today's Thought</div>
+    <div class="daily-quote-text" id="daily-quote-text"></div>
+  </div>
+
   <div style="margin-bottom:20px;text-align:center;">
     <div class="page-tag">Your Journey</div>
     <h2 style="font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:4px;">Work through it in order</h2>
@@ -499,7 +519,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Next step is the quiz.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('quiz')">Next: Take the Quiz &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('welcome-video','quiz')">Next: Take the Quiz &#8594;</button></div>
 </div>
 
 <!-- QUIZ -->
@@ -507,7 +527,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   <div class="page-header" style="text-align:center;"><div class="page-tag">Step 1</div><h2>Your Performance Quiz</h2><p>Takes about 5 minutes.</p></div>
   <div class="tool-embed"><iframe src="https://dannyjfit.github.io/ultimate-performer-quiz/" title="Ultimate Performer Quiz"></iframe></div>
   <div class="callout" style="text-align:center;"><p><strong>Finished?</strong> Head into the Why Workshop next.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('why-workshop')">Next: Why Workshop &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('quiz','why-workshop')">Next: Why Workshop &#8594;</button></div>
 </div>
 
 <!-- WHY WORKSHOP -->
@@ -550,7 +570,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <p style="font-size:13px;color:#888;margin-top:8px;text-align:center;">&#128247; Screenshot it. Save it somewhere you'll see it every day.</p>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Move to Movement next.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('movement')">Next: Movement &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('why-workshop','movement')">Next: Movement &#8594;</button></div>
 </div>
 
 <!-- MOVEMENT -->
@@ -646,7 +666,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </table>
   </div>
   <div class="callout" style="margin-top:16px;text-align:center;"><p><strong>Done?</strong> Move to Nutrition next.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('nutrition')">Next: Nutrition &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('movement','nutrition')">Next: Nutrition &#8594;</button></div>
 </div>
 
 <!-- NUTRITION -->
@@ -718,7 +738,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </div>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Move to Recovery next.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('recovery')">Next: Recovery &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('nutrition','recovery')">Next: Recovery &#8594;</button></div>
 </div>
 
 <!-- RECOVERY -->
@@ -775,7 +795,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </ul>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Last step — build your plan.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('build-plan')">Next: Your Plan &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('recovery','build-plan')">Next: Your Plan &#8594;</button></div>
 </div>
 
 <!-- YOUR PLAN -->
@@ -1174,6 +1194,10 @@ function loadStepGoal() {
 }
 const _origShowScreen = showScreen;
 showScreen = function(id) {
+  if (typeof isUnlocked === 'function' && !isUnlocked(id)) {
+    if (typeof showLockedToast === 'function') showLockedToast(id);
+    return;
+  }
   _origShowScreen(id);
   if (id === 'progress' && typeof progressInit === 'function') progressInit();
   if (id === 'movement') loadStepGoal();

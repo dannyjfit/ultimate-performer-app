@@ -343,4 +343,5 @@ function progressInit() {
     exWrap.innerHTML = '<canvas id="prog-ex-chart"></canvas>';
   }
   progressLoadCheckinChart();
+  loadWorkoutHistory();
 }

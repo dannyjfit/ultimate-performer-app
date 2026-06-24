@@ -36,6 +36,8 @@ function showApp(email) {
   showScreen('dashboard');
   updateLockUI();
   loadDailyQuote();
+  updateGreeting();
+  initSessionLogger();
 }
 function showAuthScreen() { document.getElementById('auth-screen').classList.add('visible'); }
 
@@ -284,6 +286,91 @@ function toggleInjury(el) {
   const was = el.classList.contains('open');
   document.querySelectorAll('.injury-option').forEach(o => o.classList.remove('open'));
   if (!was) el.classList.add('open');
+}
+
+// ─── SESSION LOGGER ──────────────────────────────────────────────
+const SESSION_ACTIVITIES = [
+  'Weights','Run','Walk','Cycle','HIIT','Padel','Swim',
+  'Boxing','Yoga','Pilates','Stretch','Hike','Tennis',
+  'Golf','Meditation','Breathwork','Rest Day'
+];
+let _selActivity = null, _selDuration = null;
+
+function updateGreeting() {
+  const el = document.getElementById('dash-greeting');
+  if (!el) return;
+  const h = new Date().getHours();
+  const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  el.innerHTML = `<p style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--dark);margin:0;">${g}</p>`;
+}
+
+function initSessionLogger() {
+  const pills = document.getElementById('activity-pills');
+  if (!pills || pills.children.length > 0) return;
+  pills.innerHTML = SESSION_ACTIVITIES.map(a =>
+    `<div class="slc-pill" onclick="selectActivity(this,'${a}')">${a}</div>`
+  ).join('');
+  loadSessionStreak();
+}
+
+function selectActivity(el, activity) {
+  document.querySelectorAll('#activity-pills .slc-pill').forEach(p => p.classList.remove('sel'));
+  el.classList.add('sel');
+  _selActivity = activity;
+}
+
+function selectDuration(el, dur) {
+  document.querySelectorAll('#duration-pills .slc-dur').forEach(p => p.classList.remove('sel'));
+  el.classList.add('sel');
+  _selDuration = dur;
+}
+
+async function logSession() {
+  if (!_selActivity) { _showToast('Pick an activity first'); return; }
+  if (!_uid) { _showToast('Not logged in'); return; }
+  const note = (document.getElementById('session-note') || {}).value || '';
+  const btn = document.querySelector('.slc-log-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Logging...'; }
+  const { error } = await _db.from('session_logs').insert({
+    user_id: _uid,
+    activity: _selActivity,
+    duration_mins: _selDuration || null,
+    note: note.trim() || null,
+    logged_at: new Date().toISOString()
+  });
+  if (btn) { btn.disabled = false; btn.textContent = 'Log Session'; }
+  if (error) { _showToast('Something went wrong, try again'); return; }
+  document.querySelectorAll('#activity-pills .slc-pill').forEach(p => p.classList.remove('sel'));
+  document.querySelectorAll('#duration-pills .slc-dur').forEach(p => p.classList.remove('sel'));
+  const noteEl = document.getElementById('session-note');
+  if (noteEl) noteEl.value = '';
+  _selActivity = null; _selDuration = null;
+  _showToast('Session logged ✓');
+  loadSessionStreak();
+}
+
+async function loadSessionStreak() {
+  if (!_uid) return;
+  const { data } = await _db.from('session_logs').select('logged_at').eq('user_id', _uid).order('logged_at', { ascending: false }).limit(120);
+  if (!data || !data.length) { _updateStreakBadge(0); return; }
+  const days = [...new Set(data.map(s => s.logged_at.slice(0, 10)))].sort().reverse();
+  const today = new Date().toISOString().slice(0, 10);
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  if (days[0] !== today && days[0] !== yesterday) { _updateStreakBadge(0); return; }
+  let streak = 0;
+  let check = days[0] === today ? today : yesterday;
+  for (const d of days) {
+    if (d === check) { streak++; check = new Date(new Date(check) - 86400000).toISOString().slice(0, 10); }
+    else break;
+  }
+  _updateStreakBadge(streak);
+}
+
+function _updateStreakBadge(n) {
+  const badge = document.getElementById('session-streak-badge');
+  const count = document.getElementById('session-streak-count');
+  if (count) count.textContent = n;
+  if (badge) badge.style.display = n > 0 ? 'flex' : 'none';
 }
 
 // ─── MODULE LOCKING ──────────────────────────────────────────────

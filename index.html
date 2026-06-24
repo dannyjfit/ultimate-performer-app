@@ -53,7 +53,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 #save-indicator{position:fixed;bottom:80px;right:16px;background:var(--dark);color:white;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:8px 14px;border-radius:6px;opacity:0;transition:opacity 0.3s;z-index:500;pointer-events:none;}
 #save-indicator.saving{opacity:1;background:#555;}
 #save-indicator.saved{opacity:1;background:var(--blue);}
-.welcome-hero{background:var(--dark);border-radius:12px;padding:28px 20px;margin-bottom:24px;position:relative;overflow:hidden;}
+.welcome-hero{background:var(--dark);border-radius:12px;padding:28px 20px 18px;margin-bottom:24px;position:relative;overflow:hidden;}
 .welcome-hero::before{display:none;}
 .welcome-tag{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
 .welcome-hero h1{font-family:'DM Serif Display',serif;font-size:32px;color:white;line-height:1.15;margin-bottom:12px;}
@@ -472,7 +472,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <button class="btn-primary" onclick="showScreen('welcome-video')">Start Here — Watch Welcome Video</button>
   </div>
   
-  <div id="dash-greeting" style="padding:16px 16px 8px;"></div>
+  <div id="dash-greeting" style="padding:16px 16px 8px;text-align:center;"></div>
 
   <div class="daily-quote-card">
     <div class="daily-quote-label">Today's Thought</div>
@@ -896,7 +896,19 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- PROGRESS -->
 <div id="screen-progress" class="screen">
-  <div class="page-header" style="text-align:center;"><div class="page-tag">Track</div><h2>Progress</h2><p>Track your body weight and see how your lifts are moving over time.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Track</div><h2>Progress</h2><p>Track your body weight and see how you're showing up over time.</p></div>
+
+  <div class="workout-stats-row" style="gap:12px;margin:0 0 16px;">
+    <div class="workout-stat-box">
+      <div class="workout-stat-num" id="prog-streak-num">0</div>
+      <div class="workout-stat-label">Day Streak 🔥</div>
+    </div>
+    <div class="workout-stat-box">
+      <div class="workout-stat-num" id="prog-total-sessions">0</div>
+      <div class="workout-stat-label">Total Sessions</div>
+    </div>
+  </div>
+
   <div id="steps-section-progress" style="display:none;margin-bottom:16px;">
     <div class="steps-card">
       <div class="steps-card-header">
@@ -928,27 +940,6 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   <div class="content-section" style="margin-bottom:16px;">
     <h4 style="text-align:center;">Body Weight Over Time</h4>
     <div id="prog-bw-chart-wrap" style="position:relative;height:220px;margin-top:12px;"><canvas id="prog-bw-chart"></canvas></div>
-  </div>
-  <div class="content-section" style="margin-bottom:16px;">
-    <h4 style="text-align:center;">Log an Exercise</h4>
-    <p style="margin-bottom:14px;text-align:center;">You can also log directly from the Movement section.</p>
-    <div class="prog-form-grid">
-      <div class="prog-field prog-field-full"><label class="prog-label" for="prog-exercise-select">Exercise</label><select class="prog-input prog-select" id="prog-exercise-select"></select></div>
-      <div class="prog-field"><label class="prog-label" for="prog-weight-used">Weight (kg)</label><input class="prog-input" type="number" id="prog-weight-used" placeholder="0 = bodyweight" min="0" step="0.5"></div>
-      <div class="prog-field"><label class="prog-label" for="prog-sets">Sets</label><input class="prog-input" type="number" id="prog-sets" placeholder="e.g. 3" min="1" max="20"></div>
-      <div class="prog-field"><label class="prog-label" for="prog-reps">Reps</label><input class="prog-input" type="number" id="prog-reps" placeholder="e.g. 12" min="1" max="100"></div>
-      <div class="prog-field prog-field-full"><label class="prog-label" for="prog-ex-notes">Notes (optional)</label><textarea class="prog-input prog-textarea" id="prog-ex-notes" placeholder="e.g. felt strong, increased weight..."></textarea></div>
-    </div>
-    <button class="prog-btn" id="prog-ex-log-btn" onclick="progressSubmitExerciseLog()">Log Exercise</button>
-  </div>
-  <div class="content-section">
-    <h4 style="text-align:center;">Exercise Progression</h4>
-    <p style="margin-bottom:14px;text-align:center;">Select an exercise to see your weight over time.</p>
-    <div class="prog-chart-controls">
-      <select class="prog-input prog-select" id="prog-chart-exercise"></select>
-      <button class="prog-btn prog-btn-sm" id="prog-ex-chart-btn" onclick="progressLoadExerciseChart()">View Progression</button>
-    </div>
-    <div id="prog-ex-chart-wrap" style="position:relative;height:220px;margin-top:14px;"><canvas id="prog-ex-chart"></canvas></div>
   </div>
 </div>
 

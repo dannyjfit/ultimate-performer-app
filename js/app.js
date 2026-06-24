@@ -118,10 +118,8 @@ async function handleWaiverAgree(email) {
 
 function showWaiverModal(email) {
   document.getElementById('waiver-modal').style.display = 'flex';
-  // Wire up the agree button with this user's email
   const btn = document.getElementById('waiver-btn');
   btn.onclick = () => handleWaiverAgree(email);
-  // Checkbox enables/disables the button
   const cb = document.getElementById('waiver-checkbox');
   cb.checked = false;
   btn.disabled = true;
@@ -253,6 +251,7 @@ function showScreen(id) {
     if ((item.getAttribute('onclick')||'').includes("'"+id+"'")) item.classList.add('active');
   });
   if (id === 'progress' && typeof progressInit === 'function') progressInit();
+  if (id === 'dashboard' && typeof loadWorkoutStreak === 'function') loadWorkoutStreak();
   window.scrollTo(0,0);
 }
 

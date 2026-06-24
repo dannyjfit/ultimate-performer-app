@@ -271,6 +271,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 .prog-toast-error{background:#c62828;color:#fff;}
 .tg-log-btn{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;padding:5px 10px;border:1.5px solid #4682b4;border-radius:6px;background:transparent;color:#4682b4;cursor:pointer;white-space:nowrap;margin-left:6px;-webkit-appearance:none;}
 .tg-log-btn.active{background:#4682b4;color:#fff;}
+.finish-workout-wrap{padding:20px 0 8px;text-align:center;}.finish-workout-btn{background:#4682b4;color:white;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:16px 32px;border-radius:10px;border:none;cursor:pointer;width:100%;max-width:360px;-webkit-appearance:none;transition:background 0.2s;}.finish-workout-btn:hover{background:#2d5f8a;}.finish-workout-btn:disabled{opacity:0.6;cursor:not-allowed;}.streak-card{background:var(--dark);border-radius:12px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}.streak-left{display:flex;align-items:center;gap:14px;}.streak-left span{font-size:32px;}.streak-number{font-family:'DM Serif Display',serif;font-size:42px;color:white;line-height:1;}.streak-label{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:2px;}.streak-right{font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,0.4);text-align:right;max-width:140px;line-height:1.5;}.workout-stats-row{display:flex;justify-content:center;margin-bottom:16px;}.workout-stat-box{background:#f4f8fc;border-radius:10px;padding:16px 32px;text-align:center;}.workout-stat-num{font-family:'DM Serif Display',serif;font-size:36px;color:#4682b4;}.workout-stat-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-top:4px;}.workout-history-list{display:flex;flex-direction:column;gap:10px;margin-top:8px;}.workout-history-row{background:#f7f6f2;border-radius:8px;padding:14px 16px;border-left:3px solid #4682b4;}.workout-history-name{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:#1a1a1a;margin-bottom:4px;}.workout-history-date{font-size:12px;color:#888;}
 .tg-inline-log{background:#f4f8fc;border:1.5px solid #d0e3f0;border-radius:8px;padding:12px;margin-top:10px;margin-bottom:4px;}
 .tg-log-fields{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
 .tg-log-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:70px;}
@@ -459,6 +460,18 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   </div>
   <button class="steps-enable-btn" id="steps-enable-btn" onclick="requestHealthKit()" style="display:none;">&#127939; Enable Step Tracking</button>
   <p style="font-size:11px;color:#aaa;text-align:center;margin:4px 0 8px;">Step data is read from Apple Health (HealthKit). No health data is stored or shared.</p>
+  <div id="dashboard-streak" style="margin:0 16px 20px;">
+    <div class="streak-card">
+      <div class="streak-left">
+        <span id="streak-fire">🔥</span>
+        <div>
+          <div class="streak-number"><span id="streak-count">0</span></div>
+          <div class="streak-label" id="streak-label">day streak</div>
+        </div>
+      </div>
+      <div class="streak-right">Keep showing up. Don't break the chain.</div>
+    </div>
+  </div>
 
   <div style="margin-bottom:20px;text-align:center;">
     <div class="page-tag">Your Journey</div>
@@ -983,6 +996,17 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
       </div>
       <button class="gen-change-btn" onclick="tgChange('tg2')">&#8592; Change My Inputs</button>
     </div>
+  </div>
+  <!-- WORKOUT HISTORY -->
+  <div class="prog-section">
+    <h4 style="text-align:center;">Workout History</h4>
+    <div class="workout-stats-row">
+      <div class="workout-stat-box">
+        <div class="workout-stat-num" id="workout-total-count">0</div>
+        <div class="workout-stat-label">Total Workouts</div>
+      </div>
+    </div>
+    <div id="workout-history-list" class="workout-history-list"><p class="prog-empty">No workouts logged yet.</p></div>
   </div>
 </div>
 

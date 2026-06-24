@@ -34,6 +34,8 @@ function showApp(email) {
   hideWaiverModal();
   document.getElementById('nav-user-email').textContent = email;
   showScreen('dashboard');
+  updateLockUI();
+  loadDailyQuote();
 }
 function showAuthScreen() { document.getElementById('auth-screen').classList.add('visible'); }
 
@@ -282,6 +284,139 @@ function toggleInjury(el) {
   const was = el.classList.contains('open');
   document.querySelectorAll('.injury-option').forEach(o => o.classList.remove('open'));
   if (!was) el.classList.add('open');
+}
+
+// ─── MODULE LOCKING ──────────────────────────────────────────────
+const MODULE_ORDER = ['welcome-video','quiz','why-workshop','movement','nutrition','recovery','build-plan'];
+const FREE_SCREENS = ['dashboard','progress','calorie-calc','exercise-lib','meal-gen','training-gen','coaching'];
+
+function _progressKey() { return _uid ? `up_prog_${_uid}` : 'up_prog_guest'; }
+
+function getCompleted() {
+  try { return JSON.parse(localStorage.getItem(_progressKey()) || '[]'); }
+  catch(e) { return []; }
+}
+
+function markComplete(id) {
+  const done = getCompleted();
+  if (!done.includes(id)) { done.push(id); localStorage.setItem(_progressKey(), JSON.stringify(done)); }
+  updateLockUI();
+}
+
+function isUnlocked(id) {
+  if (FREE_SCREENS.includes(id)) return true;
+  if (!MODULE_ORDER.includes(id)) return true;
+  const idx = MODULE_ORDER.indexOf(id);
+  if (idx === 0) return true;
+  return getCompleted().includes(MODULE_ORDER[idx - 1]);
+}
+
+function completeAndGo(current, next) {
+  markComplete(current);
+  showScreen(next);
+}
+
+function showLockedToast(id) {
+  const idx = MODULE_ORDER.indexOf(id);
+  const prev = MODULE_ORDER[idx - 1];
+  const names = {
+    'welcome-video':'the Welcome Video','quiz':'the Quiz','why-workshop':'the Why Workshop',
+    'movement':'Movement','nutrition':'Nutrition','recovery':'Recovery','build-plan':'Your Plan'
+  };
+  _showToast(`Finish ${names[prev] || 'the previous step'} first`);
+}
+
+function _showToast(msg) {
+  let t = document.getElementById('lock-toast');
+  if (!t) { t = document.createElement('div'); t.id='lock-toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.classList.add('visible');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('visible'), 2500);
+}
+
+function updateLockUI() {
+  const done = getCompleted();
+  MODULE_ORDER.forEach(id => {
+    const unlocked = isUnlocked(id);
+    const completed = done.includes(id);
+
+    // Sidebar
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+      if ((item.getAttribute('onclick')||'').includes(`'${id}'`)) {
+        item.classList.toggle('module-locked', !unlocked);
+        item.classList.toggle('module-done', completed);
+        let lk = item.querySelector('.sb-lock'); let dk = item.querySelector('.sb-done');
+        if (!unlocked) {
+          if (!lk) { lk=document.createElement('span'); lk.className='sb-lock'; lk.textContent='🔒'; item.appendChild(lk); }
+          if (dk) dk.remove();
+        } else if (completed) {
+          if (!dk) { dk=document.createElement('span'); dk.className='sb-done'; dk.textContent='✓'; item.appendChild(dk); }
+          if (lk) lk.remove();
+        } else {
+          if (lk) lk.remove(); if (dk) dk.remove();
+        }
+      }
+    });
+
+    // Mobile nav
+    document.querySelectorAll('.mobile-nav-item').forEach(item => {
+      if ((item.getAttribute('onclick')||'').includes(`'${id}'`))
+        item.classList.toggle('module-locked', !unlocked);
+    });
+
+    // Dashboard cards
+    document.querySelectorAll('.module-card').forEach(card => {
+      if ((card.getAttribute('onclick')||'').includes(`'${id}'`)) {
+        card.classList.toggle('module-locked', !unlocked);
+        card.classList.toggle('module-done', completed);
+        let ov = card.querySelector('.lock-overlay');
+        if (!unlocked) {
+          if (!ov) { ov=document.createElement('div'); ov.className='lock-overlay'; ov.innerHTML='<span>🔒</span>'; card.appendChild(ov); }
+        } else { if (ov) ov.remove(); }
+        let tick = card.querySelector('.done-tick');
+        if (completed) {
+          if (!tick) { tick=document.createElement('div'); tick.className='done-tick'; tick.textContent='✓'; card.appendChild(tick); }
+        } else { if (tick) tick.remove(); }
+      }
+    });
+  });
+}
+
+// ─── DAILY QUOTE ─────────────────────────────────────────────────
+const DAILY_QUOTES = [
+  "You don't need more information. You need to actually do the thing.",
+  "Discipline is just deciding in advance.",
+  "The gap between where you are and where you want to be is mostly just consistency.",
+  "Nobody is coming to sort your life out. Good news though, you don't need them to.",
+  "Most people overestimate what they need and underestimate what they already have.",
+  "You're not tired. You're just avoiding something.",
+  "Standards aren't set once. They're defended every single day.",
+  "The version of you that has it together isn't waiting for the right moment either.",
+  "Hard things first. Everything else is just admin.",
+  "If it's not in the calendar, it's not real.",
+  "Progress without reflection is just being busy.",
+  "You already know what you need to do. That's the annoying part.",
+  "The people you admire aren't more talented. They're just more consistent.",
+  "A bad week doesn't reset who you are. Getting back up does.",
+  "Your future self is either going to thank you or make excuses for you.",
+  "Identity isn't what you say about yourself. It's what you do when nobody's watching.",
+  "Comfort is expensive. It just doesn't invoice you straight away.",
+  "The goal isn't perfection. It's just not quitting.",
+  "Some days the win is just showing up. That counts.",
+  "Stop negotiating with yourself at 6am. You already made the decision last night.",
+  "You can either protect your standards or your excuses. Not both.",
+  "The best time to build the habit was months ago. Second best time is today.",
+  "Rest is part of the programme. Giving up isn't.",
+  "Execution is the only thing that separates ideas from results.",
+  "Your body keeps score. So does your confidence."
+];
+
+function loadDailyQuote() {
+  const el = document.getElementById('daily-quote-text');
+  if (!el) return;
+  const dayIndex = Math.floor(Date.now() / 86400000);
+  el.textContent = DAILY_QUOTES[dayIndex % DAILY_QUOTES.length];
 }
 
 // ─── BOOT ────────────────────────────────────────────────────────

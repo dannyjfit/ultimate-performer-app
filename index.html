@@ -67,6 +67,22 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 .module-card h3{font-family:'DM Serif Display',serif;font-size:17px;color:var(--dark);margin-bottom:6px;}
 .module-card p{font-size:12px;color:#666;line-height:1.4;}
 .module-icon{font-size:24px;margin-bottom:10px;}
+/* Session logger */
+.session-logger-card{margin:0 16px 16px;background:white;border-radius:12px;padding:16px;border:1px solid rgba(0,0,0,0.07);}
+.slc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.slc-title{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dark);}
+.slc-streak-badge{background:#fff4e0;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;color:#c97b00;display:flex;align-items:center;gap:3px;}
+.slc-pills-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:10px;padding-bottom:2px;}
+.slc-pills-scroll::-webkit-scrollbar{display:none;}
+.slc-pills{display:flex;gap:6px;width:max-content;}
+.slc-pill{border:1px solid rgba(0,0,0,0.12);border-radius:20px;padding:6px 12px;font-size:11px;font-weight:600;color:#555;white-space:nowrap;cursor:pointer;background:#f9f8f6;-webkit-tap-highlight-color:transparent;}
+.slc-pill.sel{background:var(--blue);border-color:var(--blue);color:white;}
+.slc-dur-row{display:flex;gap:5px;margin-bottom:10px;}
+.slc-dur{flex:1;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:7px 2px;font-size:10px;font-weight:700;color:#555;text-align:center;cursor:pointer;background:#f9f8f6;-webkit-tap-highlight-color:transparent;}
+.slc-dur.sel{background:var(--blue);border-color:var(--blue);color:white;}
+.slc-note{width:100%;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'Inter',sans-serif;outline:none;color:var(--dark);background:#fafaf8;margin-bottom:10px;box-sizing:border-box;}
+.slc-log-btn{width:100%;background:var(--dark);color:white;border:none;border-radius:8px;padding:12px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;}
+.slc-log-btn:active{opacity:0.8;}
 /* Lock states */
 .module-card{position:relative;}
 .module-card.module-locked{opacity:0.5;pointer-events:auto;}
@@ -456,7 +472,13 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <button class="btn-primary" onclick="showScreen('welcome-video')">Start Here — Watch Welcome Video</button>
   </div>
   
-  <div id="dash-greeting" style="padding:16px 16px 0;"></div>
+  <div id="dash-greeting" style="padding:16px 16px 8px;"></div>
+
+  <div class="daily-quote-card">
+    <div class="daily-quote-label">Today's Thought</div>
+    <div class="daily-quote-text" id="daily-quote-text"></div>
+  </div>
+
   <div id="steps-section" style="display:none;">
     <div class="steps-card">
       <div class="steps-card-header">
@@ -475,7 +497,26 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   </div>
   <button class="steps-enable-btn" id="steps-enable-btn" onclick="requestHealthKit()" style="display:none;">&#127939; Enable Step Tracking</button>
   <p style="font-size:11px;color:#aaa;text-align:center;margin:4px 0 8px;">Step data is read from Apple Health (HealthKit). No health data is stored or shared.</p>
-  <div id="dashboard-streak" style="margin:0 16px 20px;">
+
+  <!-- SESSION LOGGER -->
+  <div class="session-logger-card" id="session-logger-card">
+    <div class="slc-header">
+      <span class="slc-title">Log Today's Session</span>
+      <span class="slc-streak-badge" id="session-streak-badge" style="display:none;">🔥 <span id="session-streak-count">0</span> day streak</span>
+    </div>
+    <div class="slc-pills-scroll"><div class="slc-pills" id="activity-pills"></div></div>
+    <div class="slc-dur-row" id="duration-pills">
+      <div class="slc-dur" onclick="selectDuration(this,15)">15 min</div>
+      <div class="slc-dur" onclick="selectDuration(this,30)">30 min</div>
+      <div class="slc-dur" onclick="selectDuration(this,45)">45 min</div>
+      <div class="slc-dur" onclick="selectDuration(this,60)">60 min</div>
+      <div class="slc-dur" onclick="selectDuration(this,90)">90 min</div>
+    </div>
+    <input type="text" id="session-note" class="slc-note" placeholder="Add a note... (optional)">
+    <button class="slc-log-btn" onclick="logSession()">Log Session</button>
+  </div>
+
+  <div id="dashboard-streak" style="margin:0 16px 20px;display:none;">
     <div class="streak-card">
       <div class="streak-left">
         <span id="streak-fire">🔥</span>
@@ -486,11 +527,6 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
       </div>
       <div class="streak-right">Keep showing up. Don't break the chain.</div>
     </div>
-  </div>
-
-  <div class="daily-quote-card">
-    <div class="daily-quote-label">Today's Thought</div>
-    <div class="daily-quote-text" id="daily-quote-text"></div>
   </div>
 
   <div style="margin-bottom:20px;text-align:center;">

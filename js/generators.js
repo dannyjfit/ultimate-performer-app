@@ -2,6 +2,172 @@
 // GENERATOR RENDERING — shared logic for both training & meal
 // ═══════════════════════════════════════════════════════════════
 
+// ─── WORKOUT COMPLETION MESSAGES ────────────────────────────────
+const WORKOUT_MESSAGES = [
+  "That's another one in the bank. 💪",
+  "Done. Most people didn't even start.",
+  "Logged. Your future self just said thank you.",
+  "Another workout, another standard set.",
+  "You showed up. That's the whole game.",
+  "Work done. Recovery mode activated.",
+  "That's what consistency looks like.",
+  "One more. Keep stacking them.",
+  "Built different. 🔥",
+  "Earned it. Every rep counts.",
+  "That's the streak alive. Don't break it.",
+  "Didn't feel like it? Did it anyway. That's the difference.",
+  "Session logged. On to the next one.",
+  "This is what discipline looks like in real life.",
+  "Another day, another standard held."
+];
+
+// ─── WORKOUT COMPLETION FUNCTIONS ───────────────────────────────
+async function logWorkoutCompletion(workoutName, btnEl) {
+  const originalText = btnEl.innerHTML;
+  btnEl.disabled = true;
+  btnEl.innerHTML = 'Logging...';
+
+  try {
+    const { data: { user } } = await _db.auth.getUser();
+    if (!user) { btnEl.disabled = false; btnEl.innerHTML = originalText; return; }
+
+    const { error } = await _db.from('workout_completions').insert({
+      user_id: user.id,
+      workout_name: workoutName,
+      completed_at: new Date().toISOString()
+    });
+
+    if (error) throw error;
+
+    const msg = WORKOUT_MESSAGES[Math.floor(Math.random() * WORKOUT_MESSAGES.length)];
+    btnEl.innerHTML = '✅ Logged!';
+    btnEl.style.background = '#2d7a4f';
+    btnEl.style.borderColor = '#2d7a4f';
+
+    // Show toast message
+    progressToast(msg, 'success');
+
+    // Update streak on dashboard if visible
+    if (typeof loadWorkoutStreak === 'function') loadWorkoutStreak();
+
+    setTimeout(() => {
+      btnEl.disabled = false;
+      btnEl.innerHTML = '✅ Finish Workout';
+      btnEl.style.background = '';
+      btnEl.style.borderColor = '';
+    }, 3000);
+
+  } catch(e) {
+    console.error(e);
+    btnEl.disabled = false;
+    btnEl.innerHTML = originalText;
+    progressToast('Could not log workout. Try again.', 'error');
+  }
+}
+
+async function loadWorkoutStreak() {
+  const streakEl = document.getElementById('dashboard-streak');
+  const streakCountEl = document.getElementById('streak-count');
+  const streakLabelEl = document.getElementById('streak-label');
+  if (!streakEl || !streakCountEl) return;
+
+  try {
+    const { data: { user } } = await _db.auth.getUser();
+    if (!user) return;
+
+    const { data, error } = await _db
+      .from('workout_completions')
+      .select('completed_at')
+      .eq('user_id', user.id)
+      .order('completed_at', { ascending: false });
+
+    if (error || !data) return;
+
+    // Calculate streak — count consecutive days with at least one workout
+    const streak = calculateStreak(data.map(d => d.completed_at));
+    streakCountEl.textContent = streak;
+    streakLabelEl.textContent = streak === 1 ? 'day streak' : 'day streak';
+
+    // Fire emoji based on streak length
+    const fireEl = document.getElementById('streak-fire');
+    if (fireEl) {
+      if (streak >= 14) fireEl.textContent = '🔥🔥🔥';
+      else if (streak >= 7) fireEl.textContent = '🔥🔥';
+      else if (streak >= 1) fireEl.textContent = '🔥';
+      else fireEl.textContent = '💤';
+    }
+
+  } catch(e) {
+    console.error('Streak load error', e);
+  }
+}
+
+function calculateStreak(timestamps) {
+  if (!timestamps.length) return 0;
+
+  // Get unique days (YYYY-MM-DD in local time)
+  const days = [...new Set(timestamps.map(ts =>
+    new Date(ts).toLocaleDateString('en-CA') // YYYY-MM-DD format
+  ))].sort().reverse();
+
+  if (!days.length) return 0;
+
+  const today = new Date().toLocaleDateString('en-CA');
+  const yesterday = new Date(Date.now() - 86400000).toLocaleDateString('en-CA');
+
+  // Streak must include today or yesterday to be active
+  if (days[0] !== today && days[0] !== yesterday) return 0;
+
+  let streak = 1;
+  for (let i = 1; i < days.length; i++) {
+    const prev = new Date(days[i-1]);
+    const curr = new Date(days[i]);
+    const diff = (prev - curr) / 86400000;
+    if (diff === 1) streak++;
+    else break;
+  }
+  return streak;
+}
+
+async function loadWorkoutHistory() {
+  const el = document.getElementById('workout-history-list');
+  if (!el) return;
+
+  try {
+    const { data: { user } } = await _db.auth.getUser();
+    if (!user) return;
+
+    const { data, error } = await _db
+      .from('workout_completions')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('completed_at', { ascending: false })
+      .limit(30);
+
+    if (error || !data) { el.innerHTML = '<p class="prog-empty">No workouts logged yet.</p>'; return; }
+
+    const totalEl = document.getElementById('workout-total-count');
+    if (totalEl) totalEl.textContent = data.length;
+
+    if (!data.length) {
+      el.innerHTML = '<p class="prog-empty">No workouts logged yet. Hit Finish Workout after your first session.</p>';
+      return;
+    }
+
+    el.innerHTML = data.map(d => {
+      const date = new Date(d.completed_at).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+      const time = new Date(d.completed_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      return `<div class="workout-history-row">
+        <div class="workout-history-name">${d.workout_name}</div>
+        <div class="workout-history-date">${date} at ${time}</div>
+      </div>`;
+    }).join('');
+
+  } catch(e) {
+    el.innerHTML = '<p class="prog-empty">Could not load workout history.</p>';
+  }
+}
+
 // ─── TRAINING GENERATOR ─────────────────────────────────────────
 const _tgState = {
   tg:  {loc:null,level:null,days:null,goal:null},
@@ -83,11 +249,18 @@ function tgChange(ns) {
 function tgBuildSession(day, goal, level) {
   const g = TGGOALS[goal];
   const sets = level==='advanced' ? 3 : 2;
+  const safeWorkoutName = day.name.replace(/'/g, "\\'");
+  const finishBtn = `<div class="finish-workout-wrap">
+    <button class="finish-workout-btn" onclick="logWorkoutCompletion('${safeWorkoutName}', this)">
+      ✅ Finish Workout
+    </button>
+  </div>`;
   let h = `<div class="gen-session-title">${day.name}</div><div class="gen-session-sub">${sets} rounds per block · ${g.rest}</div>`;
   h += tgBlock('🔥 Warm Up','', tgWarmup(day.warmup), '');
   h += tgBlock('💪 Tri-Set A',`${sets} rounds — back to back`, tgExList(day.triA,goal,sets), `<div class="gen-rest-note">⏱ ${g.rest} after final exercise. Repeat ${sets} rounds.</div>`);
   h += tgBlock('🔁 Tri-Set B',`${sets} rounds — back to back`, tgExList(day.triB,goal,sets), `<div class="gen-rest-note">⏱ ${g.rest} after final exercise. Repeat ${sets} rounds.</div>`);
   h += tgBlock('🧠 Core Finisher','2 rounds', tgExList(day.core,goal,2), '');
+  h += finishBtn;
   return h;
 }
 
@@ -118,7 +291,6 @@ function tgExList(exs, goal, sets) {
     const aLink = aName ? TGV[aName] : null;
     const aUid  = 'v'+Math.random().toString(36).slice(2,9);
     const alt   = aLink ? `<div><div class="gen-alt-label">Can't do this?</div><button class="gen-alt-watch-btn" id="vb-${aUid}" onclick="tgVid('${aUid}','${aLink}')">▶ ${aName}</button><div class="gen-video-container" id="vc-${aUid}"></div></div>` : '';
-    const safeId = ex.name.replace(/[^a-zA-Z0-9]/g, '_');
     const logBtn = `<button class="tg-log-btn" onclick="tgLogExercise('${ex.name.replace(/'/g,"\\'")}', this)">+ Log</button>`;
     return `<div class="gen-ex-row-wrap"><div class="gen-ex-row-inner"><div class="gen-ex-num">${i+1}</div><div class="gen-ex-info"><div class="gen-ex-name">${ex.name}</div><div class="gen-ex-detail">${sets} sets · ${reps}</div></div><div style="display:flex;align-items:center;gap:4px;">${btn}${logBtn}</div></div>${vc}${alt}</div>`;
   }).join('');

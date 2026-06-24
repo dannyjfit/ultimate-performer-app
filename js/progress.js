@@ -149,9 +149,12 @@ async function progressLoadStats() {
   if (typeof _uid === 'undefined' || !_uid) return;
   const { data } = await _db.from('session_logs').select('logged_at').eq('user_id', _uid).order('logged_at', { ascending: false }).limit(120);
   const total = document.getElementById('prog-total-sessions');
+  const weekEl = document.getElementById('prog-week-sessions');
   const streakEl = document.getElementById('prog-streak-num');
   if (total) total.textContent = data ? data.length : 0;
-  if (!data || !data.length) { if (streakEl) streakEl.textContent = 0; return; }
+  if (!data || !data.length) { if (streakEl) streakEl.textContent = 0; if (weekEl) weekEl.textContent = 0; return; }
+  const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); weekStart.setHours(0,0,0,0);
+  if (weekEl) weekEl.textContent = data.filter(s => new Date(s.logged_at) >= weekStart).length;
   const days = [...new Set(data.map(s => s.logged_at.slice(0, 10)))].sort().reverse();
   const today = new Date().toISOString().slice(0, 10);
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);

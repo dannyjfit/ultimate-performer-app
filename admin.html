@@ -228,6 +228,12 @@ body { background: var(--cream); color: var(--dark); font-family: 'Inter', sans-
       </div>
 
       <div class="section">
+        <div class="section-title">🏃 Session Logs</div>
+        <div class="workout-stats-bar" id="session-stats-bar"></div>
+        <div class="checkin-list" id="session-logs-list"></div>
+      </div>
+
+      <div class="section">
         <div class="section-title">🏋️ Workout Completions</div>
         <div class="workout-stats-bar" id="workout-stats-bar"></div>
         <div class="checkin-list" id="workout-completions-list"></div>
@@ -296,10 +302,15 @@ async function loadUser(userId) {
   document.getElementById('user-profile').classList.remove('visible');
 
   try {
-    const res = await fetch(`${WORKER_URL}?action=get_user&user_id=${userId}`);
+    const [res, sessRes] = await Promise.all([
+      fetch(`${WORKER_URL}?action=get_user&user_id=${userId}`),
+      fetch(`${WORKER_URL}?action=get_sessions&user_id=${userId}`)
+    ]);
     const result = await res.json();
+    const sessions = await sessRes.json().catch(() => []);
     document.getElementById('loading-state').style.display = 'none';
     renderProfile(result.auth, result.data || {}, result.checkins || [], result.completions || []);
+    renderSessionLogs(Array.isArray(sessions) ? sessions : []);
     document.getElementById('user-profile').classList.add('visible');
   } catch(e) {
     document.getElementById('loading-state').style.display = 'none';
@@ -399,6 +410,40 @@ function renderProfile(auth, d, checkIns, completions) {
 
   // Workout completions
   renderWorkoutCompletions(completions);
+}
+
+function renderSessionLogs(sessions) {
+  const list = document.getElementById('session-logs-list');
+  const statsBar = document.getElementById('session-stats-bar');
+  if (!list || !statsBar) return;
+  if (!sessions.length) {
+    statsBar.innerHTML = '';
+    list.innerHTML = '<div class="checkin-empty">No sessions logged yet</div>';
+    return;
+  }
+  const days = new Set(sessions.map(s => s.logged_at.slice(0, 10))).size;
+  const avgDur = sessions.filter(s => s.duration_mins).length
+    ? Math.round(sessions.filter(s => s.duration_mins).reduce((a, s) => a + s.duration_mins, 0) / sessions.filter(s => s.duration_mins).length)
+    : null;
+  const topActivity = Object.entries(sessions.reduce((acc, s) => { acc[s.activity] = (acc[s.activity] || 0) + 1; return acc; }, {})).sort((a,b) => b[1]-a[1])[0];
+  statsBar.innerHTML = `
+    <div class="workout-stat-pill"><div class="workout-stat-num">${sessions.length}</div><div class="workout-stat-label">Total Sessions</div></div>
+    <div class="workout-stat-pill"><div class="workout-stat-num">${days}</div><div class="workout-stat-label">Active Days</div></div>
+    ${avgDur ? `<div class="workout-stat-pill"><div class="workout-stat-num">${avgDur}m</div><div class="workout-stat-label">Avg Duration</div></div>` : ''}
+    ${topActivity ? `<div class="workout-stat-pill"><div class="workout-stat-num" style="font-size:16px;">${topActivity[0]}</div><div class="workout-stat-label">Top Activity</div></div>` : ''}
+  `;
+  list.innerHTML = sessions.slice(0, 30).map(s => {
+    const d = new Date(s.logged_at);
+    const date = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    const time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    return `<div class="workout-completion-card">
+      <div>
+        <div class="workout-completion-name">${s.activity}${s.duration_mins ? ` &mdash; ${s.duration_mins} min` : ''}</div>
+        ${s.note ? `<div style="font-size:12px;color:#666;margin-top:3px;">${s.note}</div>` : ''}
+      </div>
+      <div class="workout-completion-date">${date} at ${time}</div>
+    </div>`;
+  }).join('');
 }
 
 function renderWorkoutCompletions(completions) {

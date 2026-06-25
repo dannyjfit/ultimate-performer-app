@@ -458,3 +458,97 @@ function mgBuildDay(day) {
     </div>`;
   }).join('');
 }
+
+// ─── EXERCISE LOGGING ────────────────────────────────────────────
+function tgLogExercise(exName, btnEl) {
+  const wrap = btnEl.closest('.gen-ex-row-wrap');
+  if (!wrap) return;
+
+  let panel = wrap.querySelector('.tg-log-panel');
+  if (panel) {
+    const isOpen = panel.style.display !== 'none';
+    panel.style.display = isOpen ? 'none' : 'block';
+    btnEl.classList.toggle('active', !isOpen);
+    if (!isOpen) {
+      const histEl = panel.querySelector('.tg-log-history');
+      tgLoadExHistory(exName, histEl);
+    }
+    return;
+  }
+
+  const safeId = 'log_' + Math.random().toString(36).slice(2, 9);
+  panel = document.createElement('div');
+  panel.className = 'tg-log-panel';
+  panel.style.cssText = 'padding:12px 0 4px;border-top:1px solid rgba(0,0,0,0.07);margin-top:8px;';
+  panel.innerHTML = `
+    <div class="tg-log-fields">
+      <div class="tg-log-field"><label>Weight</label><input class="tg-log-input" type="text" placeholder="e.g. 60kg" id="${safeId}_w"></div>
+      <div class="tg-log-field"><label>Sets</label><input class="tg-log-input" type="number" placeholder="3" min="1" id="${safeId}_s"></div>
+      <div class="tg-log-field"><label>Reps</label><input class="tg-log-input" type="text" placeholder="e.g. 10" id="${safeId}_r"></div>
+    </div>
+    <button class="tg-log-save-btn" onclick="tgSaveExLog('${exName.replace(/'/g, "\\'")}','${safeId}',this)">Save</button>
+    <div class="tg-log-history" id="${safeId}_hist"></div>
+  `;
+  wrap.appendChild(panel);
+  btnEl.classList.add('active');
+  tgLoadExHistory(exName, document.getElementById(safeId + '_hist'));
+}
+
+async function tgSaveExLog(exName, safeId, btnEl) {
+  if (!_uid) { progressToast('Not logged in', 'error'); return; }
+  const weight = document.getElementById(safeId + '_w')?.value.trim() || null;
+  const sets   = parseInt(document.getElementById(safeId + '_s')?.value) || null;
+  const reps   = document.getElementById(safeId + '_r')?.value.trim() || null;
+  if (!weight && !sets && !reps) { progressToast('Add at least one value', 'error'); return; }
+
+  btnEl.disabled = true;
+  btnEl.textContent = 'Saving...';
+
+  const { error } = await _db.from('exercise_logs').insert({
+    user_id: _uid,
+    exercise_name: exName,
+    weight,
+    sets,
+    reps,
+    logged_at: new Date().toISOString()
+  });
+
+  btnEl.disabled = false;
+  btnEl.textContent = 'Save';
+
+  if (error) { progressToast('Could not save. Try again.', 'error'); return; }
+
+  document.getElementById(safeId + '_w').value = '';
+  document.getElementById(safeId + '_s').value = '';
+  document.getElementById(safeId + '_r').value = '';
+  progressToast('Logged ✓');
+  tgLoadExHistory(exName, document.getElementById(safeId + '_hist'));
+}
+
+async function tgLoadExHistory(exName, histEl) {
+  if (!histEl) return;
+  if (!_uid) { histEl.innerHTML = ''; return; }
+  histEl.innerHTML = '<div class="tg-log-history-loading">Loading...</div>';
+
+  const { data, error } = await _db
+    .from('exercise_logs')
+    .select('*')
+    .eq('user_id', _uid)
+    .eq('exercise_name', exName)
+    .order('logged_at', { ascending: false })
+    .limit(5);
+
+  if (error || !data || !data.length) {
+    histEl.innerHTML = '<div class="tg-log-history-empty">No history yet.</div>';
+    return;
+  }
+
+  histEl.innerHTML = '<div class="tg-log-history-title">Recent</div>' + data.map(d => {
+    const date  = new Date(d.logged_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    const parts = [d.weight, d.sets ? d.sets + ' sets' : null, d.reps ? d.reps + ' reps' : null].filter(Boolean);
+    return `<div class="tg-log-history-row">
+      <span class="tg-log-history-date">${date}</span>
+      <span class="tg-log-history-detail">${parts.join(' · ')}</span>
+    </div>`;
+  }).join('');
+}

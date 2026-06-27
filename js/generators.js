@@ -170,8 +170,8 @@ async function loadWorkoutHistory() {
 
 // ─── TRAINING GENERATOR ─────────────────────────────────────────
 const _tgState = {
-  tg:  {loc:null,level:null,days:null,goal:null},
-  tg2: {loc:null,level:null,days:null,goal:null}
+  tg:  {loc:null,level:null,days:null,goal:null,phase:null},
+  tg2: {loc:null,level:null,days:null,goal:null,phase:null}
 };
 let _tgActiveVid = null;
 
@@ -181,13 +181,13 @@ function tgPick(btn, ns) {
   btn.classList.add('sel');
   _tgState[ns][grp] = btn.dataset.val;
   const s = _tgState[ns];
-  document.getElementById(`${ns}-gen-btn`).disabled = !(s.loc && s.level && s.days && s.goal);
+  document.getElementById(`${ns}-gen-btn`).disabled = !(s.loc && s.level && s.days && s.goal && s.phase);
 }
 
 function tgGenerate(ns, silent=false) {
   const s = _tgState[ns];
   const key = `${s.loc}_${s.days}`;
-  const days = TGPLANS[key]?.[s.level];
+  const days = TGPLANS[key]?.[s.level]?.[s.phase];
   if (!days) { if(!silent) alert('Plan not found — try different options.'); return; }
 
   if (!silent) {
@@ -195,6 +195,7 @@ function tgGenerate(ns, silent=false) {
     saveField('training_level', s.level);
     saveField('training_days', s.days);
     saveField('training_goal', s.goal);
+    saveField('training_phase', s.phase);
     const other = ns==='tg' ? 'tg2' : 'tg';
     _tgState[other] = {...s};
     Object.entries(s).forEach(([grp,val]) => {
@@ -214,9 +215,10 @@ function tgRender(ns, days, s) {
   const g = TGGOALS[s.goal];
   const locL = {gym:'Gym',home_db:'Home — Dumbbells',home_bw:'Bodyweight Only'};
   const lvlL = {beginner:'Beginner',intermediate:'Intermediate',advanced:'Advanced'};
+  const phaseL = {p1:'Phase 1',p2:'Phase 2',p3:'Phase 3'};
 
-  document.getElementById(`${ns}-subtitle`).textContent = `${g.label} · ${locL[s.loc]} · ${lvlL[s.level]} · ${s.days} Days/Week`;
-  document.getElementById(`${ns}-meta`).innerHTML = [locL[s.loc],lvlL[s.level],s.days+' Days/Week',g.label].map(t=>`<span class="gen-meta-tag">${t}</span>`).join('');
+  document.getElementById(`${ns}-subtitle`).textContent = `${g.label} · ${locL[s.loc]} · ${lvlL[s.level]} · ${s.days} Days/Week · ${phaseL[s.phase]}`;
+  document.getElementById(`${ns}-meta`).innerHTML = [locL[s.loc],lvlL[s.level],s.days+' Days/Week',g.label,phaseL[s.phase]].map(t=>`<span class="gen-meta-tag">${t}</span>`).join('');
   document.getElementById(`${ns}-intro`).innerHTML = `<p>${g.intros[s.level]}</p>`;
 
   const tabsEl = document.getElementById(`${ns}-tabs`);
@@ -248,18 +250,19 @@ function tgChange(ns) {
 
 function tgBuildSession(day, goal, level) {
   const g = TGGOALS[goal];
-  const sets = level==='advanced' ? 3 : 2;
+  const setsA = day.triA[0]?.sets || 3;
+  const setsB = day.triB[0]?.sets || 3;
   const safeWorkoutName = day.name.replace(/'/g, "\\'");
   const finishBtn = `<div class="finish-workout-wrap">
     <button class="finish-workout-btn" onclick="logWorkoutCompletion('${safeWorkoutName}', this)">
       ✅ Finish Workout
     </button>
   </div>`;
-  let h = `<div class="gen-session-title">${day.name}</div><div class="gen-session-sub">${sets} rounds per block · ${g.rest}</div>`;
+  let h = `<div class="gen-session-title">${day.name}</div><div class="gen-session-sub">${setsA} rounds per block · ${g.rest}</div>`;
   h += tgBlock('🔥 Warm Up','', tgWarmup(day.warmup), '');
-  h += tgBlock('💪 Tri-Set A',`${sets} rounds — back to back`, tgExList(day.triA,goal,sets), `<div class="gen-rest-note">⏱ ${g.rest} after final exercise. Repeat ${sets} rounds.</div>`);
-  h += tgBlock('🔁 Tri-Set B',`${sets} rounds — back to back`, tgExList(day.triB,goal,sets), `<div class="gen-rest-note">⏱ ${g.rest} after final exercise. Repeat ${sets} rounds.</div>`);
-  h += tgBlock('🧠 Core Finisher','2 rounds', tgExList(day.core,goal,2), '');
+  h += tgBlock('💪 Tri-Set A',`${setsA} rounds — back to back`, tgExList(day.triA,goal), `<div class="gen-rest-note">⏱ ${g.rest} after final exercise. Repeat ${setsA} rounds.</div>`);
+  h += tgBlock('🔁 Tri-Set B',`${setsB} rounds — back to back`, tgExList(day.triB,goal), `<div class="gen-rest-note">⏱ ${g.rest} after final exercise. Repeat ${setsB} rounds.</div>`);
+  h += tgBlock('🧠 Core Finisher','2 rounds', tgExList(day.core,goal), '');
   h += finishBtn;
   return h;
 }
@@ -280,7 +283,7 @@ function tgReps(type, goal) {
   return (type==='core' ? r.core : type==='compound' ? r.compound : r.isolation)+' reps';
 }
 
-function tgExList(exs, goal, sets) {
+function tgExList(exs, goal) {
   return exs.map((ex,i) => {
     const reps = tgReps(ex.type, goal);
     const link = TGV[ex.name];
@@ -292,7 +295,7 @@ function tgExList(exs, goal, sets) {
     const aUid  = 'v'+Math.random().toString(36).slice(2,9);
     const alt   = aLink ? `<div><div class="gen-alt-label">Can't do this?</div><button class="gen-alt-watch-btn" id="vb-${aUid}" onclick="tgVid('${aUid}','${aLink}')">▶ ${aName}</button><div class="gen-video-container" id="vc-${aUid}"></div></div>` : '';
     const logBtn = `<button class="tg-log-btn" onclick="tgLogExercise('${ex.name.replace(/'/g,"\\'")}', this)">+ Log</button>`;
-    return `<div class="gen-ex-row-wrap"><div class="gen-ex-row-inner"><div class="gen-ex-num">${i+1}</div><div class="gen-ex-info"><div class="gen-ex-name">${ex.name}</div><div class="gen-ex-detail">${sets} sets · ${reps}</div></div><div style="display:flex;align-items:center;gap:4px;">${btn}${logBtn}</div></div>${vc}${alt}</div>`;
+    return `<div class="gen-ex-row-wrap"><div class="gen-ex-row-inner"><div class="gen-ex-num">${i+1}</div><div class="gen-ex-info"><div class="gen-ex-name">${ex.name}</div><div class="gen-ex-detail">${ex.sets} sets · ${reps}</div></div><div style="display:flex;align-items:center;gap:4px;">${btn}${logBtn}</div></div>${vc}${alt}</div>`;
   }).join('');
 }
 

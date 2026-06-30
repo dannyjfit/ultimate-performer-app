@@ -67,6 +67,34 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 .module-card h3{font-family:'DM Serif Display',serif;font-size:17px;color:var(--dark);margin-bottom:6px;}
 .module-card p{font-size:12px;color:#666;line-height:1.4;}
 .module-icon{font-size:24px;margin-bottom:10px;}
+/* Session logger */
+.session-logger-card{margin:0 16px 16px;background:white;border-radius:12px;padding:16px;border:1px solid rgba(0,0,0,0.07);}
+.slc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.slc-title{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dark);}
+.slc-streak-badge{background:#fff4e0;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;color:#c97b00;display:flex;align-items:center;gap:3px;}
+.slc-pills-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:10px;padding-bottom:2px;}
+.slc-pills-scroll::-webkit-scrollbar{display:none;}
+.slc-pills{display:flex;gap:6px;width:max-content;}
+.slc-pill{border:1px solid rgba(0,0,0,0.12);border-radius:20px;padding:6px 12px;font-size:11px;font-weight:600;color:#555;white-space:nowrap;cursor:pointer;background:#f9f8f6;-webkit-tap-highlight-color:transparent;}
+.slc-pill.sel{background:var(--blue);border-color:var(--blue);color:white;}
+.slc-dur-row{display:flex;gap:5px;margin-bottom:10px;}
+.slc-dur{flex:1;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:7px 2px;font-size:10px;font-weight:700;color:#555;text-align:center;cursor:pointer;background:#f9f8f6;-webkit-tap-highlight-color:transparent;}
+.slc-dur.sel{background:var(--blue);border-color:var(--blue);color:white;}
+.slc-note{width:100%;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'Inter',sans-serif;outline:none;color:var(--dark);background:#fafaf8;margin-bottom:10px;box-sizing:border-box;}
+.slc-log-btn{width:100%;background:var(--dark);color:white;border:none;border-radius:8px;padding:12px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;}
+.slc-log-btn:active{opacity:0.8;}
+/* Lock states */
+.module-card{position:relative;}
+.module-card.module-locked{opacity:0.5;pointer-events:auto;}
+.module-card.module-locked .lock-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(240,238,231,0.6);border-radius:10px;font-size:22px;}
+.module-card.module-done .done-tick{position:absolute;top:8px;right:10px;color:var(--blue);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;}
+.sidebar-item.module-locked{opacity:0.45;}
+.sidebar-item .sb-lock{margin-left:auto;font-size:12px;}
+.sidebar-item .sb-done{margin-left:auto;color:var(--blue);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;}
+.mobile-nav-item.module-locked{opacity:0.4;}
+#lock-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--dark);color:white;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:10px 18px;border-radius:20px;opacity:0;transition:opacity 0.25s,transform 0.25s;z-index:999;pointer-events:none;white-space:nowrap;}
+#lock-toast.visible{opacity:1;transform:translateX(-50%) translateY(0);}
+/* Daily quote */
 .page-header{margin-bottom:24px;}
 .page-tag{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
 .page-header h2{font-family:'DM Serif Display',serif;font-size:28px;color:var(--dark);margin-bottom:8px;}
@@ -442,7 +470,13 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <button class="btn-primary" onclick="showScreen('welcome-video')">Start Here — Watch Welcome Video</button>
   </div>
   
-  <div id="dash-greeting" style="padding:16px 16px 0;"></div>
+  <div id="dash-greeting" style="padding:16px 16px 8px;text-align:center;"></div>
+
+  <div class="daily-quote-card">
+    <div class="daily-quote-label">Today's Thought</div>
+    <div class="daily-quote-text" id="daily-quote-text"></div>
+  </div>
+
   <div id="steps-section" style="display:none;">
     <div class="steps-card">
       <div class="steps-card-header">
@@ -461,6 +495,37 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   </div>
   <button class="steps-enable-btn" id="steps-enable-btn" onclick="requestHealthKit()" style="display:none;">&#127939; Enable Step Tracking</button>
   <p style="font-size:11px;color:#aaa;text-align:center;margin:4px 0 8px;">Step data is read from Apple Health (HealthKit). No health data is stored or shared.</p>
+
+  <!-- SESSION LOGGER -->
+  <div class="session-logger-card" id="session-logger-card">
+    <div class="slc-header">
+      <span class="slc-title">Log Today's Session</span>
+      <span class="slc-streak-badge" id="session-streak-badge" style="display:none;">🔥 <span id="session-streak-count">0</span> day streak</span>
+    </div>
+    <div class="slc-pills-scroll"><div class="slc-pills" id="activity-pills"></div></div>
+    <div class="slc-dur-row" id="duration-pills">
+      <div class="slc-dur" onclick="selectDuration(this,15)">15 min</div>
+      <div class="slc-dur" onclick="selectDuration(this,30)">30 min</div>
+      <div class="slc-dur" onclick="selectDuration(this,45)">45 min</div>
+      <div class="slc-dur" onclick="selectDuration(this,60)">60 min</div>
+      <div class="slc-dur" onclick="selectDuration(this,90)">90 min</div>
+    </div>
+    <input type="text" id="session-note" class="slc-note" placeholder="Add a note... (optional)">
+    <button class="slc-log-btn" onclick="logSession()">Log Session</button>
+  </div>
+
+  <div id="dashboard-streak" style="margin:0 16px 20px;display:none;">
+    <div class="streak-card">
+      <div class="streak-left">
+        <span id="streak-fire">🔥</span>
+        <div>
+          <div class="streak-number"><span id="streak-count">0</span></div>
+          <div class="streak-label" id="streak-label">day streak</div>
+        </div>
+      </div>
+      <div class="streak-right">Keep showing up. Don't break the chain.</div>
+    </div>
+  </div>
 
   <div style="margin-bottom:20px;text-align:center;">
     <div class="page-tag">Your Journey</div>
@@ -488,7 +553,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Next step is the quiz.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('quiz')">Next: Take the Quiz &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('welcome-video','quiz')">Next: Take the Quiz &#8594;</button></div>
 </div>
 
 <!-- QUIZ -->
@@ -496,7 +561,13 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   <div class="page-header" style="text-align:center;"><div class="page-tag">Step 1</div><h2>Your Performance Quiz</h2><p>Takes about 5 minutes.</p></div>
   <div class="tool-embed"><iframe src="https://dannyjfit.github.io/ultimate-performer-quiz/" title="Ultimate Performer Quiz"></iframe></div>
   <div class="callout" style="text-align:center;"><p><strong>Finished?</strong> Head into the Why Workshop next.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('why-workshop')">Next: Why Workshop &#8594;</button></div>
+  <div style="text-align:center;margin-bottom:16px;">
+    <label style="font-size:14px;color:#444;cursor:pointer;display:inline-flex;align-items:center;gap:10px;">
+      <input type="checkbox" id="quiz-done-cb" style="width:18px;height:18px;accent-color:var(--blue);cursor:pointer;flex-shrink:0;">
+      I've completed the quiz
+    </label>
+  </div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('quiz','why-workshop')">Next: Why Workshop &#8594;</button></div>
 </div>
 
 <!-- WHY WORKSHOP -->
@@ -539,7 +610,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <p style="font-size:13px;color:#888;margin-top:8px;text-align:center;">&#128247; Screenshot it. Save it somewhere you'll see it every day.</p>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Move to Movement next.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('movement')">Next: Movement &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('why-workshop','movement')">Next: Movement &#8594;</button></div>
 </div>
 
 <!-- MOVEMENT -->
@@ -643,7 +714,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </table>
   </div>
   <div class="callout" style="margin-top:16px;text-align:center;"><p><strong>Done?</strong> Move to Nutrition next.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('nutrition')">Next: Nutrition &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('movement','nutrition')">Next: Nutrition &#8594;</button></div>
 </div>
 
 <!-- NUTRITION -->
@@ -715,7 +786,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </div>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Move to Recovery next.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('recovery')">Next: Recovery &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('nutrition','recovery')">Next: Recovery &#8594;</button></div>
 </div>
 
 <!-- RECOVERY -->
@@ -772,7 +843,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </ul>
   </div>
   <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Last step — build your plan.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="showScreen('build-plan')">Next: Your Plan &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('recovery','build-plan')">Next: Your Plan &#8594;</button></div>
 </div>
 
 <!-- YOUR PLAN -->
@@ -831,7 +902,23 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- PROGRESS -->
 <div id="screen-progress" class="screen">
-  <div class="page-header" style="text-align:center;"><div class="page-tag">Track</div><h2>Progress</h2><p>Track your body weight and see how your lifts are moving over time.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Track</div><h2>Progress</h2><p>Your sessions, your streak, your weight over time. Everything in one place.</p></div>
+
+  <div class="workout-stats-row" style="gap:12px;margin:0 0 16px;">
+    <div class="workout-stat-box">
+      <div class="workout-stat-num" id="prog-streak-num">0</div>
+      <div class="workout-stat-label">Day Streak 🔥</div>
+    </div>
+    <div class="workout-stat-box">
+      <div class="workout-stat-num" id="prog-week-sessions">0</div>
+      <div class="workout-stat-label">This Week</div>
+    </div>
+    <div class="workout-stat-box">
+      <div class="workout-stat-num" id="prog-total-sessions">0</div>
+      <div class="workout-stat-label">All Time</div>
+    </div>
+  </div>
+
   <div id="steps-section-progress" style="display:none;margin-bottom:16px;">
     <div class="steps-card">
       <div class="steps-card-header">
@@ -860,30 +947,9 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </div>
     <button class="prog-btn" id="prog-checkin-btn" onclick="progressSubmitCheckin()">Save Check-In</button>
   </div>
-  <div class="content-section" style="margin-bottom:16px;">
+  <div class="content-section">
     <h4 style="text-align:center;">Body Weight Over Time</h4>
     <div id="prog-bw-chart-wrap" style="position:relative;height:220px;margin-top:12px;"><canvas id="prog-bw-chart"></canvas></div>
-  </div>
-  <div class="content-section" style="margin-bottom:16px;">
-    <h4 style="text-align:center;">Log an Exercise</h4>
-    <p style="margin-bottom:14px;text-align:center;">You can also log directly from the Movement section.</p>
-    <div class="prog-form-grid">
-      <div class="prog-field prog-field-full"><label class="prog-label" for="prog-exercise-select">Exercise</label><select class="prog-input prog-select" id="prog-exercise-select"></select></div>
-      <div class="prog-field"><label class="prog-label" for="prog-weight-used">Weight (kg)</label><input class="prog-input" type="number" id="prog-weight-used" placeholder="0 = bodyweight" min="0" step="0.5"></div>
-      <div class="prog-field"><label class="prog-label" for="prog-sets">Sets</label><input class="prog-input" type="number" id="prog-sets" placeholder="e.g. 3" min="1" max="20"></div>
-      <div class="prog-field"><label class="prog-label" for="prog-reps">Reps</label><input class="prog-input" type="number" id="prog-reps" placeholder="e.g. 12" min="1" max="100"></div>
-      <div class="prog-field prog-field-full"><label class="prog-label" for="prog-ex-notes">Notes (optional)</label><textarea class="prog-input prog-textarea" id="prog-ex-notes" placeholder="e.g. felt strong, increased weight..."></textarea></div>
-    </div>
-    <button class="prog-btn" id="prog-ex-log-btn" onclick="progressSubmitExerciseLog()">Log Exercise</button>
-  </div>
-  <div class="content-section">
-    <h4 style="text-align:center;">Exercise Progression</h4>
-    <p style="margin-bottom:14px;text-align:center;">Select an exercise to see your weight over time.</p>
-    <div class="prog-chart-controls">
-      <select class="prog-input prog-select" id="prog-chart-exercise"></select>
-      <button class="prog-btn prog-btn-sm" id="prog-ex-chart-btn" onclick="progressLoadExerciseChart()">View Progression</button>
-    </div>
-    <div id="prog-ex-chart-wrap" style="position:relative;height:220px;margin-top:14px;"><canvas id="prog-ex-chart"></canvas></div>
   </div>
 </div>
 
@@ -1001,6 +1067,17 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
       </div>
       <button class="gen-change-btn" onclick="tgChange('tg2')">&#8592; Change My Inputs</button>
     </div>
+  </div>
+  <!-- WORKOUT HISTORY -->
+  <div class="prog-section">
+    <h4 style="text-align:center;">Workout History</h4>
+    <div class="workout-stats-row">
+      <div class="workout-stat-box">
+        <div class="workout-stat-num" id="workout-total-count">0</div>
+        <div class="workout-stat-label">Total Workouts</div>
+      </div>
+    </div>
+    <div id="workout-history-list" class="workout-history-list"><p class="prog-empty">No workouts logged yet.</p></div>
   </div>
 </div>
 
@@ -1128,6 +1205,10 @@ window.addEventListener("load", function() {
 function playVideo(el, videoId) {
   el.innerHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1" allowfullscreen allow="autoplay; encrypted-media"></iframe>';
   el.style.cursor = 'default';
+  const wvScreen = document.getElementById('screen-welcome-video');
+  if (wvScreen && wvScreen.classList.contains('active')) {
+    localStorage.setItem('up_wv_' + (typeof _uid !== 'undefined' && _uid ? _uid : 'guest'), '1');
+  }
 }
 
 function saveStepGoal(val) {
@@ -1168,6 +1249,10 @@ function loadStepGoal() {
 }
 const _origShowScreen = showScreen;
 showScreen = function(id) {
+  if (typeof isUnlocked === 'function' && !isUnlocked(id)) {
+    if (typeof showLockedToast === 'function') showLockedToast(id);
+    return;
+  }
   _origShowScreen(id);
   if (id === 'progress' && typeof progressInit === 'function') progressInit();
   if (id === 'movement') loadStepGoal();

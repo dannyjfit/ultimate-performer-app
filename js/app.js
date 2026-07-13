@@ -38,8 +38,17 @@ function showApp(email) {
   loadDailyQuote();
   updateGreeting();
   initSessionLogger();
+  pingLastActive();
 }
 function showAuthScreen() { document.getElementById('auth-screen').classList.add('visible'); }
+
+async function pingLastActive() {
+  if (!_uid) return;
+  await _db.from('user_data').upsert(
+    { id: _uid, last_active: new Date().toISOString() },
+    { onConflict: 'id' }
+  );
+}
 
 async function handleLogin() {
   const email = document.getElementById('login-email').value.trim();

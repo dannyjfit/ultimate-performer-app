@@ -332,14 +332,36 @@ function setField(id, value) {
   else { el.textContent = 'Not set'; el.classList.add('empty'); }
 }
 
+function formatDate(ts) {
+  if (!ts) return null;
+  return new Date(ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function formatDateTime(ts) {
+  if (!ts) return null;
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+    + ' at ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
 function renderProfile(auth, d, checkIns, completions) {
   const email = auth.email || '';
   document.getElementById('profile-avatar').textContent = email.charAt(0).toUpperCase();
   document.getElementById('profile-email').textContent = email;
   document.getElementById('profile-joined').textContent = auth.created_at
-    ? 'Joined ' + new Date(auth.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-  document.getElementById('profile-updated').textContent = d.updated_at
-    ? 'Last active ' + new Date(d.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+    ? 'Joined ' + formatDate(auth.created_at) : '';
+
+  // Use last_active (app open) with time, fall back to updated_at date only
+  const lastActiveEl = document.getElementById('profile-updated');
+  if (d.last_active) {
+    lastActiveEl.textContent = 'Last active ' + formatDateTime(d.last_active);
+    lastActiveEl.style.color = 'rgba(255,255,255,0.55)';
+  } else if (d.updated_at) {
+    lastActiveEl.textContent = 'Last active ' + formatDate(d.updated_at);
+    lastActiveEl.style.color = 'rgba(255,255,255,0.35)';
+  } else {
+    lastActiveEl.textContent = '';
+  }
 
   const whyBlock = document.getElementById('why-block');
   const whyText = document.getElementById('why-statement-text');
@@ -408,7 +430,6 @@ function renderProfile(auth, d, checkIns, completions) {
     });
   }
 
-  // Workout completions
   renderWorkoutCompletions(completions);
 }
 
@@ -457,7 +478,6 @@ function renderWorkoutCompletions(completions) {
     return;
   }
 
-  // Calculate streak
   const days = [...new Set(completions.map(c =>
     new Date(c.completed_at).toLocaleDateString('en-CA')
   ))].sort().reverse();

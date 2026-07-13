@@ -515,6 +515,10 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
       <div class="slc-dur" onclick="selectDuration(this,90)">90 min</div>
     </div>
     <input type="text" id="session-note" class="slc-note" placeholder="Add a note... (optional)">
+    <div class="slc-dur-row" id="session-day-pills" style="margin-bottom:10px;">
+      <div class="slc-dur sel" id="session-day-today" onclick="selectSessionDay(this,'today')">Today</div>
+      <div class="slc-dur" id="session-day-yesterday" onclick="selectSessionDay(this,'yesterday')">Yesterday</div>
+    </div>
     <button class="slc-log-btn" onclick="logSession()">Log Session</button>
   </div>
 

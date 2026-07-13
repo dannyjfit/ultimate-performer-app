@@ -303,7 +303,7 @@ const SESSION_ACTIVITIES = [
   'Boxing','Yoga','Pilates','Stretch','Hike','Tennis',
   'Golf','Meditation','Breathwork','Rest Day'
 ];
-let _selActivity = null, _selDuration = null;
+let _selActivity = null, _selDuration = null, _selDay = 'today';
 
 function updateGreeting() {
   const el = document.getElementById('dash-greeting');
@@ -334,18 +334,27 @@ function selectDuration(el, dur) {
   _selDuration = dur;
 }
 
+function selectSessionDay(el, day) {
+  document.querySelectorAll('#session-day-pills .slc-dur').forEach(p => p.classList.remove('sel'));
+  el.classList.add('sel');
+  _selDay = day;
+}
+
 async function logSession() {
   if (!_selActivity) { _showToast('Pick an activity first'); return; }
   if (!_uid) { _showToast('Not logged in'); return; }
   const note = (document.getElementById('session-note') || {}).value || '';
   const btn = document.querySelector('.slc-log-btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Logging...'; }
+  const now = new Date();
+  if (_selDay === 'yesterday') now.setDate(now.getDate() - 1);
+  const logged_at = now.toISOString();
   const { error } = await _db.from('session_logs').insert({
     user_id: _uid,
     activity: _selActivity,
     duration_mins: _selDuration || null,
     note: note.trim() || null,
-    logged_at: new Date().toISOString()
+    logged_at
   });
   if (btn) { btn.disabled = false; btn.textContent = 'Log Session'; }
   if (error) { _showToast('Something went wrong, try again'); return; }
@@ -353,7 +362,11 @@ async function logSession() {
   document.querySelectorAll('#duration-pills .slc-dur').forEach(p => p.classList.remove('sel'));
   const noteEl = document.getElementById('session-note');
   if (noteEl) noteEl.value = '';
-  _selActivity = null; _selDuration = null;
+  _selActivity = null; _selDuration = null; _selDay = 'today';
+  const todayBtn = document.getElementById('session-day-today');
+  const yestBtn = document.getElementById('session-day-yesterday');
+  if (todayBtn) { todayBtn.classList.add('sel'); }
+  if (yestBtn) { yestBtn.classList.remove('sel'); }
   _showToast('Session logged ✓');
   loadSessionStreak();
 }

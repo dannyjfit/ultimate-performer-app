@@ -33,7 +33,12 @@ function showApp(email) {
   document.getElementById('auth-screen').classList.remove('visible');
   hideWaiverModal();
   document.getElementById('nav-user-email').textContent = email;
-  showScreen('dashboard');
+  if (getPillarPicks().length !== 2) {
+    openPillarPickerForEditing();
+    showScreen('pillar-picker');
+  } else {
+    showScreen('dashboard');
+  }
   updateLockUI();
   loadDailyQuote();
   updateGreeting();
@@ -156,28 +161,6 @@ async function loadData() {
     if (el && data[f]) el.value = data[f];
   });
 
-  if (data.why_statement) {
-    const pw = document.getElementById('plan_why');
-    if (pw) pw.value = data.why_statement;
-  }
-  if (data.calorie_target) {
-    const pc = document.getElementById('plan_calories');
-    if (pc) pc.value = data.calorie_target;
-  }
-  if (data.protein_target) {
-    const pp = document.getElementById('plan_protein');
-    if (pp) pp.value = data.protein_target;
-  }
-
-  crossPopulateSleep();
-
-  if (data.weekly_plan && typeof data.weekly_plan === 'object') {
-    document.querySelectorAll('.weekly-table textarea[data-day]').forEach(ta => {
-      const day = ta.dataset.day, col = ta.dataset.col;
-      if (data.weekly_plan[day] && data.weekly_plan[day][col]) ta.value = data.weekly_plan[day][col];
-    });
-  }
-
   if (data.training_loc && data.training_level && data.training_days && data.training_goal) {
     const s = { loc:data.training_loc, level:data.training_level, days:data.training_days, goal:data.training_goal };
     ['tg','tg2'].forEach(ns => {
@@ -221,37 +204,10 @@ function debounceSave(col, val) {
   _saveTimers[col] = setTimeout(() => saveField(col, val), 1000);
 }
 
-function debounceWeekly() {
-  clearTimeout(_weeklyTimer);
-  _weeklyTimer = setTimeout(saveWeekly, 1000);
-}
-
-async function saveWeekly() {
-  if (!_uid) return;
-  const plan = {};
-  document.querySelectorAll('.weekly-table textarea[data-day]').forEach(ta => {
-    const d=ta.dataset.day, c=ta.dataset.col;
-    if (!plan[d]) plan[d]={};
-    plan[d][c] = ta.value;
-  });
-  showSaveIndicator('saving');
-  const { error } = await _db.from('user_data').upsert({ id:_uid, weekly_plan:plan, updated_at:new Date().toISOString() }, { onConflict:'id' });
-  if (!error) showSaveIndicator('saved');
-}
-
 // ─── CROSS-POPULATION ────────────────────────────────────────────
 function crossPopulateWhy(val) {
-  ['why_statement','plan_why'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el && el.value !== val) el.value = val;
-  });
-}
-
-function crossPopulateSleep() {
-  const bed  = (document.getElementById('sleep_bedtime')  || {}).value || '';
-  const wake = (document.getElementById('sleep_waketime') || {}).value || '';
-  const planSleep = document.getElementById('plan_sleep');
-  if (planSleep) planSleep.value = (bed && wake) ? `${bed} – ${wake}` : (bed || wake);
+  const el = document.getElementById('why_statement');
+  if (el && el.value !== val) el.value = val;
 }
 
 // ─── UI HELPERS ──────────────────────────────────────────────────
@@ -395,9 +351,8 @@ function _updateStreakBadge(n) {
   if (badge) badge.style.display = n > 0 ? 'flex' : 'none';
 }
 
-// ─── MODULE LOCKING ──────────────────────────────────────────────
-const MODULE_ORDER = ['welcome-video','quiz','why-workshop','movement','nutrition','recovery','build-plan'];
-const FREE_SCREENS = ['dashboard','progress','calorie-calc','exercise-lib','meal-gen','training-gen','coaching'];
+// ─── COMPLETION TRACKING (no locks — used only to hide one-time items) ──
+const MODULE_ORDER = ['welcome-video','quiz','why-workshop','movement','nutrition','recovery'];
 
 function _progressKey() { return _uid ? `up_prog_${_uid}` : 'up_prog_guest'; }
 
@@ -410,14 +365,6 @@ function markComplete(id) {
   const done = getCompleted();
   if (!done.includes(id)) { done.push(id); localStorage.setItem(_progressKey(), JSON.stringify(done)); }
   updateLockUI();
-}
-
-function isUnlocked(id) {
-  if (FREE_SCREENS.includes(id)) return true;
-  if (!MODULE_ORDER.includes(id)) return true;
-  const idx = MODULE_ORDER.indexOf(id);
-  if (idx === 0) return true;
-  return getCompleted().includes(MODULE_ORDER[idx - 1]);
 }
 
 function canComplete(id) {
@@ -445,11 +392,6 @@ function canComplete(id) {
       const wake = document.getElementById('sleep_waketime');
       return !!(bed && bed.value.trim() && wake && wake.value.trim());
     }
-    case 'build-plan': {
-      let filled = false;
-      document.querySelectorAll('.weekly-table textarea[data-day]').forEach(ta => { if (ta.value.trim()) filled = true; });
-      return filled;
-    }
     default: return true;
   }
 }
@@ -461,8 +403,7 @@ function getCompletionHint(id) {
     'why-workshop':  'Write your why statement first',
     'movement':      'Build your training plan first',
     'nutrition':     'Build your meal plan first',
-    'recovery':      'Fill in your sleep times first',
-    'build-plan':    'Fill in at least one day in your weekly plan'
+    'recovery':      'Fill in your sleep times first'
   };
   return hints[id] || 'Complete this section first';
 }
@@ -471,16 +412,6 @@ function completeAndGo(current, next) {
   if (!canComplete(current)) { _showToast(getCompletionHint(current)); return; }
   markComplete(current);
   showScreen(next);
-}
-
-function showLockedToast(id) {
-  const idx = MODULE_ORDER.indexOf(id);
-  const prev = MODULE_ORDER[idx - 1];
-  const names = {
-    'welcome-video':'the Welcome Video','quiz':'the Quiz','why-workshop':'the Why Workshop',
-    'movement':'Movement','nutrition':'Nutrition','recovery':'Recovery','build-plan':'Your Plan'
-  };
-  _showToast(`Finish ${names[prev] || 'the previous step'} first`);
 }
 
 function _showToast(msg) {
@@ -492,57 +423,98 @@ function _showToast(msg) {
   t._timer = setTimeout(() => t.classList.remove('visible'), 2500);
 }
 
+// updateLockUI now just handles hiding one-time items (welcome video, quiz)
+// once they're done, and marks completed sidebar items. Nothing is ever locked.
 function updateLockUI() {
   const done = getCompleted();
 
-  // Hide Start Here button once welcome video is watched
-  const startBtn = document.querySelector('#screen-dashboard .btn-primary');
+  const startBtn = document.getElementById('dash-start-btn');
   if (startBtn) startBtn.style.display = done.includes('welcome-video') ? 'none' : '';
 
   MODULE_ORDER.forEach(id => {
-    const unlocked = isUnlocked(id);
     const completed = done.includes(id);
-
-    // Sidebar
     document.querySelectorAll('.sidebar-item').forEach(item => {
       if ((item.getAttribute('onclick')||'').includes(`'${id}'`)) {
-        item.classList.toggle('module-locked', !unlocked);
         item.classList.toggle('module-done', completed);
-        let lk = item.querySelector('.sb-lock'); let dk = item.querySelector('.sb-done');
-        if (!unlocked) {
-          if (!lk) { lk=document.createElement('span'); lk.className='sb-lock'; lk.textContent='🔒'; item.appendChild(lk); }
-          if (dk) dk.remove();
-        } else if (completed) {
-          if (!dk) { dk=document.createElement('span'); dk.className='sb-done'; dk.textContent='✓'; item.appendChild(dk); }
-          if (lk) lk.remove();
-        } else {
-          if (lk) lk.remove(); if (dk) dk.remove();
-        }
-      }
-    });
-
-    // Mobile nav
-    document.querySelectorAll('.mobile-nav-item').forEach(item => {
-      if ((item.getAttribute('onclick')||'').includes(`'${id}'`))
-        item.classList.toggle('module-locked', !unlocked);
-    });
-
-    // Dashboard cards
-    document.querySelectorAll('.module-card').forEach(card => {
-      if ((card.getAttribute('onclick')||'').includes(`'${id}'`)) {
-        card.classList.toggle('module-locked', !unlocked);
-        card.classList.toggle('module-done', completed);
-        let ov = card.querySelector('.lock-overlay');
-        if (!unlocked) {
-          if (!ov) { ov=document.createElement('div'); ov.className='lock-overlay'; ov.innerHTML='<span>🔒</span>'; card.appendChild(ov); }
-        } else { if (ov) ov.remove(); }
-        let tick = card.querySelector('.done-tick');
+        let dk = item.querySelector('.sb-done');
         if (completed) {
-          if (!tick) { tick=document.createElement('div'); tick.className='done-tick'; tick.textContent='✓'; card.appendChild(tick); }
-        } else { if (tick) tick.remove(); }
+          if (!dk) { dk=document.createElement('span'); dk.className='sb-done'; dk.textContent='✓'; item.appendChild(dk); }
+        } else if (dk) dk.remove();
       }
     });
   });
+
+  renderDashboardPillars();
+}
+
+// ─── PILLAR PICKER ───────────────────────────────────────────────
+const PILLAR_META = {
+  training: { icon:'&#127947;', label:'Training', screen:'movement',      desc:'Workouts built around your schedule and level.' },
+  nutrition:{ icon:'&#129361;', label:'Nutrition', screen:'nutrition',    desc:'Simple, realistic eating for a busy life.' },
+  sleep:    { icon:'&#128564;', label:'Sleep',     screen:'recovery',     desc:'Better rest, better everything.' },
+  recovery: { icon:'&#129688;', label:'Recovery',  screen:'recovery',     desc:'Breathwork, stress, and bouncing back.' },
+  mindset:  { icon:'&#127919;', label:'Mindset',   screen:'why-workshop', desc:'The thinking behind everything you do.' }
+};
+
+function _pillarKey() { return _uid ? `up_pillars_${_uid}` : 'up_pillars_guest'; }
+
+function getPillarPicks() {
+  try { return JSON.parse(localStorage.getItem(_pillarKey()) || '[]'); }
+  catch(e) { return []; }
+}
+
+function togglePillarPick(card) {
+  const current = document.querySelectorAll('#pillar-picker-grid .pillar-pick-card.selected');
+  const isSelected = card.classList.contains('selected');
+  if (!isSelected && current.length >= 2) { _showToast('Pick 2 to start — tap one to swap it out'); return; }
+  card.classList.toggle('selected');
+  const count = document.querySelectorAll('#pillar-picker-grid .pillar-pick-card.selected').length;
+  document.getElementById('pillar-pick-count').textContent = count;
+  document.getElementById('pillar-pick-confirm').disabled = count !== 2;
+}
+
+function confirmPillarPicks() {
+  const picks = Array.from(document.querySelectorAll('#pillar-picker-grid .pillar-pick-card.selected')).map(c => c.dataset.pillar);
+  if (picks.length !== 2) return;
+  localStorage.setItem(_pillarKey(), JSON.stringify(picks));
+  renderDashboardPillars();
+  showScreen('dashboard');
+}
+
+function openPillarPickerForEditing() {
+  const picks = getPillarPicks();
+  document.querySelectorAll('#pillar-picker-grid .pillar-pick-card').forEach(card => {
+    card.classList.toggle('selected', picks.includes(card.dataset.pillar));
+  });
+  document.getElementById('pillar-pick-count').textContent = picks.length;
+  document.getElementById('pillar-pick-confirm').disabled = picks.length !== 2;
+}
+
+function toggleExploreMore() {
+  const grid = document.getElementById('dash-explore-more');
+  const label = document.getElementById('explore-more-label');
+  const open = grid.classList.toggle('open');
+  label.innerHTML = open ? 'Explore more &#8593;' : 'Explore more &#8595;';
+}
+
+function renderDashboardPillars() {
+  const focusEl = document.getElementById('dash-focus-pillars');
+  const exploreEl = document.getElementById('dash-explore-more');
+  if (!focusEl || !exploreEl) return;
+
+  const picks = getPillarPicks();
+  if (picks.length !== 2) return; // picker not completed yet, dashboard pillar section stays empty
+
+  focusEl.innerHTML = picks.map(p => {
+    const m = PILLAR_META[p];
+    return `<div class="module-card" onclick="showScreen('${m.screen}')"><div class="module-icon">${m.icon}</div><h3>${m.label}</h3><p>${m.desc}</p></div>`;
+  }).join('');
+
+  const rest = Object.keys(PILLAR_META).filter(p => !picks.includes(p));
+  exploreEl.innerHTML = rest.map(p => {
+    const m = PILLAR_META[p];
+    return `<div class="module-card" onclick="showScreen('${m.screen}')"><div class="module-icon">${m.icon}</div><h3>${m.label}</h3><p>${m.desc}</p></div>`;
+  }).join('');
 }
 
 // ─── DAILY QUOTE ─────────────────────────────────────────────────

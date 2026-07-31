@@ -61,15 +61,20 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 .btn-primary{display:inline-block;background:var(--blue);color:white;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 24px;border-radius:4px;cursor:pointer;border:none;transition:background 0.2s;-webkit-appearance:none;touch-action:manipulation;}
 .btn-primary:active{background:var(--blue-dark);}
 .modules-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
-.pillar-picker-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
-.pillar-pick-card{background:white;border-radius:10px;padding:20px 16px;cursor:pointer;border:2px solid rgba(0,0,0,0.06);position:relative;text-align:center;touch-action:manipulation;transition:border-color 0.15s,background 0.15s;}
-.pillar-pick-card.selected{border-color:var(--blue);background:rgba(70,130,180,0.06);}
-.pillar-pick-card .pillar-icon{font-size:28px;margin-bottom:8px;}
-.pillar-pick-card h3{font-family:'DM Serif Display',serif;font-size:16px;margin-bottom:4px;}
-.pillar-pick-card p{font-size:11px;color:#666;line-height:1.3;}
-.pillar-pick-card .pillar-check{position:absolute;top:8px;right:10px;color:var(--blue);font-weight:700;display:none;}
+.pillar-picker-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.pillar-pick-card{background:white;border-radius:14px;padding:26px 16px;cursor:pointer;border:2px solid rgba(0,0,0,0.06);position:relative;text-align:center;touch-action:manipulation;transition:border-color 0.15s,background 0.15s,transform 0.1s;}
+.pillar-pick-card:active{transform:scale(0.97);}
+.pillar-pick-card.selected{border-color:var(--blue);background:rgba(70,130,180,0.07);}
+.pillar-pick-card .pillar-icon{font-size:36px;margin-bottom:10px;display:block;}
+.pillar-pick-card h3{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:5px;}
+.pillar-pick-card p{font-size:11.5px;color:#666;line-height:1.4;}
+.pillar-pick-card .pillar-check{position:absolute;top:10px;right:12px;width:20px;height:20px;border-radius:50%;background:var(--blue);color:white;font-size:12px;line-height:20px;display:none;}
 .pillar-pick-card.selected .pillar-check{display:block;}
-.pillar-picker-count{text-align:center;font-size:12px;color:#888;margin-bottom:16px;}
+.pillar-picker-hero{background:var(--dark);border-radius:12px;padding:28px 20px 22px;margin-bottom:22px;text-align:center;}
+.pillar-picker-hero .welcome-tag{margin-bottom:10px;}
+.pillar-picker-hero h1{font-family:'DM Serif Display',serif;font-size:26px;color:white;line-height:1.2;margin-bottom:8px;}
+.pillar-picker-hero p{color:rgba(255,255,255,0.65);font-size:14px;}
+.pillar-picker-count{text-align:center;font-size:12px;color:#888;margin-bottom:16px;font-weight:600;letter-spacing:0.5px;}
 .explore-more-toggle{text-align:center;padding:12px;font-size:13px;color:var(--blue);font-weight:600;cursor:pointer;border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(0,0,0,0.06);margin:8px 0 16px;}
 .explore-more-grid{display:none;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
 .explore-more-grid.open{display:grid;}
@@ -567,18 +572,17 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- PILLAR PICKER -->
 <div id="screen-pillar-picker" class="screen">
-  <div class="page-header" style="text-align:center;">
-    <div class="page-tag">Get Started</div>
-    <h2>What do you want to focus on?</h2>
-    <p>Pick 2 to start. You can change these anytime.</p>
+  <div class="pillar-picker-hero">
+    <div class="welcome-tag">Get Started</div>
+    <h1>What do you want to<br>focus on right now?</h1>
+    <p>Pick 2. You can change these anytime.</p>
   </div>
-  <div class="pillar-picker-count"><span id="pillar-pick-count">0</span> of 2 selected</div>
+  <div class="pillar-picker-count"><span id="pillar-pick-count">0</span> OF 2 SELECTED</div>
   <div class="pillar-picker-grid" id="pillar-picker-grid">
-    <div class="pillar-pick-card" data-pillar="training" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><div class="pillar-icon">&#127947;</div><h3>Training</h3><p>Workouts built around your schedule and level.</p></div>
-    <div class="pillar-pick-card" data-pillar="nutrition" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><div class="pillar-icon">&#129361;</div><h3>Nutrition</h3><p>Simple, realistic eating for a busy life.</p></div>
-    <div class="pillar-pick-card" data-pillar="sleep" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><div class="pillar-icon">&#128564;</div><h3>Sleep</h3><p>Better rest, better everything.</p></div>
-    <div class="pillar-pick-card" data-pillar="recovery" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><div class="pillar-icon">&#129688;</div><h3>Recovery</h3><p>Breathwork, stress, and bouncing back.</p></div>
-    <div class="pillar-pick-card" data-pillar="mindset" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><div class="pillar-icon">&#127919;</div><h3>Mindset</h3><p>The thinking behind everything you do.</p></div>
+    <div class="pillar-pick-card" data-pillar="training" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><span class="pillar-icon">&#127947;</span><h3>Training</h3><p>Workouts built around your schedule and level.</p></div>
+    <div class="pillar-pick-card" data-pillar="nutrition" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><span class="pillar-icon">&#129361;</span><h3>Nutrition</h3><p>Simple, realistic eating for a busy life.</p></div>
+    <div class="pillar-pick-card" data-pillar="recovery" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><span class="pillar-icon">&#129688;</span><h3>Recovery</h3><p>Sleep, breathwork, stress, and bouncing back.</p></div>
+    <div class="pillar-pick-card" data-pillar="mindset" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><span class="pillar-icon">&#127919;</span><h3>Mindset</h3><p>The thinking behind everything you do.</p></div>
   </div>
   <div style="text-align:center;"><button class="btn-primary" id="pillar-pick-confirm" onclick="confirmPillarPicks()" disabled>Confirm My Focus</button></div>
 </div>

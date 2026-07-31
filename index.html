@@ -61,6 +61,21 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 .btn-primary{display:inline-block;background:var(--blue);color:white;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 24px;border-radius:4px;cursor:pointer;border:none;transition:background 0.2s;-webkit-appearance:none;touch-action:manipulation;}
 .btn-primary:active{background:var(--blue-dark);}
 .modules-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.pillar-picker-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.pillar-pick-card{background:white;border-radius:10px;padding:20px 16px;cursor:pointer;border:2px solid rgba(0,0,0,0.06);position:relative;text-align:center;touch-action:manipulation;transition:border-color 0.15s,background 0.15s;}
+.pillar-pick-card.selected{border-color:var(--blue);background:rgba(70,130,180,0.06);}
+.pillar-pick-card .pillar-icon{font-size:28px;margin-bottom:8px;}
+.pillar-pick-card h3{font-family:'DM Serif Display',serif;font-size:16px;margin-bottom:4px;}
+.pillar-pick-card p{font-size:11px;color:#666;line-height:1.3;}
+.pillar-pick-card .pillar-check{position:absolute;top:8px;right:10px;color:var(--blue);font-weight:700;display:none;}
+.pillar-pick-card.selected .pillar-check{display:block;}
+.pillar-picker-count{text-align:center;font-size:12px;color:#888;margin-bottom:16px;}
+.explore-more-toggle{text-align:center;padding:12px;font-size:13px;color:var(--blue);font-weight:600;cursor:pointer;border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(0,0,0,0.06);margin:8px 0 16px;}
+.explore-more-grid{display:none;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.explore-more-grid.open{display:grid;}
+.explore-more-grid .module-card{padding:12px;}
+.explore-more-grid .module-card h3{font-size:14px;}
+.explore-more-grid .module-card p{font-size:11px;}
 .module-card{background:white;border-radius:10px;padding:16px;cursor:pointer;border:1px solid rgba(0,0,0,0.06);position:relative;overflow:hidden;touch-action:manipulation;text-align:center;}
 .module-card:active{border-color:var(--blue);transform:scale(0.98);}
 .module-number{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:6px;}
@@ -436,17 +451,16 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 <aside class="sidebar">
   <div><div class="sidebar-label">Start Here</div>
     <div class="sidebar-item active" onclick="showScreen('dashboard')"><span class="icon">&#127968;</span> Dashboard</div>
-    <div class="sidebar-item" onclick="showScreen('quiz')"><span class="icon">&#128203;</span> Your Quiz <span class="badge">Step 1</span></div>
   </div>
   <div><div class="sidebar-label">Intro</div>
     <div class="sidebar-item" onclick="showScreen('welcome-video')"><span class="icon">&#9654;</span> Welcome Video</div>
+    <div class="sidebar-item" onclick="showScreen('quiz')"><span class="icon">&#128203;</span> Performance Quiz</div>
   </div>
   <div><div class="sidebar-label">Modules</div>
-    <div class="sidebar-item" onclick="showScreen('why-workshop')"><span class="icon">&#127919;</span> Why Workshop</div>
-    <div class="sidebar-item" onclick="showScreen('movement')"><span class="icon">&#127947;</span> Movement</div>
+    <div class="sidebar-item" onclick="showScreen('why-workshop')"><span class="icon">&#127919;</span> Mindset</div>
+    <div class="sidebar-item" onclick="showScreen('movement')"><span class="icon">&#127947;</span> Training</div>
     <div class="sidebar-item" onclick="showScreen('nutrition')"><span class="icon">&#129361;</span> Nutrition</div>
     <div class="sidebar-item" onclick="showScreen('recovery')"><span class="icon">&#129688;</span> Recovery</div>
-    <div class="sidebar-item" onclick="showScreen('build-plan')"><span class="icon">&#128197;</span> Your Plan</div>
     <div class="sidebar-item" onclick="showScreen('progress')"><span class="icon">&#128200;</span> Progress</div>
   </div>
   <div><div class="sidebar-label">Tools</div>
@@ -455,7 +469,8 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="sidebar-item" onclick="showScreen('meal-gen')"><span class="icon">&#127859;</span> Meal Plan Generator</div>
     <div class="sidebar-item" onclick="showScreen('training-gen')"><span class="icon">&#128170;</span> Training Generator</div>
   </div>
-  <div><div class="sidebar-label">Contact</div>
+  <div><div class="sidebar-label">Settings</div>
+    <div class="sidebar-item" onclick="showScreen('pillar-picker')"><span class="icon">&#127919;</span> Change Your Focus</div>
     <div class="sidebar-item" onclick="showScreen('coaching')"><span class="icon">&#9993;</span> Get In Touch</div>
   </div>
   <div style="padding:12px;">
@@ -470,8 +485,8 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
   <div class="welcome-hero" style="text-align:center;">
     <div class="welcome-tag">Welcome to the program</div>
     <h1>The Ultimate<br>Performer</h1>
-    <p>For busy professionals who are ready to start putting themselves first. Work through it in order — everything is here for a reason.</p>
-    <button class="btn-primary" onclick="showScreen('welcome-video')">Start Here — Watch Welcome Video</button>
+    <p>For busy professionals who are ready to start putting themselves first.</p>
+    <button class="btn-primary" id="dash-start-btn" onclick="showScreen('welcome-video')">Start Here — Watch Welcome Video</button>
   </div>
   
   <div id="dash-greeting" style="padding:16px 16px 8px;text-align:center;"></div>
@@ -535,22 +550,37 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     </div>
   </div>
 
-  <div style="margin-bottom:20px;text-align:center;">
-    <div class="page-tag">Your Journey</div>
-    <h2 style="font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:4px;">Work through it in order</h2>
-    <p style="color:#666;font-size:14px;">Start with the welcome video, take the quiz, then work through each module. Don't skip ahead.</p>
+  <div style="margin-bottom:16px;text-align:center;">
+    <div class="page-tag">Your Focus</div>
+    <h2 style="font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:4px;">Where you're putting your energy</h2>
+    <p style="color:#666;font-size:14px;">Everything else is one tap away. <span style="color:var(--blue);cursor:pointer;font-weight:600;" onclick="showScreen('pillar-picker')">Change your focus</span></p>
   </div>
-  <div class="modules-grid">
-    <div class="module-card" onclick="showScreen('welcome-video')"><div class="module-icon">&#128075;</div><div class="module-number">Start Here</div><h3>Welcome Video</h3><p>Watch this first. I walk you through the program and exactly how to use it.</p></div>
-    <div class="module-card" onclick="showScreen('quiz')"><div class="module-icon">&#128203;</div><div class="module-number">Step 1</div><h3>Take the Quiz</h3><p>Find out where you are, what's holding you back, and what to focus on first.</p></div>
-    <div class="module-card" onclick="showScreen('why-workshop')"><div class="module-icon">&#127919;</div><div class="module-number">Module 1</div><h3>Why Workshop</h3><p>Build the foundation everything else sits on.</p></div>
-    <div class="module-card" onclick="showScreen('movement')"><div class="module-icon">&#127947;</div><div class="module-number">Module 2</div><h3>Movement</h3><p>Training built around your schedule, your equipment, and your level.</p></div>
-    <div class="module-card" onclick="showScreen('nutrition')"><div class="module-icon">&#129361;</div><div class="module-number">Module 3</div><h3>Nutrition</h3><p>Simple, realistic eating that fits a busy life.</p></div>
-    <div class="module-card" onclick="showScreen('recovery')"><div class="module-icon">&#129688;</div><div class="module-number">Module 4</div><h3>Recovery</h3><p>Sleep, breathwork, and stress management.</p></div>
-    <div class="module-card" onclick="showScreen('build-plan')"><div class="module-icon">&#128197;</div><div class="module-number">Module 5</div><h3>Your Plan</h3><p>Pull it all together into a week that actually works.</p></div>
+  <div class="modules-grid" id="dash-focus-pillars"></div>
+
+  <div class="explore-more-toggle" onclick="toggleExploreMore()"><span id="explore-more-label">Explore more &#8595;</span></div>
+  <div class="explore-more-grid" id="dash-explore-more"></div>
+
+  <div class="modules-grid" style="grid-template-columns:1fr;">
     <div class="module-card" onclick="showScreen('progress')"><div class="module-icon">&#128200;</div><div class="module-number">Track</div><h3>Progress</h3><p>Log your weight, track your lifts, and see how far you've come.</p></div>
-    <div class="module-card" onclick="showScreen('coaching')"><div class="module-icon">&#9993;</div><div class="module-number">Contact</div><h3>Get In Touch</h3><p>Questions about the programme? Reach out directly.</p></div>
   </div>
+</div>
+
+<!-- PILLAR PICKER -->
+<div id="screen-pillar-picker" class="screen">
+  <div class="page-header" style="text-align:center;">
+    <div class="page-tag">Get Started</div>
+    <h2>What do you want to focus on?</h2>
+    <p>Pick 2 to start. You can change these anytime.</p>
+  </div>
+  <div class="pillar-picker-count"><span id="pillar-pick-count">0</span> of 2 selected</div>
+  <div class="pillar-picker-grid" id="pillar-picker-grid">
+    <div class="pillar-pick-card" data-pillar="training" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><div class="pillar-icon">&#127947;</div><h3>Training</h3><p>Workouts built around your schedule and level.</p></div>
+    <div class="pillar-pick-card" data-pillar="nutrition" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><div class="pillar-icon">&#129361;</div><h3>Nutrition</h3><p>Simple, realistic eating for a busy life.</p></div>
+    <div class="pillar-pick-card" data-pillar="sleep" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><div class="pillar-icon">&#128564;</div><h3>Sleep</h3><p>Better rest, better everything.</p></div>
+    <div class="pillar-pick-card" data-pillar="recovery" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><div class="pillar-icon">&#129688;</div><h3>Recovery</h3><p>Breathwork, stress, and bouncing back.</p></div>
+    <div class="pillar-pick-card" data-pillar="mindset" onclick="togglePillarPick(this)"><span class="pillar-check">&#10003;</span><div class="pillar-icon">&#127919;</div><h3>Mindset</h3><p>The thinking behind everything you do.</p></div>
+  </div>
+  <div style="text-align:center;"><button class="btn-primary" id="pillar-pick-confirm" onclick="confirmPillarPicks()" disabled>Confirm My Focus</button></div>
 </div>
 
 <!-- WELCOME VIDEO -->
@@ -566,21 +596,21 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- QUIZ -->
 <div id="screen-quiz" class="screen">
-  <div class="page-header" style="text-align:center;"><div class="page-tag">Step 1</div><h2>Your Performance Quiz</h2><p>Takes about 5 minutes.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Optional</div><h2>Performance Quiz</h2><p>Takes about 5 minutes. Not required, but useful if you want a clearer read on where you're at.</p></div>
   <div class="tool-embed"><iframe src="https://dannyjfit.github.io/ultimate-performer-quiz/" title="Ultimate Performer Quiz"></iframe></div>
-  <div class="callout" style="text-align:center;"><p><strong>Finished?</strong> Head into the Why Workshop next.</p></div>
+  <div class="callout" style="text-align:center;"><p><strong>Finished?</strong> Head into Mindset next, or jump to whatever you're focused on.</p></div>
   <div style="text-align:center;margin-bottom:16px;">
     <label style="font-size:14px;color:#444;cursor:pointer;display:inline-flex;align-items:center;gap:10px;">
       <input type="checkbox" id="quiz-done-cb" style="width:18px;height:18px;accent-color:var(--blue);cursor:pointer;flex-shrink:0;">
       I've completed the quiz
     </label>
   </div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('quiz','why-workshop')">Next: Why Workshop &#8594;</button></div>
+  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('quiz','why-workshop')">Next: Mindset &#8594;</button></div>
 </div>
 
 <!-- WHY WORKSHOP -->
 <div id="screen-why-workshop" class="screen">
-  <div class="page-header" style="text-align:center;"><div class="page-tag">Module 1</div><h2>The Why Workshop</h2><p>Every client who fell off the wagon had the same problem — when life got in the way, they didn't have a strong enough reason to keep going. That changes here.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Mindset</div><h2>Mindset</h2><p>Every client who fell off the wagon had the same problem — when life got in the way, they didn't have a strong enough reason to keep going. That changes here.</p></div>
   <div class="video-embed" onclick="playVideo(this,'5DmExunCeb0')">
     <img src="https://img.youtube.com/vi/5DmExunCeb0/maxresdefault.jpg" alt="Why Workshop">
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
@@ -623,7 +653,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- MOVEMENT -->
 <div id="screen-movement" class="screen">
-  <div class="page-header" style="text-align:center;"><div class="page-tag">Module 2</div><h2>Movement</h2><p>Built around your schedule, your level, and your goal.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Training</div><h2>Training</h2><p>Built around your schedule, your level, and your goal.</p></div>
   <div class="video-embed" onclick="playVideo(this,'Z2eVikbPsl0')">
     <img src="https://img.youtube.com/vi/Z2eVikbPsl0/maxresdefault.jpg" alt="Movement Module">
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
@@ -727,7 +757,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- NUTRITION -->
 <div id="screen-nutrition" class="screen">
-  <div class="page-header" style="text-align:center;"><div class="page-tag">Module 3</div><h2>Nutrition</h2><p>Simplifying nutrition so it actually works for your life.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Nutrition</div><h2>Nutrition</h2><p>Simplifying nutrition so it actually works for your life.</p></div>
   <div class="video-embed" onclick="playVideo(this,'Y3LLGC2SpUI')">
     <img src="https://img.youtube.com/vi/Y3LLGC2SpUI/maxresdefault.jpg" alt="Nutrition Module">
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
@@ -799,7 +829,7 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
 
 <!-- RECOVERY -->
 <div id="screen-recovery" class="screen">
-  <div class="page-header" style="text-align:center;"><div class="page-tag">Module 4</div><h2>Recovery</h2><p>The clients who make the biggest changes take this as seriously as their training.</p></div>
+  <div class="page-header" style="text-align:center;"><div class="page-tag">Recovery</div><h2>Recovery</h2><p>The clients who make the biggest changes take this as seriously as their training.</p></div>
   <div class="video-embed" onclick="playVideo(this,'7QJKcCYIFN0')">
     <img src="https://img.youtube.com/vi/7QJKcCYIFN0/maxresdefault.jpg" alt="Recovery Module">
     <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
@@ -849,59 +879,6 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
       <li><input type="checkbox"> Hit my daily steps at least 4 days</li>
       <li><input type="checkbox"> Journalled at least twice</li>
     </ul>
-  </div>
-  <div class="callout" style="text-align:center;"><p><strong>Done?</strong> Last step — build your plan.</p></div>
-  <div style="text-align:center;"><button class="btn-primary" onclick="completeAndGo('recovery','build-plan')">Next: Your Plan &#8594;</button></div>
-</div>
-
-<!-- YOUR PLAN -->
-<div id="screen-build-plan" class="screen">
-  <div class="page-header" style="text-align:center;"><div class="page-tag">Module 5</div><h2>Your Plan</h2><p>Everything in one place, built around you.</p></div>
-  <div class="video-embed" onclick="playVideo(this,'2v3AOYfQh54')">
-    <img src="https://img.youtube.com/vi/2v3AOYfQh54/maxresdefault.jpg" alt="Your Plan">
-    <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-  </div>
-  <div class="content-section">
-    <h4 style="text-align:center;">Before You Start</h4>
-    <ul class="checklist">
-      <li><input type="checkbox"> Completed the Why Workshop and have your why statement</li>
-      <li><input type="checkbox"> Chosen your training location, level, and frequency</li>
-      <li><input type="checkbox"> Run your calorie calculator</li>
-      <li><input type="checkbox"> Set up your recovery non-negotiables</li>
-    </ul>
-  </div>
-  <div class="content-section">
-    <h4 style="text-align:center;">Your Why Statement</h4>
-    <p style="text-align:center;">Read it before you train. Read it when you don't want to.</p>
-    <textarea class="why-input" id="plan_why" placeholder="Your why statement will appear here once you've written it in the Why Workshop..." oninput="debounceSave('why_statement',this.value);crossPopulateWhy(this.value)"></textarea>
-  </div>
-  <div class="content-section">
-    <h4 style="text-align:center;">Your Daily Targets</h4>
-    <table class="input-table">
-      <tr><th colspan="2">Nutrition Targets</th></tr>
-      <tr><td>Daily Calories</td><td><input type="text" id="plan_calories" placeholder="From your calculator" oninput="debounceSave('calorie_target',this.value)"></td></tr>
-      <tr><td>Daily Protein</td><td><input type="text" id="plan_protein" placeholder="From your calculator" oninput="debounceSave('protein_target',this.value)"></td></tr>
-      <tr><td>Meals per day</td><td><input type="text" placeholder="e.g. 3 + 1 snack"></td></tr>
-    </table>
-    <table class="input-table">
-      <tr><th colspan="2">Recovery Non-Negotiables</th></tr>
-      <tr><td>Sleep window</td><td><input type="text" id="plan_sleep" placeholder="Auto-fills from Recovery section" readonly style="background:#f8f7f2;color:#555;"></td></tr>
-      <tr><td>Morning routine</td><td><input type="text" placeholder="e.g. Walk + box breathing"></td></tr>
-      <tr><td>Stress tool</td><td><input type="text" placeholder="e.g. 10 min walk at lunch"></td></tr>
-    </table>
-  </div>
-  <div class="content-section">
-    <h4 style="text-align:center;">&#128197; Your Weekly Structure</h4>
-    <table class="weekly-table">
-      <tr><th>Day</th><th>Training / Rest</th><th>Nutrition Focus</th><th>Recovery</th></tr>
-      <tr><td>Mon</td><td><textarea data-day="monday" data-col="training" placeholder="e.g. Upper body" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="monday" data-col="nutrition" placeholder="e.g. Hit protein" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="monday" data-col="recovery" placeholder="e.g. Box breathing" oninput="debounceWeekly()"></textarea></td></tr>
-      <tr><td>Tue</td><td><textarea data-day="tuesday" data-col="training" placeholder="e.g. Rest / walk" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="tuesday" data-col="nutrition" placeholder="e.g. Hit protein" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="tuesday" data-col="recovery" placeholder="e.g. 10 min walk" oninput="debounceWeekly()"></textarea></td></tr>
-      <tr><td>Wed</td><td><textarea data-day="wednesday" data-col="training" placeholder="e.g. Lower body" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="wednesday" data-col="nutrition" placeholder="e.g. Hit protein" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="wednesday" data-col="recovery" placeholder="e.g. Meditation" oninput="debounceWeekly()"></textarea></td></tr>
-      <tr><td>Thu</td><td><textarea data-day="thursday" data-col="training" placeholder="e.g. Rest / walk" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="thursday" data-col="nutrition" placeholder="e.g. Hit protein" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="thursday" data-col="recovery" placeholder="e.g. 10 min walk" oninput="debounceWeekly()"></textarea></td></tr>
-      <tr><td>Fri</td><td><textarea data-day="friday" data-col="training" placeholder="e.g. Full body" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="friday" data-col="nutrition" placeholder="e.g. Hit protein" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="friday" data-col="recovery" placeholder="e.g. Wind down" oninput="debounceWeekly()"></textarea></td></tr>
-      <tr><td>Sat</td><td><textarea data-day="saturday" data-col="training" placeholder="Optional / rest" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="saturday" data-col="nutrition" placeholder="Stay on track" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="saturday" data-col="recovery" placeholder="Longer walk" oninput="debounceWeekly()"></textarea></td></tr>
-      <tr><td>Sun</td><td><textarea data-day="sunday" data-col="training" placeholder="Rest" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="sunday" data-col="nutrition" placeholder="Prep meals" oninput="debounceWeekly()"></textarea></td><td><textarea data-day="sunday" data-col="recovery" placeholder="Weekly checklist" oninput="debounceWeekly()"></textarea></td></tr>
-    </table>
   </div>
   <div class="quote-block"><p>You've got everything you need here. The only variable now is whether you actually use it. Start today. Adjust as you go.</p></div>
   <div class="callout" style="text-align:center;"><p><strong>One last step.</strong> Book a free 30-minute Performance Review — I'll look at what you've built and tell you exactly what to focus on first.</p></div>
@@ -1157,7 +1134,6 @@ body{background:var(--cream);color:var(--dark);font-family:'Inter',sans-serif;fo
     <div class="mobile-nav-item" onclick="showScreen('movement');setMobileActive(this)"><span class="m-icon">&#127947;</span>Move</div>
     <div class="mobile-nav-item" onclick="showScreen('nutrition');setMobileActive(this)"><span class="m-icon">&#129361;</span>Nutrition</div>
     <div class="mobile-nav-item" onclick="showScreen('recovery');setMobileActive(this)"><span class="m-icon">&#129688;</span>Recovery</div>
-    <div class="mobile-nav-item" onclick="showScreen('build-plan');setMobileActive(this)"><span class="m-icon">&#128197;</span>Plan</div>
     <div class="mobile-nav-item" onclick="showScreen('progress');setMobileActive(this)"><span class="m-icon">&#128200;</span>Progress</div>
     <div class="mobile-nav-item" onclick="showScreen('coaching');setMobileActive(this)"><span class="m-icon">&#9993;</span>Contact</div>
     <div class="mobile-nav-item" onclick="resetPassword(this)"><span class="m-icon">&#128273;</span>Password</div>

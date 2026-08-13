@@ -451,8 +451,7 @@ function updateLockUI() {
 const PILLAR_META = {
   training: { icon:'&#127947;', label:'Training', screen:'movement',      desc:'Workouts built around your schedule and level.' },
   nutrition:{ icon:'&#129361;', label:'Nutrition', screen:'nutrition',    desc:'Simple, realistic eating for a busy life.' },
-  sleep:    { icon:'&#128564;', label:'Sleep',     screen:'recovery',     desc:'Better rest, better everything.' },
-  recovery: { icon:'&#129688;', label:'Recovery',  screen:'recovery',     desc:'Breathwork, stress, and bouncing back.' },
+  recovery: { icon:'&#129688;', label:'Recovery',  screen:'recovery',     desc:'Sleep, breathwork, stress, and bouncing back.' },
   mindset:  { icon:'&#127919;', label:'Mindset',   screen:'why-workshop', desc:'The thinking behind everything you do.' }
 };
 

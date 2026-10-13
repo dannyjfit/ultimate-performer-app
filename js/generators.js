@@ -329,7 +329,7 @@ function tgVid(uid, url) {
   }
   const m = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([^?&"'>]+)/);
   if (!m) return;
-  c.innerHTML = `<div class="gen-video-wrap"><iframe src="https://www.youtube.com/embed/${m[1]}?rel=0&playsinline=1" frameborder="0" allowfullscreen></iframe></div>`;
+  c.innerHTML = `<div class="gen-video-wrap"><iframe src="https://www.youtube.com/embed/${m[1]}?rel=0&playsinline=1&mute=1" frameborder="0" allowfullscreen></iframe></div>`;
   c.style.display='block'; b.textContent='✕ Close'; b.classList.add('vactive');
   _tgActiveVid = uid;
 }
@@ -340,7 +340,7 @@ function tgToggleCooldown(btnId, vidId) {
   if (c.style.display==='block') {
     c.style.display='none'; c.innerHTML=''; b.textContent='▶ Watch';
   } else {
-    c.innerHTML=`<div class="gen-video-wrap"><iframe src="https://www.youtube.com/embed/FdUFhUuJl1E?rel=0&playsinline=1" frameborder="0" allowfullscreen></iframe></div>`;
+    c.innerHTML=`<div class="gen-video-wrap"><iframe src="https://www.youtube.com/embed/FdUFhUuJl1E?rel=0&playsinline=1&mute=1" frameborder="0" allowfullscreen></iframe></div>`;
     c.style.display='block'; b.textContent='✕ Close';
   }
 }

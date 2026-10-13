@@ -237,7 +237,7 @@ function toggleVideo(btn, vid) {
   const wrap   = btn.closest('.video-item').querySelector('.video-player-wrap');
   const iframe = wrap.querySelector('iframe');
   if (wrap.classList.contains('open')) { wrap.classList.remove('open'); iframe.src=''; btn.textContent='Watch'; }
-  else { wrap.classList.add('open'); iframe.src='https://www.youtube.com/embed/'+vid; btn.textContent='Close'; }
+  else { wrap.classList.add('open'); iframe.src='https://www.youtube.com/embed/'+vid+'?mute=1'; btn.textContent='Close'; }
 }
 
 function setMobileActive(el) {

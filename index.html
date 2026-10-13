@@ -1191,7 +1191,7 @@ window.addEventListener("load", function() {
 </script>
 <script>
 function playVideo(el, videoId) {
-  el.innerHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1" allowfullscreen allow="autoplay; encrypted-media"></iframe>';
+  el.innerHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&mute=1" allowfullscreen allow="autoplay; encrypted-media"></iframe>';
   el.style.cursor = 'default';
   const wvScreen = document.getElementById('screen-welcome-video');
   if (wvScreen && wvScreen.classList.contains('active')) {
